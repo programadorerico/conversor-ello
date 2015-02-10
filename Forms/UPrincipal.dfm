@@ -3327,6 +3327,7 @@ object FPrincipal: TFPrincipal
       Hint = '2-Grupos'
       Visible = ivAlways
       LargeImageIndex = 54
+      OnClick = dxBarLargeButton4Click
       SyncImageIndex = False
       ImageIndex = 54
     end

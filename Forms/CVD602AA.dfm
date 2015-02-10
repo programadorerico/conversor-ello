@@ -95,8 +95,6 @@ inherited FCVD602AA: TFCVD602AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'select distinct grupo from produtos'
-      'where grupo<>'#39#39
-      'order by grupo')
+      'select codgrupoproduto, nome from grupoproduto')
   end
 end
