@@ -911,7 +911,17 @@ object FPrincipal: TFPrincipal
     PopupMenuItems = [rpmiItems, rpmiMinimizeRibbon]
     QuickAccessToolbar.Toolbar = BarManagerBar1
     TabOrder = 3
+    object FRibbonTab2: TdxRibbonTab
+      Caption = 'Produtos'
+      Groups = <
+        item
+          ToolbarName = 'BarManagerBar5'
+        end
+        item
+        end>
+    end
     object FRibbonTab1: TdxRibbonTab
+      Active = True
       Caption = 'Contas a receber'
       Groups = <
         item
@@ -922,7 +932,6 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar2'
         end>
-      Visible = False
     end
     object FRibbonTab3: TdxRibbonTab
       Caption = 'Contas a Pagar'
@@ -933,16 +942,6 @@ object FPrincipal: TFPrincipal
           ToolbarName = 'BarManagerBar4'
         end>
       Visible = False
-    end
-    object FRibbonTab2: TdxRibbonTab
-      Active = True
-      Caption = 'Produtos'
-      Groups = <
-        item
-          ToolbarName = 'BarManagerBar5'
-        end
-        item
-        end>
     end
   end
   object StatusBar1: TdxRibbonStatusBar
@@ -2817,7 +2816,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar3: TdxBar
       Caption = 'Clientes'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2866,7 +2864,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar2: TdxBar
       Caption = 'Documentos'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 80
       DockedTop = 0
       FloatLeft = 421
@@ -2887,7 +2884,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar4: TdxBar
       Caption = 'Fornecedor'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 267
@@ -3330,6 +3326,17 @@ object FPrincipal: TFPrincipal
       OnClick = dxBarLargeButton4Click
       SyncImageIndex = False
       ImageIndex = 54
+    end
+    object dxBarLargeButton28: TdxBarLargeButton
+      Caption = '1-Clientes'
+      Category = 0
+      Description = 'FCVD101AA'
+      Hint = '1-Clientes'
+      Visible = ivAlways
+      LargeImageIndex = 23
+      OnClick = dxBarLargeButton4Click
+      SyncImageIndex = False
+      ImageIndex = 55
     end
     object CustomdxBarCombo1: TCustomdxBarCombo
       Caption = 'New Item'

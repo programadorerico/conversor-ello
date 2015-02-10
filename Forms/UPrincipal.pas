@@ -86,6 +86,7 @@ type
     dxBarLargeButton25: TdxBarLargeButton;
     dxBarLargeButton26: TdxBarLargeButton;
     dxBarLargeButton27: TdxBarLargeButton;
+    dxBarLargeButton28: TdxBarLargeButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SBSairClick(Sender: TObject);

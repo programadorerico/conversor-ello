@@ -127,27 +127,7 @@ inherited FCVD101AA: TFCVD101AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'SELECT'
-      '    cast(a.B_COD as integer) as codigo,'
-      '    a.B_NOM as nome,'
-      '    a.B_END as endereco,'
-      '    a.B_BAI as bairro,'
-      '    a.B_CEP as cep,'
-      '    a.B_CID as cidade,'
-      '    a.B_EST as uf,'
-      '    '#39'('#39' || a.B_DDD || '#39') '#39' || a.B_TEL as telefone,'
-      '    '#39'('#39' || a.B_DDD || '#39') '#39' || a.B_TE1 as celular,'
-      '    a.B_IDE as rg,'
-      '    a.B_CPF as cpf,'
-      '    a.B_PAI as nome_pai,'
-      '    a.B_MAE as nome_mae,'
-      '    a.B_DNA as data_nascimento,'
-      '    a.B_MUN as codigo_ibge,'
-      '    a.B_EMA as email,'
-      '    a.B_FAN as nome_fantasia'
-      'FROM CLIENTE a'
-      'order by cast(a.B_COD as integer)'
-      ' ')
+      'select * from cliente')
     Left = 349
   end
   object ADOTable1: TADOTable

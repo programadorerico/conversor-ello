@@ -3,11 +3,9 @@ unit CVD101AA;
 interface
 
 uses
-  SysUtils, Variants, Classes, Controls, Forms,
-  PaiConversor, ADODB, DB,
-  SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
-  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids,
-  ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
+  SysUtils, Variants, Classes, Controls, Forms, PaiConversor, ADODB, DB, SqlExpr, FMTBcd, Provider, ComCtrls,
+  Buttons, ToolWin, StdCtrls, cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
+  PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TFCVD101AA = class(TFPaiConversor)
@@ -15,9 +13,10 @@ type
     procedure BImportarClick(Sender: TObject);
   private
     { Private declarations }
+    fIdCliente: Integer;
+    fIdReferencia: Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
-    procedure ImportaClassificacao;
   public
     { Public declarations }
   end;
@@ -29,15 +28,13 @@ implementation
 
 uses UDataModule, Utils, UnSql, UClientes;
 
-var fIdCliente: Integer;
-    fIdReferencia: Integer;
-
 {$R *.dfm}
 
 procedure TFCVD101AA.GravaRegistro;
-var fObservacao: TStringList;
-    fTipo: String;
-    fOrdem: Integer;
+var Observacao: TStringList;
+    Tipo: String;
+    Ordem: Integer;
+    IdCliente: Integer;
 
    function RetornaEstadoCivil: String;
    begin
@@ -52,7 +49,7 @@ var fObservacao: TStringList;
 
    function GetTipoPessoa: String;
    begin
-      Result := iif(Length(CDSDados.FieldByName('CPF').AsString)>14, 'J', 'F');
+      Result := CDSDados.FieldByName('TipoPessoa').AsString;
    end;
 
    function GetNome: String;
@@ -62,32 +59,26 @@ var fObservacao: TStringList;
 
    function GetFantasia: String;
    begin
-      if GetTipoPessoa='J' then begin
-         Result := CDSDados.FieldByName('Nome_Fantasia').AsString;
-      end else begin
-         Result := CDSDados.FieldByName('Nome').AsString;
-      end;
-      Result := Trim(UpperCase(TiraAcentos(Result)));
-      if Result='' then Result := GetNome;
+      Result := CDSDados.FieldByName('NomeFantasia').AsString;
    end;
 
    function GetCNPJCPF: String;
    begin
-      Result := ApenasDigitos(CDSDados.FieldByName('CPF').AsString);
+      Result := ApenasDigitos(CDSDados.FieldByName('CNPJ_CPF').AsString);
    end;
 
    function GetRGIE: String;
    begin
-      Result := CDSDados.FieldByName('RG').AsString;
+      Result := CDSDados.FieldByName('InscricaoEstadual').AsString;
    end;
 
    function GetCidade: Integer;
    begin
       Result := 3998;
-      if cdsdados.FieldByName('codigo_ibge').AsString = '' then exit;
+      if cdsdados.FieldByName('CodMunicipio').AsString = '' then exit;
       with QueryPesquisa do begin
          Sql.Clear;
-         Sql.Add(Format('Select IdCidade From TGerCidade Where CodigoIBGE = ''%s'' ', [CDSDados.FieldByName('codigo_ibge').AsString]));
+         Sql.Add(Format('Select IdCidade From TGerCidade Where CodigoIBGE = ''%s'' ', [CDSDados.FieldByName('codmunicipio').AsString]));
          Open;
          if not QueryPesquisa.IsEmpty then begin
             Result := FieldbyName('IdCidade').AsInteger;
@@ -96,36 +87,35 @@ var fObservacao: TStringList;
    end;
 
 begin
-  inherited;
-   with SqlDados, CDSDados do begin
+   inherited;
+   IdCliente := CDSDados.FieldByName('CodCliente').AsInteger;
+   with SqlDados do begin
       try
-         Start(tcInsert, 'TRecCliente', QueryTrabalho  );
-            AddValue('IdCliente',              FieldByName('Codigo').AsInteger);
-            //AddValue('IdClassificacao',        FieldByName('Grupo_Id').AsInteger);
-            AddValue('Matricula',              FieldByName('Codigo').AsString);
-            AddValue('Pessoa',                 GetTipoPessoa);
-            AddValue('Nome',                   GetNome);
-            AddValue('Fantasia',               GetFantasia);
-            AddValue('CpfCnpj',                GetCNPJCPF);
-            AddValue('RGIE',                   GetRGIE);
+         Start(tcInsert, 'TRecCliente', QueryTrabalho);
+            AddValue('IdCliente',    IdCliente);
+            AddValue('Nome',         GetNome);
+            AddValue('Pessoa',       GetTipoPessoa);
+            AddValue('Fantasia',     GetFantasia);
+            AddValue('Endereco',     Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString))));
+            AddValue('Bairro',       Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString))));
+            AddValue('Cep',          ApenasDigitos(CDSDados.FieldByName('Cep').AsString));
+            AddValue('IdCidade',     GetCidade);
+            AddValue('Numero',       CDSDados.FieldByName('numero').AsString);
+            AddValue('Complemento',  CDSDados.FieldByName('Complemento').AsString);
+            AddValue('DataCadastro', CDSDados.FieldByName('DataCadastro').AsDateTime);
+            AddValue('Fone',         ApenasDigitos(CDSDados.FieldByName('telefone').AsString));
+            AddValue('CpfCnpj',      GetCNPJCPF);
+            AddValue('RGIE',         GetRGIE);
+            AddValue('Email',        CDSDados.FieldByName('email').AsString);
+            AddValue('Celular',      ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
+            AddValue('Ativo',        ApenasDigitos(CDSDados.FieldByName('Ativo').AsString) );
+            AddValue('Contato',      ApenasDigitos(CDSDados.FieldByName('Contato').AsString) );
             AddValue('OrgaoExpedidor',         '');
-            AddValue('Endereco',               Trim(UpperCase(TiraAcentos(FieldByName('Endereco').AsString))) );
-            AddValue('Numero',                 '');
-            AddValue('Complemento',            '');
-            AddValue('Bairro',                 Trim(UpperCase(TiraAcentos(FieldByName('Bairro').AsString))) );
-            //AddValue('Sexo',                   FieldByName('Sexo').AsString);
             AddValue('EstadoCivil',            RetornaEstadoCivil);
-            AddValue('IdCidade',               GetCidade);
-            AddValue('Cep',                    ApenasDigitos(FieldByName('Cep').AsString) );
-            AddValue('Fone',                   ApenasDigitos(FieldByName('telefone').AsString) );
-            AddValue('Celular',                ApenasDigitos(FieldByName('Celular').AsString) );
-            AddValue('Email',                  FieldByName('email').AsString);
             AddValue('HomePage',               '');
-
+            //AddValue('Sexo',                   FieldByName('Sexo').AsString);
             AddValue('Conjuge',                '');
-            AddValue('FiliacaoPai',            UpperCase(TiraAcentos(FieldByName('nome_pai').AsString)) );
-            AddValue('FiliacaoMae',            UpperCase(TiraAcentos(FieldByName('nome_mae').AsString)) );
-            AddValue('Nascimento',             FieldByName('Data_Nascimento').AsDateTime);
+//            AddValue('Nascimento',             FieldByName('Data_Nascimento').AsDateTime);
             AddValue('PercentualJuros',        0);
             AddValue('PercentualMulta',        0);
             AddValue('JuroMultaDiferenciado',  'N');
@@ -134,7 +124,7 @@ begin
             AddValue('EndCobranca',            3);
             AddValue('Limite',                 'UNICO');
             AddValue('LimiteValor',            0);
-            AddValue('LimiteVcto',             DataValida('31.12.2014') );
+            AddValue('LimiteVcto',             DataValida('31.12.2015') );
             AddValue('DescontoNaVenda',        'N');
             AddValue('DescontoNaVendaValor',   0);
             AddValue('AcrescimoNaVenda',       'N');
@@ -149,66 +139,26 @@ begin
             AddValue('FormaCartao',           'S');
             AddValue('FormaConvenio',         'S');
 //            AddValue('Obs',                   FieldByName('Obs').AsString);
-
             AddValue('Usuario',            'IMPLANTACAO');
          Executa;
 
          { Endereco Comercial }
          Start(tcInsert, 'TRecClienteEndereco', QueryTrabalho  );
-            AddValue('IdCliente',              FieldByName('Codigo').AsInteger);
+            AddValue('IdCliente',              IdCliente);
             AddValue('Tipo',                   1);
-            AddValue('Endereco',               UpperCase(TiraAcentos(FieldByName('Endereco').AsString)) );
+            AddValue('Endereco',               UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString)) );
             AddValue('Numero',                 '');
             AddValue('Complemento',            '');
-            AddValue('Bairro',                 UpperCase(TiraAcentos(FieldByName('Bairro').AsString)) );
+            AddValue('Bairro',                 UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString)) );
             AddValue('EstadoCivil',            RetornaEstadoCivil);
             AddValue('IdCidade',               GetCidade);
-            AddValue('Cep',                    ApenasDigitos(FieldByName('Cep').AsString) );
-            AddValue('Fone',                   ApenasDigitos(FieldByName('telefone').AsString) );
-            AddValue('Celular',                ApenasDigitos(FieldByName('Celular').AsString) );
-            AddValue('Email',                  FieldByName('Email').AsString);
+            AddValue('Cep',                    ApenasDigitos(CDSDados.FieldByName('Cep').AsString) );
+            AddValue('Fone',                   ApenasDigitos(CDSDados.FieldByName('telefone').AsString) );
+            AddValue('Celular',                ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
+            AddValue('Email',                  CDSDados.FieldByName('Email').AsString);
 //            AddValue('HomePage',               FieldByName('HomePage').AsString);
 //            AddValue('Observacao',             FieldByName('Obs').AsString);
          Executa;
-         (*
-
-         { Endereco Entrega }
-         Start(tcInsert, 'TRecClienteEndereco', QueryTrabalho  );
-            AddValue('IdCliente',              FieldByName('CodCliente').AsInteger);
-            AddValue('Tipo',                   3);
-            AddValue('Endereco',               UpperCase(TiraAcentos(FieldByName('EnderecoPrincipal').AsString)) );
-            AddValue('Numero',                 ApenasDigitos(FieldByName('NumeroEnderecoPrincipal').AsString) );
-            AddValue('Complemento',            UpperCase(TiraAcentos(FieldByName('ComplementoEnderecoPrincipal').AsString)) );
-            AddValue('Bairro',                 UpperCase(TiraAcentos(FieldByName('BairroEnderecoPrincipal').AsString)) );
-            AddValue('EstadoCivil',            RetornaEstadoCivil);
-            AddValue('IdCidade',               GetCidade);
-            AddValue('Cep',                    ApenasDigitos(FieldByName('CepEnderecoPrincipal').AsString) );
-            AddValue('Fone',                   ApenasDigitos(FieldByName('Telefone').AsString) );
-            AddValue('Celular',                ApenasDigitos(FieldByName('Celular').AsString) );
-            AddValue('Email',                  FieldByName('Email').AsString);
-            AddValue('HomePage',               FieldByName('HomePage').AsString);
-            AddValue('Observacao',             FieldByName('NomeEmpresaTrabalho').AsString);
-         Executa;
-
-         { Endereco Cobranca }
-         Start(tcInsert, 'TRecClienteEndereco', QueryTrabalho  );
-            AddValue('IdCliente',              FieldByName('CodCliente').AsInteger);
-            AddValue('Tipo',                   4);
-            AddValue('Endereco',               UpperCase(TiraAcentos(FieldByName('EnderecoCobranca').AsString)) );
-            AddValue('Numero',                 ApenasDigitos(FieldByName('NumeroEnderecoCobranca').AsString) );
-            AddValue('Complemento',            UpperCase(TiraAcentos(FieldByName('ComplementoEnderecoPrincipal').AsString)) );
-            AddValue('Bairro',                 UpperCase(TiraAcentos(FieldByName('BairroEnderecoCobranca').AsString)) );
-            AddValue('EstadoCivil',            RetornaEstadoCivil);
-            AddValue('IdCidade',               GetCidade);
-            AddValue('Cep',                    ApenasDigitos(FieldByName('CepEnderecoCobranca').AsString) );
-            AddValue('Fone',                   ApenasDigitos(FieldByName('TelefoneEnderecoCobranca').AsString) );
-            AddValue('Celular',                ApenasDigitos(FieldByName('Celular').AsString) );
-            AddValue('Email',                  FieldByName('Email').AsString);
-            AddValue('HomePage',               FieldByName('HomePage').AsString);
-            AddValue('Observacao',             FieldByName('NomeEmpresaTrabalho').AsString+#13#10+
-                                               ApenasDigitos(FieldByName('TelefoneEmpresaTrabalho').AsString));
-         Executa;
-         *)
 
       except on e:Exception do begin
             GravaLog('Cliente: ' + CDSDados.FieldByName('Codigo').AsString + ' Mensagem: '+E.Message);
@@ -229,34 +179,6 @@ begin
    fIdReferencia := 0;
    //ImportaClassificacao;
    inherited;
-end;
-
-procedure TFCVD101AA.ImportaClassificacao;
-begin
-//   with SqlDados, QueryTECNOBYTE do begin
-//      { Limpa a tabela }
-//      Start(tcDelete, 'TRecClienteClassificacao', QueryTrabalho);
-//      Executa;
-//      try
-//         Sql.Clear;
-//         Sql.Add('Select * From GrupoCliente ');
-//         Open;
-//         { Importa Registros }
-//         while not eof do begin
-//            Start(tcInsert, 'TRecClienteClassificacao', QueryTrabalho  );
-//               AddValue('IdClassificacao', FieldByName('Id').AsInteger);
-//               AddValue('Descricao',       UpperCase(TiraAcentos(FieldByName('Nome').AsString)) );
-//               AddValue('IdUsuario',       1);
-//            Executa;
-//
-//            QueryPesquisaECO.Next;
-//
-//         end;
-//      except on e:Exception do begin
-//            GravaLog('Classificacao: ' + FieldByName('Id').AsString + ' Mensagem: '+E.Message);
-//         end;
-//      end;
-//   end;
 end;
 
 initialization RegisterClass(TFCVD101AA);
