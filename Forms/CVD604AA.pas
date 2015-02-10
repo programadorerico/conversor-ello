@@ -3,11 +3,8 @@ unit CVD604AA;
 interface
 
 uses
-  Variants, Classes, Controls, Forms,
-  PaiConversor, StdCtrls, DB,
-  SqlExpr, FMTBcd, ADODB, Provider, ComCtrls, Buttons, ToolWin, cxControls,
-  cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox;
+  Variants, Classes, Controls, Forms, PaiConversor, StdCtrls, DB, SqlExpr, FMTBcd, ADODB, Provider, ComCtrls, Buttons, ToolWin, cxControls,
+  cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TFCVD604AA = class(TFPaiConversor)
@@ -16,7 +13,6 @@ type
     { Private declarations }
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
-    procedure AfterImporta; override;
   end;
 
 var
@@ -48,29 +44,10 @@ procedure TFCVD604AA.GravaRegistro;
 begin
    inherited;
    SqlDados.Start(tcInsert, 'TEstMarca', QueryTrabalho);
-   SqlDados.AddValue('IdMarca',    FIdRegistro);
-   SqlDados.AddValue('Descricao',  CDSDados.FieldByName('marca').AsString);
+   SqlDados.AddValue('IdMarca',    CDSDados.FieldByName('CodMarca').AsInteger);
+   SqlDados.AddValue('Descricao',  CDSDados.FieldByName('Nome').AsString);
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
-end;
-
-procedure TFCVD604AA.AfterImporta;
-begin
-  inherited;
-  Datam1.sConnection.ExecuteDirect(
-     'INSERT INTO TESTGRUPO (IDGRUPO, IDTIPO, DESCRICAO, TIPO, AJUSTE, AJUSTEPERCENTUAL, USUARIO, GRUPOBALANCA, IDCONTA, IDCONTAVISTA, IDCONTAPRAZO) ' +
-     'VALUES (''1'', ''1'', ''REVENDA'', ''REV'', ''N'', ''0.000'', '' '', ''N'', NULL, NULL, NULL)'
-  );
-
-  Datam1.sConnection.ExecuteDirect(
-     'INSERT INTO TESTSUBGRUPO (IDSUBGRUPO, IDGRUPO, DESCRICAO, AJUSTE, AJUSTEPERCENTUAL, USUARIO, TEMP, IDIMPRESSORA, LISTAEXCECOES) ' +
-     'VALUES (''1'', ''1'', ''REVENDA'', ''N'', ''0.000'', '' '', NULL, NULL, NULL)'
-  );
-
-  Datam1.sConnection.ExecuteDirect(
-     'INSERT INTO TESTCLASSE (IDCLASSE, DESCRICAO, MONITORADO, AJUSTE, AJUSTEPERCENTUAL, DESCONTO, DESCONTOPERCENTUAL, COMISSAOESPECIAL, COMISSAOVISTA, COMISSAOPRAZO, MARGEMLUCRO, USUARIO, IMAGEM, LISTAEXCECOES, IDCONTA, IDCONTAVISTA, IDCONTAPRAZO, MOBILE) ' +
-     'VALUES (''1'', ''CLASSE'', ''N'', ''N'', ''0.0000'', ''N'', ''0.0000'', ''N'', ''0.000'', ''0.000'', ''0.000000'', ''TRIBURTINI'', ''0'', NULL, NULL, NULL, NULL, ''S'')'
-  );
 end;
 
 initialization RegisterClass(TFCVD604AA);

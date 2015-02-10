@@ -1,6 +1,7 @@
 unit GravaDados;
 
 interface
+
 uses UDataModule, SqlExpr, SysUtils, EllClientDataSet, EllLocate, DB, unSql, Utilitarios;
 
 function  NewIdentificador(Tabela:String; Param01: String=''):Integer; overload;
@@ -15,8 +16,12 @@ procedure AjustaSequencial(CDSDados :TEllClientDataSet);
 procedure LimpaCampoChave(CampoChave :TEllLocate);
 procedure AjustaEmpresaUsuario(CDSDados :TEllClientDataSet);
 
-
+var
+   Empresa: Integer;
+   Usuario: String;
+   
 implementation
+
 uses EllTypes;
 
 function NewIdentificador(Tabela: String; Id: String; EmpresaNaChave: Boolean): Integer; overload;

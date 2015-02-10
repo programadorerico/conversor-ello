@@ -98,6 +98,6 @@ inherited FCVD604AA: TFCVD604AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'select distinct marca from tblcdsite0 where marca<>'#39#39)
+      'select codmarca, nome from marca')
   end
 end

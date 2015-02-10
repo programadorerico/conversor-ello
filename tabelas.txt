@@ -1,6 +1,6 @@
 Produto
 GrupoProduto
-Marca
+*Marca
 TipoProduto
 SaldoEstoque
 

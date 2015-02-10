@@ -1,6 +1,6 @@
 inherited FCVD600AA: TFCVD600AA
-  Left = 490
-  Top = 184
+  Left = 214
+  Top = 200
   Width = 964
   Height = 494
   Caption = 'Produtos'
@@ -139,29 +139,7 @@ inherited FCVD600AA: TFCVD600AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'SELECT '
-      '    a.IDITEM as codigo, '
-      '    a.STATUS, '
-      '    a.NOMEPRO as descricao, '
-      '    a.NOMECOM, '
-      '    a.MARCA, '
-      '    a.UNDVEND1 as unidade,'
-      '    a.DTCAD, '
-      '    a.DTALT, a.HORAALT, a.IDGRUPO,'
-      '    b.preco as precovenda,'
-      '    est.saldo as estoque,'
-      '    ncm.idncm,'
-      '    cdb.codbarra'
-      '    -- a.IDGRUPOPIS,'
-      '    -- a.BASSUBENT, a.IDGENERO, '
-      '    -- a.TIPOITEM_SPED, '
-      '    -- a.IDUNMEDIDA'
-      'FROM TBLCDSITE0 a'
-      'left join TBLCDSPRE1 b on (a.iditem=b.iditem)'
-      'left join TBLSDOITE1 est on (a.iditem=est.iditem)'
-      'left join TBLCDSITE3 ncm on (ncm.iditem=a.iditem)'
-      'left join TBLCDSITE5 cdb on (cdb.idmestre=a.iditem)'
-      '-- TBLCDSITE4 (cst cfop)')
+      'select * from produto')
     Left = 405
     Top = 228
   end

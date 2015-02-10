@@ -90,7 +90,7 @@ MaxStackSize=1048576
 ImageBase=4194304
 ExeDescription=
 [Directories]
-OutputDir=..\..\..\Windows
+OutputDir=..\..\Windows
 UnitOutputDir=
 PackageDLLOutputDir=
 PackageDCPOutputDir=
@@ -145,6 +145,6 @@ Count=1
 Item0=$(DELPHI)\Lib;$(DELPHI)\Bin;$(DELPHI)\Imports;$(DELPHI)\Projects\Bpl;$(DELPHI)\Rave5\Lib;..\..\Componentes\Geral;..\..\Componentes\DevExpress\1ExpressDataController\Sources;..\..\Componentes\DevExpress\2XP Theme Manager\Sources;..\..\Componentes\DevExpress\3ExpressGDI+ Library\Packages;..\..\Componentes\DevExpress\4ExpressLibrary\Sources;..\..\Componentes\DevExpress\5ExpressPageControl 2\Sources;..\..\Componentes\DevExpress\6ExpressCommon Library\Sources;..\..\Componentes\DevExpress\7ExpressEditors Library 5\Sources;..\..\Componentes\DevExpress\8ExpressExport Library\Sources;..\..\Componentes\DevExpress\DevExpress ExpressBars Suite v6.28 for Delphi BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressDocking Library v5.28 for Delphi BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressFlowChart Suite v1.28 for Delphi BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressNavbar Suite v1.28 for.Delphi.BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressOrgChart Suite v1.28 for.Delphi.BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressQuantumGrid Suite v6.28.for.Delphi.BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressPrinting System v3.28.for.Delphi.BCB\Sources;..\..\Componentes\DevExpress\DevExpress ExpressQuantumTreeList Suite v4.28.for.Delphi.BCB\Sources;..\..\Componentes\ACBr\Pacotes\Delphi;..\..\Componentes\ACBr\Fontes\ACBrComum;..\..\Componentes\ACBr\Fontes\ACBrDiversos;..\..\Componentes\ACBr\Fontes\ACBrSPED\ACBrSPEDFiscal;..\..\Componentes\ACBr\Fontes\ACBrSPED\ACBrSPEDPisCofins;..\..\Componentes\ACBr\Fontes\ACBrSerial;..\..\Componentes\ACBr\Fontes\synalist;..\..\Componentes\ACBr\Fontes\ACBrBoleto;..\..\Componentes\ACBr\Fontes\ACBrSPED;..\..\Componentes\ACBr\Fontes\ACBrCapicom;..\..\Componentes\ACBr\Fontes\ACBrNFe2;..\..\Componentes\ACBr\Fontes\PCN2;..\..\Componentes\ACBr\Fontes\ACBrCTe;..\..\Componentes\ACBr\Fontes\ACBrTCP;..\..\Componentes\Excellent\AdvGrid;..\..\Componentes\Excellent;..\..\Componentes\EcoCentauro;..\..\Componentes\Triburtini;..\..\Componentes\outlook;..\..\Componentes\Crystal;..\..\Componentes\RX;..\..\Componentes\RX\Units;..\..\Componentes\dxpack\Sources;..\..\Componentes\Abbrevia\source;..\..\Componentes\OmniXML-latest;..\..\Componentes\ASQLite3_2008_03_A;..\..\Componentes\synedit_beta_2_0_2\Source;..\..\Componentes\JCL\lib\d7;..\..\Componentes\JCL\source;..\..\Componentes\JCL\source\windows;..\..\Componentes\JCL\source\common;..\..\Componentes\PngComponents\Source;..\..\Componentes\ACBr\Fontes\ZLibExGZ
 [HistoryLists\hlOutputDirectorry]
 Count=3
-Item0=..\..\..\Windows
-Item1=..\..\Windows
+Item0=..\..\Windows
+Item1=..\..\..\Windows
 Item2=D:\Triburtini\Windows

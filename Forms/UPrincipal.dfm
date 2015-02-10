@@ -581,7 +581,7 @@ object FPrincipal: TFPrincipal
     Align = alClient
     Alignment = taCenter
     AutoSize = False
-    Caption = 'Conversor - Solutions'
+    Caption = 'Conversor - 7 Sistemas'
     Font.Charset = ANSI_CHARSET
     Font.Color = clSilver
     Font.Height = -32
@@ -2851,6 +2851,10 @@ object FPrincipal: TFPrincipal
         end
         item
           Visible = True
+          ItemName = 'dxBarLargeButton27'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarLargeButton4'
         end>
       OneOnRow = True
@@ -2981,10 +2985,10 @@ object FPrincipal: TFPrincipal
       Visible = ivAlways
     end
     object dxBarLargeButton4: TdxBarLargeButton
-      Caption = '2-Produtos'
+      Caption = '3-Produtos'
       Category = 0
       Description = 'FCVD600AA'
-      Hint = '2-Produtos'
+      Hint = '3-Produtos'
       Visible = ivAlways
       LargeImageIndex = 60
       OnClick = dxBarLargeButton4Click
@@ -3315,6 +3319,16 @@ object FPrincipal: TFPrincipal
       Visible = ivAlways
       LargeImageIndex = 10
       OnClick = dxBarLargeButton4Click
+    end
+    object dxBarLargeButton27: TdxBarLargeButton
+      Caption = '2-Grupos'
+      Category = 0
+      Description = 'FCVD602AA'
+      Hint = '2-Grupos'
+      Visible = ivAlways
+      LargeImageIndex = 54
+      SyncImageIndex = False
+      ImageIndex = 54
     end
     object CustomdxBarCombo1: TCustomdxBarCombo
       Caption = 'New Item'

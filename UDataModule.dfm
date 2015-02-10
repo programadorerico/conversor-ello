@@ -34,8 +34,8 @@ object Datam1: TDatam1
   end
   object ADOConnection: TADOConnection
     ConnectionString = 
-      'Provider=MSDASQL.1;Persist Security Info=False;Data Source=Solut' +
-      'ions;Mode=ReadWrite;'
+      'Provider=MSDASQL.1;Persist Security Info=False;Data Source=sete;' +
+      'Mode=ReadWrite;'
     LoginPrompt = False
     Mode = cmReadWrite
     Provider = 'MSDASQL.1'

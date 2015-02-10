@@ -19,6 +19,7 @@ type
     procedure DataModuleDestroy(Sender: TObject);
   private
     { Private declarations }
+    FUsuario: String;
   public
     { Public declarations }
   end;
@@ -28,63 +29,55 @@ type
 var
   Datam1: TDatam1;
   TD: TTransactionDesc;
-  Empresa: Integer;
-  Usuario: String;
   SqlDados: TEllQuery;
 
 implementation
 
-uses dfMensagem;
+uses dfMensagem, GravaDados, UConfig;
 
 {$R *.dfm}
 
 procedure TDatam1.DataModuleCreate(Sender: TObject);
-var IniFile            : TIniFile;
-    ArquivoIni         : String;
-    BancoDeDados       : String;
-    BancoDeDadosOrigem : String;
-    CaminhoDll         : String;
-    sMens              : String;
-    DataArq            : TDate;
-    Retorno            : Integer;
-begin
-   sConnection.Close;
-   sConnection.Params.Values['DataBase'] := '';
-   ArquivoIni := ChangeFileExt(Application.ExeName, '.ini');
+var
+   ArquivoIni         : String;
+   BancoDeDadosOrigem : String;
+   sMens              : String;
+   DataArq            : TDate;
+   Retorno            : Integer;
 
+   Configuracao : TConfiguracao;
+begin
+   ArquivoIni := ChangeFileExt(Application.ExeName, '.ini');
    if not FileExists(ArquivoIni) then begin
       ArquivoIni := ExtractFilePath(Application.ExeName) + 'Ello.ini';
    end;
 
-   IniFile                 := TIniFile.Create(ArquivoIni);
-   BancoDeDados            := IniFile.ReadString ('Dados', 'Database', '');
-   BancoDeDadosOrigem      := IniFile.ReadString ('Dados', 'DatabaseOrigem', '');
-   CaminhoDll              := IniFile.ReadString ('Preferencias', 'Firebird', 'GDS32.DLL');
-   Empresa                 := IniFile.ReadInteger('Opcoes',  'EmpresaPadrao', 1);
-   Usuario                 := 'IMPORTACAO';
+   Configuracao       := TConfiguracao.Create(ArquivoIni);
+   BancoDeDadosOrigem := Configuracao.BancoDeDadosOrigem;
+   FUsuario           := 'IMPORTACAO';
+
+   GravaDados.Empresa := Configuracao.IdEmpresa;
+   GravaDados.Usuario := FUsuario;
 
    sConnection.LibraryName := 'dbexpint.dll';
-   sConnection.Empresa     := Empresa;
-   sConnection.Params.Values['DataBase']    := BancoDeDados;
-   sConnection.Connected   := BancoDeDados   <>'';
+   sConnection.Empresa     := Configuracao.IdEmpresa;
+   sConnection.Params.Values['DataBase'] := Configuracao.BancoDeDados;
+   sConnection.Connected   := Configuracao.BancoDeDados <>'';
 
-   // ado connection
    ADOConnection.ConnectionString := Format('Provider=MSDASQL.1;Persist Security Info=False;Data Source=%s;Mode=ReadWrite;',
-                                            [IniFile.ReadString('conexao_odbc_conversao', 'DataSource', 'Solutions')]);
+                                            [Configuracao.NomeConexaoODBC]);
    ADOConnection.Connected := True;
 
+   TD.TransactionID  := 1;
+   TD.IsolationLevel := xilReadCommitted;
+   SqlDados          := TEllQuery.Create;
 
-   TD.TransactionID        := 1;
-   TD.IsolationLevel       := xilReadCommitted;
-   SqlDados                := TEllQuery.Create;
-
-   if Pos('C:\', UpperCase(BancoDeDados)) > 0 then begin
-      Retorno := FileAge(BancoDeDados);
+   if Pos('C:\', UpperCase(Configuracao.BancoDeDados)) > 0 then begin
+      Retorno := FileAge(Configuracao.BancoDeDados);
       if Retorno <= 0 then begin
-         MensagemEllo('O caminho para os dados em: '+BancoDeDados+', não foi encontrado, ' +
+         MensagemEllo('O caminho para os dados em: '+Configuracao.BancoDeDados+', não foi encontrado, ' +
                       'ou a senha do usuário SYSDBA está incorreta.             ' + #13#10 +
                       'Verifique o arquivo '+ArquivoIni, tmErro);
-         IniFile.Free;
          Application.Terminate;
       end;
       DataArq := Trunc(FileDateToDateTime(Retorno));
@@ -93,9 +86,10 @@ begin
       end;
    end;
 
+   Configuracao.Free;
+   
    if sMens <> '' then begin
       MensagemEllo(sMens, tmInforma);
-      IniFile.Free;
       Application.Terminate;
       Exit;
    end;
@@ -107,10 +101,9 @@ begin
    FreeAndNil(SqlDados);
 end;
 
-
 function MensagemEllo(Msg :String; Tipo: TTipoMensagem):Boolean;
 begin
-  application.createform(TfdtMensagem,fdtMensagem);
+  Application.CreateForm(TfdtMensagem,fdtMensagem);
   try
     fdtMensagem.Mensagem := Msg;
     fdtMensagem.TipoMsg  := Tipo;

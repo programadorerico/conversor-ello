@@ -21,7 +21,8 @@ uses
   CVD602AA in 'Forms\CVD602AA.pas' {FCVD602AA},
   CVD802AA in 'Forms\CVD802AA.pas' {FCVD802AA},
   UFornecedores in 'Comuns\UFornecedores.pas',
-  UClientes in 'Comuns\UClientes.pas';
+  UClientes in 'Comuns\UClientes.pas',
+  UConfig in 'Comuns\UConfig.pas';
 
 {$R *.res}
 {$R winxp.res}
