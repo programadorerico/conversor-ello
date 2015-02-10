@@ -37,6 +37,7 @@ type
     FIdProduto: Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
+    procedure AntesDeImportar; override;
     function GeraNovoEAN13(const Codigo: string): string;
   public
     { Public declarations }
@@ -117,6 +118,7 @@ var  fIdInventario: Integer;
 procedure TFCVD600AA.LimpaRegistros;
 begin
    LimpaProdutos(QueryTrabalho);
+   LimpaClasses(QueryTrabalho);
    inherited;
 end;
 
@@ -150,16 +152,6 @@ var
        Result := 1;
     end;
 
-    function GetMarca: Integer;
-    var marca: String;
-    begin
-       marca := Trim(CDSDados.FieldByName('marca').AsString);
-       QueryPesquisa.SQL.Text := format('select idmarca from testmarca where descricao=%s', [QuotedStr(marca)]);
-       QueryPesquisa.Open;
-       if QueryPesquisa.IsEmpty then Result := 1
-       else Result := QueryPesquisa.FieldByName('idmarca').AsInteger;
-    end;
-
     function GetSubGrupo: Integer;
     var subgrupo: String;
     begin
@@ -171,7 +163,7 @@ var
 
     function GetUnidadeMedida: String;
     begin
-       Result := Copy(Trim(UpperCase(CDSDados.FieldByName('UNIDADE').AsString)), 1, 2);
+       Result := Copy(Trim(UpperCase(CDSDados.FieldByName('CodUnidadeMedida').AsString)), 1, 2);
        if Result = '' then Result := 'UN';
        if Result = '1' then Result := 'UN';
        if Result = '81' then Result := 'UN';
@@ -180,41 +172,59 @@ var
     function GetCodBarra: String;
     var codbarras: String;
     begin
-       codbarras := CDSDados.FieldByName('codbarra').AsString;
-       if Length(codbarras)<13 then
-          Result := GeraNovoEAN13(IntToStr(fIdProduto))
-       else
-          Result := codbarras;
+       Result := GeraNovoEAN13(IntToStr(fIdProduto))
     end;
 
     function GetDescricao: String;
     begin
-       Result := Trim(UpperCase(TirarAcentos(CDSDados.FieldByName('descricao').AsString)));
+       Result := Trim(UpperCase(TirarAcentos(CDSDados.FieldByName('Nome').AsString)));
+    end;
+
+    function GetStatus: String;
+    begin
+       Result := iif(CDSDados.FieldByName('Ativo').AsString='S', 'ATIVO', 'INATIVO');
+    end;
+
+    function GetIdNCM: Integer;
+    var codncm: String;
+    begin
+       codncm := CDSDados.FieldByName('NCM').AsString;
+       QueryPesquisa.SQL.Text := format('select idncm from testncm where codigo=%s', [QuotedStr(codncm)]);
+       QueryPesquisa.Open;
+       Result := QueryPesquisa.FieldByName('idncm').AsInteger;
     end;
 
     procedure GravaProduto;
     begin
-       FIdProduto := CDSDados.FieldByName('codigo').AsInteger;
+       FIdProduto := CDSDados.FieldByName('CodProduto').AsInteger;
        precoCusto := 0;
        try
           with SqlDados do begin
              Start(tcInsert, 'TEstProduto', QueryTrabalho);
              AddValue('IdProduto',                FIdProduto);
              AddValue('IdProdutoPrincipal',       FIdProduto);
+             AddValue('Descricao',                GetDescricao);
+             AddValue('DescComum',                GetDescricao);
+             AddValue('Embalagem',                GetUnidadeMedida);
+             AddValue('IdSubGrupo',               CDSDados.FieldByName('CodGrupoProduto').AsInteger);
+             AddValue('IdMarca',                  CDSDados.FieldByName('CodMarca').AsInteger);
+             AddValue('PrecoVenda',               CDSDados.FieldByName('precovenda').AsFloat);
+             AddValue('PrecoPrazo',               CDSDados.FieldByName('precovenda').AsFloat);
+             AddValue('VarejoPreco',              CDSDados.FieldByName('precovenda').AsFloat);
+             AddValue('AtacadoPreco',             CDSDados.FieldByName('precovenda').AsFloat);
+             AddValue('PagaComissao',             CDSDados.FieldByName('ProdutoComissionado').AsString);
+             AddValue('Status',                   GetStatus);
+             AddValue('CodNcm',                   GetIdNCM);
+
              AddValue('IdGrupoIcms',              GetGrupoIcms);
              AddValue('IdTributacao',             GetTributacao);
              AddValue('IdGrupoCredito',           1);
-             AddValue('IdSubGrupo',               1);
-             AddValue('IdMarca',                  GetMarca);
              AddValue('IdClasse',                 GetClasse);
              AddValue('Matricula',                FIdProduto);
-             AddValue('Descricao',                GetDescricao);
-             AddValue('DescComum',                GetDescricao);
              AddValue('MargemGarantido',          0);
              AddValue('CodBarras',                GetCodBarra);
              AddValue('CodReferencia',            IntToStr(FIdProduto));
              AddValue('CodAntigo',                '');
-             AddValue('CodNcm',                   CDSDados.FieldByName('idncm').AsString);
              AddValue('ClassFiscal',              '');
              AddValue('ControlaLote',             'N');
              AddValue('PrecoLivre',               'N');
@@ -224,7 +234,6 @@ var
              AddValue('Decimais',                 2);
              AddValue('DescontoMaximo',           'N');
              AddValue('Desconto',                 0);
-             AddValue('PagaComissao',             'S');
              AddValue('ComissaoEspecial',         'N');
              AddValue('ComissaoVista',            0);
              AddValue('ComissaoPrazo',            0);
@@ -249,15 +258,9 @@ var
              AddValue('Reposicao_MedioAnterior',  precoCusto);
              AddValue('Reposicao_MedioAtual',     precoCusto);
              AddValue('MargemLucro',              43);
-             AddValue('PrecoVenda',               CDSDados.FieldByName('precovenda').AsFloat);
-             AddValue('PrecoPrazo',               CDSDados.FieldByName('precovenda').AsFloat);
-             AddValue('Status',                   'ATIVO');
-             AddValue('Embalagem',                GetUnidadeMedida);
              AddValue('QtdeEmbalagem',            1);
-             AddValue('VarejoAjuste',             0);
-             AddValue('VarejoPreco',              CDSDados.FieldByName('precovenda').AsFloat);
              AddValue('AtacadoAjuste',            0);
-             AddValue('AtacadoPreco',             CDSDados.FieldByName('precovenda').AsFloat);
+             AddValue('VarejoAjuste',             0);
              AddValue('AtacadoQtde',              0);
              AddValue('IdPisEntrada',             10);
              AddValue('IdPisSaida',               10);
@@ -271,27 +274,15 @@ var
     end;
 
     procedure GravaEstoque;
-
-        procedure GravaCapaInventario;
-        begin
-           fIdInventario := 1;
-           with SqlDados do begin
-              Start(tcInsert, 'TEstInventario', QueryTrabalho);
-                 AddValue('Empresa',       1);
-                 AddValue('IdInventario',  fIdInventario);
-                 AddValue('IdAlmox',       1);
-                 AddValue('Usuario',       'IMPLANTACAO');
-              Executa;
-           end;
-        end;
-
+    var Estoque: Currency;
     begin
        if not CBEstoque.Checked then exit;
-       if (CDSDados.FieldByName('estoque').AsFloat<=0) then exit;
+
+       Estoque := CDSDados.FieldByName('saldoatual').AsCurrency;
+
+       if (Estoque<=0) then exit;
 
        try
-          if fIdInventario=0 then GravaCapaInventario;
-
           produtoMovimento := TEstProdutoMovimento.Create;
 
           produtoMovimento.IdInventario       := fIdInventario;
@@ -301,7 +292,7 @@ var
           produtoMovimento.Descricao          := Copy(UpperCase(TirarAcentos(CDSDados.FieldByName('descricao').AsString)), 1, 50);
           produtoMovimento.MovimentaEstoque   := True;
           produtoMovimento.IdTipoMovimento    := tmInventario;
-          produtoMovimento.Qtde               := CDSDados.FieldByName('estoque').AsCurrency;
+          produtoMovimento.Qtde               := Estoque;
           produtoMovimento.QtdeEmbalagem      := 1;
           produtoMovimento.PrVenda            := CDSDados.FieldByName('precovenda').AsFloat;
           produtoMovimento.Valor              := CDSDados.FieldByName('precovenda').AsFloat;
@@ -310,7 +301,7 @@ var
           FreeAndNil(produtoMovimento);
        except on e:Exception do begin
              FreeAndNil(produtoMovimento);
-             GravaLog('Produto: ' + CDSDados.FieldByName('IDPRODUTO').AsString + ' Mensagem: '+E.Message);
+             GravaLog('Produto: ' + IntToStr(FIdProduto) + ' Mensagem: '+E.Message);
           end;
        end;
 
@@ -413,6 +404,21 @@ begin
          end;
       Executa;
    end;
+end;
+
+procedure TFCVD600AA.AntesDeImportar;
+begin
+   inherited;
+   // inserir as classes no banco de dados.
+
+   Datam1.sConnection.ExecuteDirect(
+      'INSERT INTO TESTCLASSE (IDCLASSE, DESCRICAO, MONITORADO, AJUSTE, AJUSTEPERCENTUAL, DESCONTO, DESCONTOPERCENTUAL,' +
+                               'COMISSAOESPECIAL, COMISSAOVISTA, COMISSAOPRAZO, MARGEMLUCRO, USUARIO, IMAGEM, LISTAEXCECOES,' +
+                               'IDCONTA, IDCONTAVISTA, IDCONTAPRAZO, MOBILE) ' +
+      'VALUES (''1'', ''CLASSE'', ''N'', ''N'', ''0.0000'', ''N'', ''0.0000'', ''N'', ''0.000'', ''0.000'', ''0.000000'', ''TRIBURTINI'', ''0'', ' +
+      'NULL, NULL, NULL, NULL, ''S'')'
+   );
+
 end;
 
 initialization RegisterClass(TFCVD600AA);

@@ -1,7 +1,7 @@
 Produto
-GrupoProduto
+*GrupoProduto
 *Marca
-TipoProduto
+*TipoProduto
 SaldoEstoque
 
 Cliente

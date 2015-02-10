@@ -51,8 +51,8 @@ type
     Cancelar: Boolean;
     SqlGrava: TQueryGrava;
     procedure AppException(Sender: TObject; E: Exception);
-    procedure AfterImporta; virtual;
-    procedure BeforeImporta; virtual;
+    procedure AntesDeImportar; virtual;
+    procedure DepoisDeImportar; virtual;
     procedure LimpaRegistros; virtual;
     procedure ImportaRegistros; virtual;
     procedure Importa; virtual;
@@ -75,7 +75,7 @@ uses Dialogs, UDataModule, EllTypes, Utils, TeladeErro, UPrincipal;
 
 procedure TFPaiConversor.BtAbrirClick(Sender: TObject);
 begin
-  inherited;
+   inherited;
    Open;
 end;
 
@@ -92,7 +92,7 @@ end;
 
 procedure TFPaiConversor.ImportaRegistros;
 begin
-   AfterImporta;
+   AntesDeImportar;
    try
 
      {1} Importa;
@@ -100,7 +100,7 @@ begin
    except on e:Exception do GravaLog(E.Message);
    end;
 
-   BeforeImporta;
+   DepoisDeImportar;
 end;
 
 procedure TFPaiConversor.GravaLog(fMsg: String);
@@ -147,7 +147,7 @@ begin
    end;
 end;
 
-procedure TFPaiConversor.BeforeImporta;
+procedure TFPaiConversor.DepoisDeImportar;
 begin
    DBDAdos.Visible      := True;
    EBTampa.Visible      := False;
@@ -162,7 +162,7 @@ begin
    end;
 end;
 
-procedure TFPaiConversor.AfterImporta;
+procedure TFPaiConversor.AntesDeImportar;
 begin
    MError.Lines.Clear;
    EBTampa.Left         := 7;

@@ -52,7 +52,6 @@ inherited FCVD600AA: TFCVD600AA
         inherited PtlBox11: TPtlBox1 [0]
           Top = 241
           Width = 666
-          Color = clGray
         end
         inherited EBTampa: TEllBox [1]
           Left = 639
@@ -70,7 +69,6 @@ inherited FCVD600AA: TFCVD600AA
         end
         inherited PtlBox14: TPtlBox1 [2]
           Width = 679
-          Color = clGray
         end
         inherited DBDados: TExlDBGrid [3]
           Top = 27
@@ -139,7 +137,12 @@ inherited FCVD600AA: TFCVD600AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'select * from produto')
+      'select '
+      '   pro.* ,'
+      '   est.saldoatual'
+      'from produto pro'
+      'left join saldoestoque est on (pro.codproduto=est.codproduto)'
+      '')
     Left = 405
     Top = 228
   end
