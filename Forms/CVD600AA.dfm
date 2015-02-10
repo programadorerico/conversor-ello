@@ -25,7 +25,16 @@ inherited FCVD600AA: TFCVD600AA
       inherited Label1: TLabel
         Left = 690
       end
-      object CBEstoque: TCheckBox [1]
+      object CBEstoque1: TCheckBox [1]
+        Left = 689
+        Top = 108
+        Width = 244
+        Height = 17
+        Anchors = [akTop, akRight]
+        Caption = 'Importar estoque negativo'
+        TabOrder = 4
+      end
+      object CBEstoque: TCheckBox [2]
         Left = 689
         Top = 92
         Width = 245
@@ -37,22 +46,24 @@ inherited FCVD600AA: TFCVD600AA
         TabOrder = 5
         OnClick = CBEstoqueClick
       end
-      object CBEstoque1: TCheckBox [2]
-        Left = 689
-        Top = 108
-        Width = 244
-        Height = 17
-        Anchors = [akTop, akRight]
-        Caption = 'Importar estoque negativo'
-        TabOrder = 4
-      end
       inherited EBProdutos: TEllBox
         Width = 680
         Height = 371
-        inherited PtlBox14: TPtlBox1
-          Width = 679
+        inherited PtlBox11: TPtlBox1 [0]
+          Top = 241
+          Width = 666
+          Color = clGray
         end
-        inherited EBTampa: TEllBox [1]
+        inherited DBDados: TExlDBGrid
+          Top = 27
+          Width = 666
+          Height = 207
+        end
+        inherited MError: TcxMemo
+          Top = 261
+          Width = 668
+        end
+        inherited EBTampa: TEllBox [3]
           Left = 639
           Top = -172
           Width = 664
@@ -66,18 +77,9 @@ inherited FCVD600AA: TFCVD600AA
             Width = 651
           end
         end
-        inherited PtlBox11: TPtlBox1 [2]
-          Top = 241
-          Width = 666
-        end
-        inherited DBDados: TExlDBGrid [3]
-          Top = 27
-          Width = 666
-          Height = 207
-        end
-        inherited MError: TcxMemo [4]
-          Top = 261
-          Width = 668
+        inherited PtlBox14: TPtlBox1 [4]
+          Width = 679
+          Color = clGray
         end
       end
       inherited BtAbrir: TButton
