@@ -921,19 +921,17 @@ object FPrincipal: TFPrincipal
         end>
     end
     object FRibbonTab1: TdxRibbonTab
-      Active = True
       Caption = 'Contas a receber'
       Groups = <
         item
           ToolbarName = 'BarManagerBar3'
         end
         item
-        end
-        item
           ToolbarName = 'BarManagerBar2'
         end>
     end
     object FRibbonTab3: TdxRibbonTab
+      Active = True
       Caption = 'Contas a Pagar'
       Groups = <
         item
@@ -941,7 +939,6 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar4'
         end>
-      Visible = False
     end
   end
   object StatusBar1: TdxRibbonStatusBar
@@ -3128,7 +3125,7 @@ object FPrincipal: TFPrincipal
       Category = 0
       Description = 'FCVD201AA'
       Hint = 'Contas a Pagar'
-      Visible = ivAlways
+      Visible = ivNever
       LargeImageIndex = 2
       OnClick = dxBarLargeButton4Click
       HotImageIndex = 2

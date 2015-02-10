@@ -3,11 +3,8 @@ unit CVD200AA;
 interface
 
 uses
-  SysUtils, Variants, Classes, Controls, Forms,
-  PaiConversor, ADODB, DB,
-  SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
-  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids,
-  ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
+  SysUtils, Variants, Classes, Controls, Forms, PaiConversor, ADODB, DB, SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
+  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TFCVD200AA = class(TFPaiConversor)
@@ -29,8 +26,8 @@ uses UnSql, UDataModule, Utils, UFornecedores;
 {$R *.dfm}
 
 procedure TFCVD200AA.GravaRegistro;
-var fOrdem: Integer;
- i : integer;
+var
+   IdFornecedor : Integer;
 
    function GetTipoPessoa: String;
    begin
@@ -39,38 +36,28 @@ var fOrdem: Integer;
 
    function GetNome: String;
    begin
-      Result := Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Nome').AsString)));
+      Result := Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('NomeFantasia').AsString)));
    end;
 
    function GetFantasia: String;
    begin
-      Result := CDSDados.FieldByName('Nome').AsString;
-      Result := Trim(UpperCase(TiraAcentos(Result)));
-      if Result='' then Result := GetNome;
+      Result := CDSDados.FieldByName('NomeFantasia').AsString;
    end;
 
    function GetCNPJCPF: String;
    begin
-      if GetTipoPessoa='J' then begin
-         Result := ApenasDigitos(CDSDados.FieldByName('CNPJ').AsString);
-      end else begin
-         Result := ApenasDigitos(CDSDados.FieldByName('CPF').AsString);
-      end;
+      Result := ApenasDigitos(CDSDados.FieldByName('CNPJ_CPF').AsString);
    end;
 
    function GetRGIE: String;
    begin
-      if GetTipoPessoa='J' then begin
-         Result := ApenasDigitos(CDSDados.FieldByName('InsEstadual').AsString);
-      end else begin
-         Result := CDSDados.FieldByName('RG').AsString;
-      end;
+      Result := ApenasDigitos(CDSDados.FieldByName('InscricaoEstadual').AsString);
    end;
 
    function GetCidade: Integer;
    var codigo_ibge : string;
    begin
-      codigo_ibge := CDSDados.FieldByName('CodCidade').AsString;
+      codigo_ibge := CDSDados.FieldByName('CodMunicipio').AsString;
       Result := 3998;
       if codigo_ibge='' then Exit;
       with QueryPesquisa do begin
@@ -85,38 +72,36 @@ var fOrdem: Integer;
 
 begin
    inherited;
-   i := CDSDados.FieldByName('Codigo').AsInteger;
-   with SqlDados, CDSDados do begin
+   IdFornecedor := CDSDados.FieldByName('CodFornecedor').AsInteger;
+   with SqlDados do begin
       try
-         Start(tcInsert, 'TPagFornecedor', QueryTrabalho  );
-            AddValue('IdFornecedor',     FieldByName('Codigo').AsInteger);
+         Start(tcInsert, 'TPagFornecedor', QueryTrabalho);
+            AddValue('IdFornecedor',     IdFornecedor);
             AddValue('Nome',             GetNome);
             AddValue('Tipo',             GetTipoPessoa);
             AddValue('Fantasia',         GetFantasia);
             AddValue('CpfCnpj',          GetCNPJCPF);
             AddValue('RGIE',             GetRGIE);
             AddValue('OrgaoExpedidor',   '');
-            AddValue('Endereco',         UpperCase(TiraAcentos(FieldByName('Endereco').AsString)) );
-            AddValue('Numero',           '');
+            AddValue('Endereco',         UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString)) );
+            AddValue('Numero',           CDSDados.FieldByName('Numero').AsString);
             AddValue('Complemento',      '');
-            AddValue('Bairro',           UpperCase(TiraAcentos(FieldByName('Bairro').AsString)) );
+            AddValue('Bairro',           UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString)) );
             AddValue('CaixaPostal',      '' );
             AddValue('IdCidade',         GetCidade);
 
-            AddValue('Cep',              ApenasDigitos(FieldByName('Cep').AsString) );
-            AddValue('Fone',             ApenasDigitos(FieldByName('Fone').AsString) );
-            AddValue('Fax',              ApenasDigitos(FieldByName('Fax').AsString));
+            AddValue('Cep',              ApenasDigitos(CDSDados.FieldByName('Cep').AsString) );
+            AddValue('Fax',              ApenasDigitos(CDSDados.FieldByName('Fax').AsString));
             AddValue('Contato',          GetFantasia);
-            AddValue('ContatoFone',      ApenasDigitos(FieldByName('ContatoFone').AsString) );
-            AddValue('VendedorFoneCel',  '');
-            AddValue('Email',            FieldByName('Email').AsString);
-            AddValue('HomePage',         FieldByName('HomePage').AsString);
-
-            AddValue('DataCadastro',     FieldByName('DtaCadastro').AsDateTime);
-
+            AddValue('Email',            CDSDados.FieldByName('Email').AsString);
             AddValue('DiaEspecifico',    0);
-            AddValue('Obs',              '');
             AddValue('Usuario',          'IMPLANTACAO');
+            AddValue('DataCadastro',     Now);
+
+            AddValue('Homepage',         '');
+            AddValue('Contatofone',      '');
+            AddValue('Fone',             '');
+            AddValue('Obs',              '');
          Executa;
 
       except on e:Exception do begin

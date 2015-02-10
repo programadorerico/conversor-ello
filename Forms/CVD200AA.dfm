@@ -31,6 +31,7 @@ inherited FCVD200AA: TFCVD200AA
         inherited PtlBox14: TPtlBox1
           Width = 679
           Caption = ''
+          Color = clGray
           LabelText = 'Fornecedores'
         end
         inherited DBDados: TExlDBGrid
@@ -44,6 +45,7 @@ inherited FCVD200AA: TFCVD200AA
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
+          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 646
@@ -74,13 +76,13 @@ inherited FCVD200AA: TFCVD200AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 839
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 839
       end
       inherited ToolBar1: TToolBar
@@ -101,31 +103,7 @@ inherited FCVD200AA: TFCVD200AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'SELECT'
-      '    cast(a.F_COD as integer) as codigo,'
-      '    a.F_NOM as nome,'
-      '    a.F_END as endereco,'
-      '    a.F_BAI as bairro, '
-      '    a.F_CEP as cep, '
-      '    a.F_CID as cidade, '
-      '    a.F_EST as uf, '
-      '    '#39'('#39' || a.F_DDD || '#39') '#39' || a.F_TEL as fone, '
-      '    '#39'('#39' || a.F_DDD || '#39') '#39' || a.F_TE1 as fax,'
-      '    '#39'('#39' || a.F_DDD || '#39') '#39' || a.F_TE2 as contatofone,'
-      '    a.F_MAI as email,'
-      '    a.F_SIT as homepage,'
-      '    a.F_INE as InsEstadual, '
-      '    a.F_CGC as CNPJ, '
-      '    a.F_CPF as cpf, '
-      '    a.F_CON as contato,'
-      '    -- ?? a.F_DPC,'
-      '    -- ?? a.F_DUC, '
-      '    a.F_DCA as DtaCadastro,'
-      '    a.F_MUN as CodCidade'
-      '    -- ?? a.F_CNA, '
-      '    -- ?? a.F_IMU'
-      'FROM FORNECEDOR a'
-      'order by cast(a.f_cod as integer)')
+      'select * from fornecedor')
     Left = 341
     Top = 312
   end
