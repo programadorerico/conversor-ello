@@ -49,9 +49,8 @@ inherited FCVD600AA: TFCVD600AA
       inherited EBProdutos: TEllBox
         Width = 680
         Height = 371
-        inherited PtlBox11: TPtlBox1 [0]
-          Top = 241
-          Width = 666
+        inherited PtlBox14: TPtlBox1
+          Width = 679
         end
         inherited EBTampa: TEllBox [1]
           Left = 639
@@ -67,8 +66,9 @@ inherited FCVD600AA: TFCVD600AA
             Width = 651
           end
         end
-        inherited PtlBox14: TPtlBox1 [2]
-          Width = 679
+        inherited PtlBox11: TPtlBox1 [2]
+          Top = 241
+          Width = 666
         end
         inherited DBDados: TExlDBGrid [3]
           Top = 27
@@ -95,14 +95,14 @@ inherited FCVD600AA: TFCVD600AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btCancelar: TButton
-        Left = 839
+      inherited btConfirmar: TButton
+        Left = 815
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btConfirmar: TButton
-        Left = 815
+      inherited btCancelar: TButton
+        Left = 839
       end
       inherited ToolBar1: TToolBar
         Width = 643

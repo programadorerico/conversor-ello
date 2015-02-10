@@ -191,7 +191,10 @@ var
        codncm := CDSDados.FieldByName('NCM').AsString;
        QueryPesquisa.SQL.Text := format('select idncm from testncm where codigo=%s', [QuotedStr(codncm)]);
        QueryPesquisa.Open;
-       Result := QueryPesquisa.FieldByName('idncm').AsInteger;
+       if QueryPesquisa.IsEmpty then
+          Result := 1
+       else
+          Result := QueryPesquisa.FieldByName('idncm').AsInteger;
     end;
 
     procedure GravaProduto;
