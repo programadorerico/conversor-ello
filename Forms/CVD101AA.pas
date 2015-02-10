@@ -108,7 +108,7 @@ begin
             AddValue('RGIE',         GetRGIE);
             AddValue('Email',        CDSDados.FieldByName('email').AsString);
             AddValue('Celular',      ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
-            AddValue('Ativo',        ApenasDigitos(CDSDados.FieldByName('Ativo').AsString) );
+            AddValue('Ativo',        CDSDados.FieldByName('Ativo').AsString);
             AddValue('Contato',      ApenasDigitos(CDSDados.FieldByName('Contato').AsString) );
             AddValue('OrgaoExpedidor',         '');
             AddValue('EstadoCivil',            RetornaEstadoCivil);
