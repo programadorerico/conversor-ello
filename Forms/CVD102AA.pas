@@ -11,12 +11,6 @@ uses
 
 type
   TFCVD102AA = class(TFPaiConversor)
-    ADOComissao: TADOQuery;
-    ADOComissaoprCodi: TStringField;
-    ADOComissaoCodCli: TStringField;
-    ADOComissaoTicket: TStringField;
-    ADOComissaoBaCodi: TStringField;
-    ADOComissaoTot_Comis: TFloatField;
     Edit1: TEdit;
     Label2: TLabel;
     procedure BImportarClick(Sender: TObject);

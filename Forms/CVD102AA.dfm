@@ -37,22 +37,24 @@ inherited FCVD102AA: TFCVD102AA
       inherited EBProdutos: TEllBox
         Width = 680
         Height = 371
-        inherited DBDados: TExlDBGrid [0]
-          Top = 24
-          Width = 666
-          Height = 207
+        inherited PtlBox14: TPtlBox1
+          Width = 679
+          Color = clGray
+          LabelText = 'Documentos a receber'
         end
         inherited MError: TcxMemo [1]
           Top = 261
           Width = 668
         end
-        inherited PtlBox14: TPtlBox1 [2]
-          Width = 679
-          LabelText = 'Documentos a receber'
+        inherited DBDados: TExlDBGrid [2]
+          Top = 24
+          Width = 666
+          Height = 207
         end
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
+          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 622
@@ -91,13 +93,13 @@ inherited FCVD102AA: TFCVD102AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 839
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 839
       end
       inherited ToolBar1: TToolBar
@@ -116,44 +118,9 @@ inherited FCVD102AA: TFCVD102AA
     Left = 433
     Top = 312
   end
-  object ADOComissao: TADOQuery [4]
-    Connection = Datam1.ADOConnection
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'Select prCodi,'
-      '       CodCli,'
-      '       Ticket,'
-      '       BaCodi,'
-      '       Tot_Comis'
-      'From   Moviment'
-      'Where Tipo='#39'F'#39' '
-      'and Cancelado is null'
-      'and Quitado is null'
-      'order by ticket')
-    Left = 212
-    Top = 312
-    object ADOComissaoprCodi: TStringField
-      FieldName = 'prCodi'
-      Size = 6
-    end
-    object ADOComissaoCodCli: TStringField
-      FieldName = 'CodCli'
-      Size = 8
-    end
-    object ADOComissaoTicket: TStringField
-      FieldName = 'Ticket'
-      Size = 6
-    end
-    object ADOComissaoBaCodi: TStringField
-      FieldName = 'BaCodi'
-      Size = 6
-    end
-    object ADOComissaoTot_Comis: TFloatField
-      FieldName = 'Tot_Comis'
-    end
-  end
   inherited CDSDados: TADOQuery
+    SQL.Strings = (
+      'select * from contareceber')
     Left = 357
     Top = 312
   end
