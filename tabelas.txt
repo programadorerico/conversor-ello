@@ -1,8 +1,8 @@
-Produto
+*Produto
 *GrupoProduto
 *Marca
 *TipoProduto
-SaldoEstoque
+*SaldoEstoque
 
 Cliente
 Fornecedor

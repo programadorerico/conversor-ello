@@ -154,38 +154,6 @@ inherited FCVD102AA: TFCVD102AA
     end
   end
   inherited CDSDados: TADOQuery
-    SQL.Strings = (
-      'SELECT '
-      '    a.F_NNF as numero_fatura,'
-      '    a.F_CLI as cliente_codigo,'
-      '    a.F_NCL as cliente_nome,'
-      '    a.F_END as cliente_endereco,'
-      '    a.F_BAI as cliente_bairro,'
-      '    a.F_CEP as cliente_cep,'
-      '    a.F_MUN as codigo_ibge,'
-      '    a.F_CID as cliente_cidade,'
-      '    a.F_EST as cliente_uf,'
-      '    a.F_DDD,'
-      '    a.F_TEL,'
-      '    a.F_INS,'
-      '    a.F_CGC,'
-      '    a.F_VDE as valor,'
-      '    -- ?? a.F_ISS,'
-      '    a.F_VCO,'
-      '    a.F_VRE as valor_recebido,'
-      '    a.F_DFA as data_fatura,'
-      '    -- ?? a.F_FIM (C, P),'
-      '    a.F_DRE as data_recebimento,'
-      '    a.F_TIP as forma_recebimento,'
-      '    a.F_DES as desconto,'
-      '    -- ?? a.F_PLA,'
-      '    -- ?? a.F_VEI,'
-      '    -- ?? a.F_NVE,'
-      '    -- a.F_FPA,'
-      '    a.F_NFP as forma_parcelamento'
-      'FROM FATURA a'
-      'where a.f_dfa>'#39'01.01.2013'#39
-      'order by a.f_dfa desc')
     Left = 357
     Top = 312
   end

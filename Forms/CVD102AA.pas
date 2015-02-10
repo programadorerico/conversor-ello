@@ -22,6 +22,8 @@ type
     procedure BImportarClick(Sender: TObject);
   private
     { Private declarations }
+    fIdDocumento: Integer;
+    fIdParcela: Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
   end;
@@ -33,10 +35,6 @@ implementation
 
 uses UDataModule, UnSql, Utils;
 
-var
-   fIdDocumento: Integer;
-   fIdParcela: Integer;
-    
 {$R *.dfm}
 
 procedure TFCVD102AA.LimpaRegistros;
@@ -65,26 +63,25 @@ procedure TFCVD102AA.GravaRegistro;
 var valor, valor_recebido: Currency;
 begin
    inherited;
-   with SqlDados, CDSDados do begin
+   FIdDocumento := CDSDados.FieldByName('CodContaReceber').AsInteger;
+   valor := CDSDados.FieldByName('valor').AsCurrency;
+   valor_recebido := CDSDados.FieldByName('ValorRecebido').AsCurrency;
+   with SqlDados do begin
       try
-         Inc(fIdDocumento);
          Start(tcInsert, 'TRecDocumento', QueryTrabalho);
             AddValue('Empresa',     1);
-            AddValue('IdDocumento', fIdDocumento);
-            AddValue('IdCliente',   FieldByName('cliente_codigo').AsInteger);
+            AddValue('IdDocumento', FIdDocumento);
+            AddValue('IdCliente',   CDSDados.FieldByName('CodCliente').AsInteger);
             AddValue('IdTipo',      1);
-            AddValue('Documento',   StrZero(FieldByName('numero_fatura').AsString, 7));
+            AddValue('Documento',   StrZero(CDSDados.FieldByName('numeroTitulo').AsString, 7));
 //            AddValue('Complemento', FieldByName('Observacao').AsString + '  Fatura: ' + FieldByName('FaturaNumero').AsString);
-            AddValue('Emissao',     FieldByName('data_fatura').AsDateTime);
-            AddValue('Valor',       FieldByName('Valor').AsFloat);
+            AddValue('Emissao',     CDSDados.FieldByName('DataEmissao').AsDateTime);
+            AddValue('Valor',       valor);
             AddValue('QtdeParcela', 1);
             AddValue('Origem',      'IMP');
             AddValue('Valido',      'S');
             AddValue('Usuario',     'IMPLANTACAO');
          Executa;
-
-         valor := FieldByName('valor').AsCurrency;
-         valor_recebido := FieldByName('valor_recebido').AsCurrency;
 
          Inc(fIdParcela);
          Start(tcInsert, 'TRecParcela', QueryTrabalho);
@@ -93,15 +90,17 @@ begin
             AddValue('IdDocumento',        fIdDocumento);
             AddValue('IdPortador',         1);
             AddValue('IdTipoDocumento',    1);
-            AddValue('IdCliente',          FieldByName('cliente_codigo').AsInteger);
+            AddValue('IdCliente',          CDSDados.FieldByName('CodCliente').AsInteger);
             AddValue('Parcela',            1);
-            AddValue('Vencimento',         FieldByName('data_recebimento').AsDateTime);
-            AddValue('Valor',              FieldByName('Valor').AsFloat);
-            AddValue('DataBaixa',          FieldByName('data_recebimento').Asdatetime);
-            AddValue('ValorBaixado',       FieldByName('valor_recebido').AsFloat);
+            AddValue('Vencimento',         CDSDados.FieldByName('DataRecebimento').AsDateTime);
+            AddValue('Valor',              valor);
+            AddValue('DataBaixa',          CDSDados.FieldByName('DataRecebimento').Asdatetime);
+            AddValue('ValorBaixado',       valor_recebido);
          Executa;
 
-      except on e:Exception do GravaLog('Documento: ' + CDSDados.FieldByName('numero_fatura').AsString + ' Mensagem: '+E.Message);
+      except
+         on e:Exception do
+            GravaLog('Documento: ' + CDSDados.FieldByName('NumeroTitulo').AsString + ' Mensagem: '+E.Message);
       end;
    end;
 end;
