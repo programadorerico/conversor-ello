@@ -119,9 +119,7 @@ begin
 end;
 
 procedure TFCVD802AA.GravaRegistro;
-var fParcela: Integer;
-    fChave1: String;
-    fChave2: String;
+var
     TTParcelas: Double;
 
     function RetornaTipoDocumento(pTipo: Integer): Integer;
@@ -607,7 +605,6 @@ begin
 end;
 
 procedure TFCVD802AA.Open;
-var Filtro: String;
 begin
 //    with QueryTECNOBYTE do begin
 //        Filtro := iif(Edit1.Text<>'', Format(' AND Dct.Cliente = ''%s'' ', [StrZero(StrToIntDef(Edit1.Text,0), 5)]), '');
@@ -830,60 +827,5 @@ end;
 initialization RegisterClass(TFCVD802AA);
 
 end.
-
-
-UPDATE OR INSERT INTO TRECPORTADOR (IDPORTADOR, NOME, FORMATO, USUARIO) VALUES (1, 'CARTEIRA', 'CA', 'TRIBURTINI');
-UPDATE OR INSERT INTO TRECPORTADOR (IDPORTADOR, NOME, FORMATO, USUARIO) VALUES (2, 'BANCO DO BRASIL', 'CA', 'TRIBURTINI');
-UPDATE OR INSERT INTO TRECPORTADOR (IDPORTADOR, NOME, FORMATO, USUARIO) VALUES (3, 'CAIXA ECONOMICA', 'CA', 'TRIBURTINI');
-UPDATE OR INSERT INTO TRECPORTADOR (IDPORTADOR, NOME, FORMATO, USUARIO) VALUES (4, 'BRADESCO 350024-1', 'CA', 'TRIBURTINI');
-UPDATE OR INSERT INTO TRECPORTADOR (IDPORTADOR, NOME, FORMATO, USUARIO) VALUES (5, 'BRADESCO 26509-8', 'CA', 'TRIBURTINI');
-UPDATE OR INSERT INTO TRECPORTADOR (IDPORTADOR, NOME, FORMATO, USUARIO) VALUES (6, 'SICREDI', 'CA', 'TRIBURTINI');
-
-COMMIT WORK;
-
-
-
-
-
-ALTER TRIGGER TRECBAIXA_ALL_AF INACTIVE;
-ALTER TRIGGER TRECBAIXAPARCELA_ALL_AF INACTIVE;
-ALTER TRIGGER TRECPARCELA_ALL INACTIVE;
-ALTER TRIGGER TRECPARCELA_ALL_AF INACTIVE;
-ALTER TRIGGER TRECPARCELA_ALL_BE INACTIVE;
-COMMIT WORK;
-
-update tctalancamento set PagDocumento = null;
-update tPagDocumento set IdCtaLancamento = null;
-update TPlcMovimento set IdCtaLancamento = null;
-
-delete from tpagBaixaparcela;
-delete from tpagBaixa;
-delete from tpagparcela;
-
-delete from tCtaLancamento;
-delete from tColLancamento;
-
-delete from TPlcMovimento;
-delete from tpagDocumento;
-
-delete from TRecBaixaparcela;
-delete from TRecBaixa;
-delete from TRecDebitoCliente;
-
-delete from TRecParcela;
-delete from TRecDocumento;
-
-delete from timoVendaParcela;
-delete from timoVendaComprador;
-delete from timoVenda;
-
-
-
-ALTER TRIGGER TRECBAIXA_ALL_AF ACTIVE;
-ALTER TRIGGER TRECBAIXAPARCELA_ALL_AF ACTIVE;
-ALTER TRIGGER TRECPARCELA_ALL ACTIVE;
-ALTER TRIGGER TRECPARCELA_ALL_AF ACTIVE;
-ALTER TRIGGER TRECPARCELA_ALL_BE ACTIVE;
-
 
 

@@ -121,13 +121,8 @@ implementation
 
 uses Utils, UDataModule;
 
-Var RotinaSelecionada :Integer;
-    Ctrl              :TWinControl;
+var
     TamanhoMenu: Integer = 280;
-    ImagemAtiva: boolean;
-    ImagemON: TImage;
-    ImagemOFF: TImage;
-    ExisteFigura: Boolean;
 
 {$R *.DFM}
 

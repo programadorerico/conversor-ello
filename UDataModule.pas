@@ -12,10 +12,8 @@ type
     sConnection: TEllConnection;
     ADOConnection: TADOConnection;
     ADOQuery: TADOQuery;
-    ConnectionOrigem: TSQLConnection;
     QueryPesquisa: TSQLQuery;
     QueryTrabalho: TSQLQuery;
-    QueryECO: TSQLQuery;
     ADOTable1: TADOTable;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
@@ -48,7 +46,6 @@ var IniFile            : TIniFile;
     CaminhoDll         : String;
     sMens              : String;
     DataArq            : TDate;
-    DataX              : TDate;
     Retorno            : Integer;
 begin
    sConnection.Close;
@@ -70,10 +67,6 @@ begin
    sConnection.Empresa     := Empresa;
    sConnection.Params.Values['DataBase']    := BancoDeDados;
    sConnection.Connected   := BancoDeDados   <>'';
-
-   ConnectionOrigem.LibraryName := 'dbexpint.dll';
-   ConnectionOrigem.Params.Values['DataBase']    := BancoDeDadosOrigem;
-   ConnectionOrigem.Connected   := BancoDeDadosOrigem<>'';
 
    // ado connection
    ADOConnection.ConnectionString := Format('Provider=MSDASQL.1;Persist Security Info=False;Data Source=%s;Mode=ReadWrite;',

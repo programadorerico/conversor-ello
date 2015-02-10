@@ -176,7 +176,6 @@ begin
 end;
 
 procedure TFPaiConversor.BEditaClick(Sender: TObject);
-var Result: Boolean;
 begin
   inherited;
 {   try

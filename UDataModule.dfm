@@ -51,30 +51,6 @@ object Datam1: TDatam1
     Left = 189
     Top = 24
   end
-  object ConnectionOrigem: TSQLConnection
-    ConnectionName = 'IBLocal'
-    DriverName = 'Interbase'
-    GetDriverFunc = 'getSQLDriverINTERBASE'
-    LibraryName = 'dbexpint.dll'
-    LoginPrompt = False
-    Params.Strings = (
-      'BlobSize=-1'
-      'CommitRetain=False'
-      'Database=127.0.0.1:D:\Triburtini\Financas\Dados\bICALHO.FDB'
-      'DriverName=Interbase'
-      'ErrorResourceFile='
-      'LocaleCode=0000'
-      'Password=masterkey'
-      'RoleName=RoleName'
-      'ServerCharSet='
-      'SQLDialect=3'
-      'Interbase TransIsolation=ReadCommited'
-      'User_Name=sysdba'
-      'WaitOnLocks=True')
-    VendorLib = 'GDS32.DLL'
-    Left = 292
-    Top = 24
-  end
   object QueryPesquisa: TSQLQuery
     MaxBlobSize = -1
     Params = <>
@@ -100,13 +76,6 @@ object Datam1: TDatam1
     SQLConnection = sConnection
     Left = 188
     Top = 82
-  end
-  object QueryECO: TSQLQuery
-    MaxBlobSize = -1
-    Params = <>
-    SQLConnection = ConnectionOrigem
-    Left = 292
-    Top = 80
   end
   object ADOTable1: TADOTable
     Connection = ADOConnection

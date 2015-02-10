@@ -312,7 +312,6 @@ begin
 end;
 
 procedure LimpaCampoChave(CampoChave :TEllLocate);
-var CDSDados :TDataSet;
 begin
    CampoChave.Field.AsString := ''
 end;
