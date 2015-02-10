@@ -3,15 +3,9 @@ unit UPrincipal;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  Menus, Buttons, ToolWin, ComCtrls, ExtCtrls, StdCtrls, unSQL, EllConnection, DBXpress, DB, FMTBcd,
-  DBClient, Provider, IniFiles, jpeg, ImgList, SqlExpr,
-  cxPC, cxControls, ActnMan, ActnCtrls, ActnMenus, mxOutlookBar, EllBox, 
-  EllButton, EllEButton, NewBox, EllEdit, cxHeader, cxContainer, cxListView, 
-  StdActns, ActnList, cxTreeView, cxSplitter, dxCore, dxButton, dxBarExtItems,  cxGridCustomView,
-  dxStatusBar, dxRibbonStatusBar, dxRibbon, dxBar, dxRibbonGallery, dxRibbonForm,
-  cxClasses, cxGraphics, dxGDIPlusClasses, cxGridCustomTableView, cxDropDownEdit,
-  cxCalc, cxBarEditItem;
+  Classes, Controls, Forms, ComCtrls, ExtCtrls, StdCtrls, SqlExpr, dxBarExtItems, dxStatusBar, dxRibbonStatusBar,
+  dxRibbon, dxBar, dxRibbonGallery, cxGraphics, FMTBcd, DB, ImgList,
+  cxClasses, cxControls;
 
 type
   TFPrincipal = class(TForm)
@@ -112,7 +106,6 @@ var
   VALOR            :INTEGER;
   Paulo            :String;
   Valor1           :integer;
-//  Empresa          :integer;
   sUsuario         :String;
   Usuario          :String;
   LicenciadoPara   :String;
@@ -126,7 +119,7 @@ var
 
 implementation
 
-uses Utils, UDataModule, PaiConversor;
+uses Utils, UDataModule;
 
 Var RotinaSelecionada :Integer;
     Ctrl              :TWinControl;

@@ -28,18 +28,18 @@ inherited FCVD603AA: TFCVD603AA
       inherited EBProdutos: TEllBox
         Width = 744
         Height = 326
-        inherited PtlBox14: TPtlBox1
-          Width = 743
-          LabelText = 'Sub-Grupos'
+        inherited DBDados: TExlDBGrid [0]
+          Top = 27
+          Width = 730
+          Height = 162
         end
         inherited MError: TcxMemo [1]
           Top = 216
           Width = 732
         end
-        inherited DBDados: TExlDBGrid [2]
-          Top = 27
-          Width = 730
-          Height = 162
+        inherited PtlBox14: TPtlBox1 [2]
+          Width = 743
+          LabelText = 'Sub-Grupos'
         end
         inherited PtlBox11: TPtlBox1
           Top = 196

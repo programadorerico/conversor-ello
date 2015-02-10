@@ -3,10 +3,11 @@ unit CVD604AA;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PaiConversor, FMTBcd, StdCtrls, DBClient, Provider, ADODB, DB,
-  SqlExpr, ComCtrls, Buttons, ToolWin, cxControls, cxContainer, cxEdit,
-  cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, ExtCtrls, EllBox, EllConnection;
+  Variants, Classes, Controls, Forms,
+  PaiConversor, StdCtrls, DB,
+  SqlExpr, FMTBcd, ADODB, Provider, ComCtrls, Buttons, ToolWin, cxControls,
+  cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
+  PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TFCVD604AA = class(TFPaiConversor)
@@ -23,7 +24,7 @@ var
 
 implementation
 
-uses EllTypes, UnSql, GravaDados, UDataModule, Utils, UProdutos;
+uses EllTypes, UnSql, UDataModule, UProdutos;
 
 {$R *.dfm}
 

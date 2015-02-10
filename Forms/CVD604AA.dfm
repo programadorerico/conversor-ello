@@ -27,18 +27,18 @@ inherited FCVD604AA: TFCVD604AA
       inherited EBProdutos: TEllBox
         Width = 744
         Height = 326
-        inherited DBDados: TExlDBGrid [0]
-          Width = 730
-          Height = 162
+        inherited PtlBox14: TPtlBox1
+          Width = 743
+          Color = clGray
+          LabelText = 'Marcas'
         end
         inherited MError: TcxMemo [1]
           Top = 216
           Width = 732
         end
-        inherited PtlBox14: TPtlBox1 [2]
-          Width = 743
-          Color = clGray
-          LabelText = 'Marcas'
+        inherited DBDados: TExlDBGrid [2]
+          Width = 730
+          Height = 162
         end
         inherited PtlBox11: TPtlBox1
           Top = 196
@@ -75,13 +75,13 @@ inherited FCVD604AA: TFCVD604AA
     inherited EllBox5: TEllBox
       Top = 364
       Width = 1004
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 903
       end
       inherited btSair: TButton
         Left = 903
       end
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 903
       end
       inherited ToolBar1: TToolBar

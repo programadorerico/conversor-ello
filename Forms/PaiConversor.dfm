@@ -244,15 +244,15 @@ inherited FPaiConversor: TFPaiConversor
       DesignSize = (
         929
         43)
-      inherited btConfirmar: TButton
-        Left = 732
+      inherited btCancelar: TButton [0]
+        Left = 828
         Visible = False
       end
       inherited btSair: TButton [1]
         Left = 828
       end
-      inherited btCancelar: TButton [2]
-        Left = 828
+      inherited btConfirmar: TButton [2]
+        Left = 732
         Visible = False
       end
       inherited ToolBar1: TToolBar

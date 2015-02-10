@@ -3,9 +3,9 @@ unit dfMensagem;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  ExtCtrls, StdCtrls, Buttons, ComCtrls, jpeg, dxGDIPlusClasses, 
-  cxControls, cxContainer, cxEdit, cxLabel, EllTypes;
+  Windows, Classes, Controls, Forms, 
+  ExtCtrls, StdCtrls, 
+  cxEdit, cxLabel, EllTypes, cxControls, cxContainer, dxGDIPlusClasses;
 
 type
   TfdtMensagem = class(TForm)

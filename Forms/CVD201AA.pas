@@ -3,10 +3,11 @@ unit CVD201AA;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PaiConversor, FMTBcd, StdCtrls, DBClient, Provider, ADODB, DB,
-  SqlExpr, ComCtrls, Buttons, ToolWin, cxControls, cxContainer, cxEdit,
-  cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, ExtCtrls, EllBox, EllConnection;
+  SysUtils, Variants, Classes, Controls, Forms,
+  PaiConversor, ADODB, DB,
+  SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
+  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids,
+  ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TFCVD201AA = class(TFPaiConversor)
@@ -26,7 +27,7 @@ var
 
 implementation
 
-uses UDataModule, GravaDados, UnSql, Utils;
+uses UDataModule, UnSql, Utils;
 
 {$R *.dfm}
 

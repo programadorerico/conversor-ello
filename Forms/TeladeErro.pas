@@ -3,9 +3,9 @@ unit TeladeErro;
 interface
 
 uses
-  Windows, Messages, SysUtils, Classes, Graphics, Controls, Forms, Dialogs,
-  StdCtrls, ComCtrls, Buttons, ExtCtrls, dxGDIPlusClasses,
-  cxControls, cxContainer, cxEdit, cxLabel;
+  Windows, Classes, Controls, Forms, 
+  StdCtrls, ComCtrls, ExtCtrls, 
+  cxLabel, cxControls, cxContainer, cxEdit, dxGDIPlusClasses;
 
 type
   TFTeladeErro = class(TForm)

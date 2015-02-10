@@ -3,10 +3,12 @@ unit CVD802AA;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PaiConversor, FMTBcd, StdCtrls, DBClient, Provider, ADODB, DB,
-  SqlExpr, ComCtrls, Buttons, ToolWin, cxControls, cxContainer, cxEdit, Contnrs, UnSql, 
-  cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, ExtCtrls, EllBox, EllConnection;
+  SysUtils, Variants, Classes, Controls, Forms,
+  PaiConversor, StdCtrls, ADODB, DB,
+  SqlExpr, Contnrs, UnSql, 
+  EllConnection, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, cxControls,
+  cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
+  PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TImoAjustaRateioDocumento = class;
@@ -76,7 +78,7 @@ var
   FCVD802AA: TFCVD802AA;
 
 implementation
-uses UDataModule, GravaDados, Utils;
+uses UDataModule, Utils;
 var fDetalhe: TStringList;
     fIdDocumento: Integer;
     fIdParcela: Integer;

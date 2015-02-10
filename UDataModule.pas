@@ -3,8 +3,8 @@ unit UDataModule;
 interface
 
 uses
-  SysUtils, Forms, Variants, Controls, Classes, DBXpress, DB, ADODB, SqlExpr, IniFiles, EllTypes, unSql,
-  FMTBcd, EllConnection;
+  SysUtils, Forms, Controls, Classes, DBXpress, DB, ADODB, SqlExpr, IniFiles, EllTypes, unSql,
+  EllConnection, FMTBcd;
 
 type
   TDatam1 = class(TDataModule)
@@ -36,7 +36,7 @@ var
 
 implementation
 
-uses Utils, dfMensagem;
+uses dfMensagem;
 
 {$R *.dfm}
 

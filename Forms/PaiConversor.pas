@@ -3,10 +3,12 @@ unit PaiConversor;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  PaiRotinaEll, FMTBcd, DBClient, Provider, ADODB, DB, ComCtrls, UnSql,
-  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, cxGrid,
-  ExlDBGrid, PtlBox1, SqlExpr, Buttons, ToolWin, StdCtrls, ExtCtrls, EllBox;
+  Windows, Messages, SysUtils, Variants, Classes, Controls, Forms,
+  PaiRotinaEll, Provider, DB, ComCtrls, UnSql,
+  cxMemo, Grids, DBGrids, 
+  ExlDBGrid, PtlBox1, SqlExpr, StdCtrls, EllBox, FMTBcd, cxControls,
+  cxContainer, cxEdit, cxTextEdit, ADODB, Buttons, ToolWin, Graphics,
+  ExtCtrls;
 
 type
   TFPaiConversor = class(TFPaiRotinaEll)
@@ -65,7 +67,7 @@ var
 
 implementation
 
-uses Dialogs, UDataModule, EllTypes, Utils, TeladeErro, UPrincipal, DBXpress;
+uses Dialogs, UDataModule, EllTypes, Utils, TeladeErro, UPrincipal;
 
 {$R *.dfm}
 {$R MenuEll.res}

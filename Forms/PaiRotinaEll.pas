@@ -3,11 +3,11 @@ unit PaiRotinaEll;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, EllBox, Buttons, EllMenu,
-  DBEditEll, DBCtrls, DBComboBoxEll, FMTBcd, DBClient, DataSetEll, DB,
-  SqlExpr, EllClientDataSet, EllEditLocate, EllLocate, Provider, LabevelEll, jpeg, ToolWin, ComCtrls,
-  ADODB;
+  Windows, Classes, Controls, Forms,
+  StdCtrls, ExtCtrls, EllBox, Buttons, 
+  
+  SqlExpr, ComCtrls,
+  ADODB, FMTBcd, DB, ToolWin, Graphics;
 
 type
   TFPaiRotinaEll = class(TForm)

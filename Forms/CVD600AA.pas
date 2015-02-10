@@ -3,10 +3,9 @@ unit CVD600AA;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, PaiConversor, FMTBcd, StdCtrls, DBClient, Provider, ADODB, DB,
-  SqlExpr, ComCtrls, Buttons, ToolWin, cxControls, cxContainer, cxEdit, EllTypes,
-  cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, ExtCtrls, EllBox, EllConnection;
+  SysUtils, Variants, Classes, Controls, Forms, PaiConversor, StdCtrls, DBClient, ADODB, DB, SqlExpr, ComCtrls, FMTBcd,
+  Provider, Buttons, ToolWin, cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1,
+  Graphics, ExtCtrls, EllBox;
 
 type
   TTipoMovimento    = ({00} tmNaoIdentificado,
@@ -106,8 +105,7 @@ var
 
 implementation
 
-uses Utils, UnSql, GravaDados, UDataModule, UCodigoEAN, UProdutos,
-  PaiRotinaEll;
+uses Utils, UnSql, UDataModule, UCodigoEAN, UProdutos, PaiRotinaEll;
 
 var  fIdInventario: Integer;
      fIdLote: Integer;

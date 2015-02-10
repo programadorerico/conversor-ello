@@ -3,10 +3,10 @@ unit CVD602AA;
 interface
 
 uses
-  Variants, Classes, Controls, Forms, PaiConversor, SqlExpr, FMTBcd, ADODB,
-  Provider, DB, ComCtrls, Buttons, ToolWin, StdCtrls, cxControls,
-  cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox;
+  Variants, Classes, Controls, Forms, PaiConversor, 
+  DB, StdCtrls, FMTBcd, ADODB, Provider, SqlExpr, ComCtrls, Buttons,
+  ToolWin, cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids,
+  DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
 
 type
   TFCVD602AA = class(TFPaiConversor)
