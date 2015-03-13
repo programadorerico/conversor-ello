@@ -34,7 +34,7 @@ var
 
 implementation
 
-uses dfMensagem, GravaDados, UConfig;
+uses Dialogs, dfMensagem, GravaDados, UConfig;
 
 {$R *.dfm}
 
@@ -47,14 +47,30 @@ var
    Retorno            : Integer;
 
    Configuracao : TConfiguracao;
+
+   OpenDialog: TOpenDialog;
 begin
    ArquivoIni := ChangeFileExt(Application.ExeName, '.ini');
    if not FileExists(ArquivoIni) then begin
       ArquivoIni := ExtractFilePath(Application.ExeName) + 'Ello.ini';
    end;
 
+   OpenDialog := TOpenDialog.Create(nil);
+   OpenDialog.InitialDir := GetCurrentDir;
+   OpenDialog.Options := [ofFileMustExist];
+   OpenDialog.Filter := 'Arquivos do firebird |*.fdb';
+   OpenDialog.FilterIndex := 1;
+   OpenDialog.Title := 'Selecione o arquivo do banco de dados de origem';
+   if openDialog.Execute then
+      BancoDeDadosOrigem := openDialog.FileName
+   else begin
+      Application.Terminate;
+      Application.ProcessMessages;
+      Exit;
+   end;
+   OpenDialog.Free;
+
    Configuracao       := TConfiguracao.Create(ArquivoIni);
-   BancoDeDadosOrigem := Configuracao.BancoDeDadosOrigem;
    FUsuario           := 'IMPORTACAO';
 
    GravaDados.Empresa := Configuracao.IdEmpresa;
@@ -65,9 +81,8 @@ begin
    sConnection.Params.Values['DataBase'] := Configuracao.BancoDeDados;
    sConnection.Connected   := Configuracao.BancoDeDados <>'';
 
-//   ADOConnection.ConnectionString := Format('Provider=MSDASQL.1;Persist Security Info=False;Data Source=%s;Mode=ReadWrite;',
-//                                            [Configuracao.NomeConexaoODBC]);
-//   ADOConnection.Connected := True;
+   OriginConnection.Params.Values['Database'] := BancoDeDadosOrigem;
+   OriginConnection.Connected := True;
 
    TD.TransactionID  := 1;
    TD.IsolationLevel := xilReadCommitted;

@@ -51,7 +51,6 @@ type
     dxBarLargeButton11: TdxBarLargeButton;
     dxBarSubItem3: TdxBarSubItem;
     dxBarEdit1: TdxBarEdit;
-    BarManagerBar2: TdxBar;
     Label1: TLabel;
     LAviso: TLabel;
     dxBarLargeButton12: TdxBarLargeButton;

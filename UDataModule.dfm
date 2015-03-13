@@ -104,7 +104,6 @@ object Datam1: TDatam1
       'Interbase TransIsolation=ReadCommited'
       'Trim Char=False')
     VendorLib = 'GDS32.DLL'
-    Connected = True
     Empresa = 0
     Left = 324
     Top = 24

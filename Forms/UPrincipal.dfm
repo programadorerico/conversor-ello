@@ -936,9 +936,6 @@ object FPrincipal: TFPrincipal
       Groups = <
         item
           ToolbarName = 'BarManagerBar3'
-        end
-        item
-          ToolbarName = 'BarManagerBar2'
         end>
     end
   end
@@ -2825,7 +2822,7 @@ object FPrincipal: TFPrincipal
           Visible = True
           ItemName = 'dxBarLargeButton2'
         end>
-      OneOnRow = False
+      OneOnRow = True
       Row = 0
       UseOwnFont = False
       Visible = True
@@ -2850,26 +2847,6 @@ object FPrincipal: TFPrincipal
           ItemName = 'dxBarLargeButton4'
         end>
       OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object BarManagerBar2: TdxBar
-      Caption = 'Documentos'
-      CaptionButtons = <>
-      DockedLeft = 80
-      DockedTop = 0
-      FloatLeft = 421
-      FloatTop = 134
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarLargeButton11'
-        end>
-      OneOnRow = False
       Row = 0
       UseOwnFont = False
       Visible = True
