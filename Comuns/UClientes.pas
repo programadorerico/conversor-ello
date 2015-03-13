@@ -77,6 +77,7 @@ type
     function GetEstadoCivil: String;
   public
     procedure CarregaDoDataset(DataSet: TDataSet);
+    property QueryPesquisa: TSqlQuery read FQueryPesquisa write FQueryPesquisa;
   published
     property IdCliente: Integer read FIdCliente;
     property Nome: String read FNome;
@@ -126,8 +127,6 @@ type
     property FormaConvenio: String read FFormaConvenio;
     property Obs: String read FObs;
     property Usuario: String read FUsuario;
-
-    property QueryPesquisa: TSqlQuery read FQueryPesquisa write FQueryPesquisa;
   end;
 
 procedure LimpaClientes(query: TSQLQuery);
