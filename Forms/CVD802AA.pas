@@ -8,7 +8,7 @@ uses
   SqlExpr, Contnrs, UnSql, 
   EllConnection, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, cxControls,
   cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox;
+  PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
 
 type
   TImoAjustaRateioDocumento = class;
@@ -125,7 +125,7 @@ var
     function RetornaTipoDocumento(pTipo: Integer): Integer;
     begin
        Result := 1;
-       with CDSDados do begin
+       with CDSDadosOrigem do begin
           if pTipo = 06 then Result := 6;
           if pTipo = 11 then Result := 2;
           if pTipo = 12 then Result := 3;
@@ -134,7 +134,7 @@ var
 
     procedure GravaVenda;
     begin
-       with SqlDados, CDSDados do begin
+       with SqlDados, CDSDadosOrigem do begin
           { Venda }
           Inc(fIdVenda);
           Start(tcInsert, 'TImoVenda', QueryTrabalho  );
@@ -167,7 +167,7 @@ var
 
     procedure GravaComprador;
     begin
-       with SqlDados, CDSDados do begin
+       with SqlDados, CDSDadosOrigem do begin
           { Comprador(s) }
           Start(tcInsert, 'TImoVendaComprador', QueryTrabalho  );
              AddValue('Empresa',   FieldByName('Empresa').AsInteger);
@@ -180,12 +180,12 @@ var
 
     procedure GravaParcelasVenda;
     begin
-       with QueryPesquisaECO, SqlDados do begin
+       with QueryOrigem, SqlDados do begin
           Sql.Clear;
           Sql.Add(Format('Select * From TRecParcela Where Empresa = ''%s'' AND Cliente = ''%s'' AND Documento = ''%s'' AND Tipo = ''01'' ',
-                         [CDSDados.FieldByName('Empresa').AsString,
-                          CDSDados.FieldByName('Cliente').AsString,
-                          CDSDados.FieldByName('Documento').AsString]));
+                         [CDSDadosOrigem.FieldByName('Empresa').AsString,
+                          CDSDadosOrigem.FieldByName('Cliente').AsString,
+                          CDSDadosOrigem.FieldByName('Documento').AsString]));
           Open;
           while (not eof) and (not Cancelar) do begin
              Start(tcInsert, 'TImoVendaParcela', QueryTrabalho  );
@@ -205,8 +205,8 @@ var
        with QueryPesquisaECO, SqlGrava do begin
           Sql.Clear;
           Sql.Add(Format('Select * From TRecParcela Where Empresa = ''%s'' AND Cliente = ''%s'' AND Documento = ''%s'' AND Tipo = ''%s'' ',
-                         [CDSDados.FieldByName('Empresa').AsString,
-                          CDSDados.FieldByName('Cliente').AsString,
+                         [CDSDadosOrigem.FieldByName('Empresa').AsString,
+                          CDSDadosOrigem.FieldByName('Cliente').AsString,
                           pDocumento, pTipo]));
           Open;
           TTParcelas := 0;
@@ -252,11 +252,11 @@ var
 
     procedure GravaParcelas(pDocumento, pTipo: String);
     begin
-       with QueryPesquisaECO, SqlGrava do begin
+       with QueryOrigem, SqlGrava do begin
           Sql.Clear;
           Sql.Add(Format('Select * From TRecParcela Where Empresa = ''%s'' AND Cliente = ''%s'' AND Documento = ''%s'' AND Tipo = ''%s'' ',
-                         [CDSDados.FieldByName('Empresa').AsString,
-                          CDSDados.FieldByName('Cliente').AsString,
+                         [CDSDadosOrigem.FieldByName('Empresa').AsString,
+                          CDSDadosOrigem.FieldByName('Cliente').AsString,
                           pDocumento, pTipo]));
           Open;
           TTParcelas := 0;
@@ -275,7 +275,7 @@ var
                 AddValue('DataBaixa',              FieldByName('DataBaixa').AsDateTime);
                 AddValue('NossoNumero',            FieldByName('NossoNumero').AsString);
                 AddValue('Valor',                  FieldByName('Valor').AsFloat);
-                //AddValue('IdRenegociacao',         iif(CDSDados.FieldByName('Origem').AsString='REN', fIdRenegociacao, NULL) );
+                //AddValue('IdRenegociacao',         iif(CDSDadosOrigem.FieldByName('Origem').AsString='REN', fIdRenegociacao, NULL) );
                 AddValue('IdRenegociacaoTemp',     FieldByName('IdRenegociacao').AsInteger);
                 AddValue('UltimoRecebimento',      FieldByName('UltimoRecebimento').AsDateTime);
                 AddValue('ValorPendente',          FieldByName('ValorPendente').AsFloat);
@@ -286,7 +286,7 @@ var
              Executa;
              TTParcelas := TTParcelas + FieldByName('Valor').AsFloat;
 
-             if (fIdVenda<>0) and (CDSDados.FieldByName('Origem').AsString='IMO') then begin
+             if (fIdVenda<>0) and (CDSDadosOrigem.FieldByName('Origem').AsString='IMO') then begin
                 Start(tcInsert, 'TRecParcelaImovel', QueryTrabalho  );
                    AddValue('Empresa',         FieldByName('Empresa').AsInteger);
                    AddValue('IdDocumento',     fIdDocumento);
@@ -311,9 +311,9 @@ var
           with fQuery do begin
              Sql.Clear;
              Sql.Add(Format('Select * From TRecDocumento Where Empresa = ''%s'' AND Cliente = ''%s'' AND Documento = ''%s'' ',
-                            [CDSDados.FieldByName('Empresa').AsString,
-                             CDSDados.FieldByName('Cliente').AsString,
-                             CDSDados.FieldByName('Documento').AsString]));
+                            [CDSDadosOrigem.FieldByName('Empresa').AsString,
+                             CDSDadosOrigem.FieldByName('Cliente').AsString,
+                             CDSDadosOrigem.FieldByName('Documento').AsString]));
              Open;
              while not fQuery.eof do begin
                 { Documento  }
@@ -357,7 +357,7 @@ var
     begin
        with QAux do begin
           Sql.Clear;
-          if CDSDados.FieldByName('Origem').AsString='REN' then begin
+          if CDSDadosOrigem.FieldByName('Origem').AsString='REN' then begin
              Sql.Add(Format('Select IdVenda                                                                                        ' +
                             'From   TImoVenda V                                                                                    ' +
                             'Where  V.Empresa     = %d AND                                                                         ' +
@@ -366,9 +366,9 @@ var
                             '                         From   TRecParcela P JOIN TRecDocumento D ON (D.Empresa     = P.Empresa      ' +
                             '                                                                   AND D.IdDocumento = P.IdDocumento) ' +
                             '                         Where  P.IdRenegociacaoTemp = %d)                                            ',
-                            [CDSDados.FieldByName('Empresa').AsInteger,
-                             CDSDados.FieldByName('Cliente').AsInteger,
-                             CDSDados.FieldByName('IdDocumento').AsInteger]));
+                            [CDSDadosOrigem.FieldByName('Empresa').AsInteger,
+                             CDSDadosOrigem.FieldByName('Cliente').AsInteger,
+                             CDSDadosOrigem.FieldByName('IdDocumento').AsInteger]));
              Open;
           end else begin
              Sql.Add(Format('Select IdVenda              ' +
@@ -376,9 +376,9 @@ var
                             'Where  Empresa     = %d AND ' +
                             '       IdComprador = %d AND ' +
                             '       Cod_Venda   = ''%s'' ',
-                            [CDSDados.FieldByName('Empresa').AsInteger,
-                             CDSDados.FieldByName('Cliente').AsInteger,
-                             CDSDados.FieldByName('Documento').AsString]));
+                            [CDSDadosOrigem.FieldByName('Empresa').AsInteger,
+                             CDSDadosOrigem.FieldByName('Cliente').AsInteger,
+                             CDSDadosOrigem.FieldByName('Documento').AsString]));
              Open;
           end;
           Result := QAux.FieldByName('IdVenda').AsInteger;
@@ -391,26 +391,26 @@ var
        Inc(fIdDocumento);
        with SqlDados do begin
           Start(tcInsert, 'TRecDocumento', QueryTrabalho  );
-             AddValue('Empresa',         CDSDados.FieldByName('Empresa').AsInteger);
+             AddValue('Empresa',         CDSDadosOrigem.FieldByName('Empresa').AsInteger);
              AddValue('IdDocumento',     fIdDocumento);
-             AddValue('IdCliente',       CDSDados.FieldByName('Cliente').AsString);
-             AddValue('IdTipo',          RetornaTipoDocumento(StrToIntDef(CDSDados.FieldByName('Tipo').AsString, 0)));
+             AddValue('IdCliente',       CDSDadosOrigem.FieldByName('Cliente').AsString);
+             AddValue('IdTipo',          RetornaTipoDocumento(StrToIntDef(CDSDadosOrigem.FieldByName('Tipo').AsString, 0)));
              AddValue('IdImovelVenda',   fIdVenda);
-             AddValue('Documento',       CDSDados.FieldByName('Documento').AsString);
-             AddValue('Complemento',     CDSDados.FieldByName('Observacao').AsString);
-             AddValue('Emissao',         CDSDados.FieldByName('Emissao').AsDateTime);
+             AddValue('Documento',       CDSDadosOrigem.FieldByName('Documento').AsString);
+             AddValue('Complemento',     CDSDadosOrigem.FieldByName('Observacao').AsString);
+             AddValue('Emissao',         CDSDadosOrigem.FieldByName('Emissao').AsDateTime);
              AddValue('Valor',           TTParcelas);
-             AddValue('QtdeParcela',     CDSDados.FieldByName('QtdParcela').AsInteger);
-             AddValue('IdRenegociacao',  iif(CDSDados.FieldByName('Origem').AsString='REN', fIdRenegociacao, NULL) );
-             AddValue('Origem',          iif(CDSDados.FieldByName('Origem').AsString='REN', 'REN', 'IMP') );
+             AddValue('QtdeParcela',     CDSDadosOrigem.FieldByName('QtdParcela').AsInteger);
+             AddValue('IdRenegociacao',  iif(CDSDadosOrigem.FieldByName('Origem').AsString='REN', fIdRenegociacao, NULL) );
+             AddValue('Origem',          iif(CDSDadosOrigem.FieldByName('Origem').AsString='REN', 'REN', 'IMP') );
              AddValue('Valido',          'S');
              AddValue('Usuario',         'IMPORTACAO');
           Executa;
 
-          GravaParcelas(CDSDados.FieldByName('Documento').AsString, CDSDados.FieldByName('Tipo').AsString);
+          GravaParcelas(CDSDadosOrigem.FieldByName('Documento').AsString, CDSDadosOrigem.FieldByName('Tipo').AsString);
 
           Start(tcUpdate, 'TRecDocumento', QueryTrabalho  );
-             AddWhere('Empresa',         CDSDados.FieldByName('Empresa').AsInteger);
+             AddWhere('Empresa',         CDSDadosOrigem.FieldByName('Empresa').AsInteger);
              AddWhere('IdDocumento',     fIdDocumento);
              AddValue('Valor',           TTParcelas);
           Executa;
@@ -426,15 +426,15 @@ var
            with SqlDados do begin
               Inc(fIdRenegociacao); 
               Start(tcInsert, 'TRenegociacao', QueryTrabalho  );
-                 AddValue('Empresa',          CDSDados.FieldByName('Empresa').AsInteger);
+                 AddValue('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddValue('IdRenegociacao',   fIdRenegociacao);
-                 AddValue('IdCliente',        CDSDados.FieldByName('Cliente').AsInteger);
+                 AddValue('IdCliente',        CDSDadosOrigem.FieldByName('Cliente').AsInteger);
                  AddValue('IdUsuario',        1);
-                 AddValue('Data',             CDSDados.FieldByName('Emissao').AsDateTime);
+                 AddValue('Data',             CDSDadosOrigem.FieldByName('Emissao').AsDateTime);
                  AddValue('ValorBaixado',     0);
                  AddValue('ValorRenegociado', 0);
-                 AddValue('ValorGerado',      CDSDados.FieldByName('Valor').AsFloat);
-                 AddValue('Observacao',       CDSDados.FieldByName('Observacao').AsString);
+                 AddValue('ValorGerado',      CDSDadosOrigem.FieldByName('Valor').AsFloat);
+                 AddValue('Observacao',       CDSDadosOrigem.FieldByName('Observacao').AsString);
                  AddValue('Origem',           'IMPORTACAO');
               Executa;
            end;
@@ -445,14 +445,14 @@ var
            with QueryPesquisa, SqlDados do begin
               Sql.Clear;
               Sql.Add(Format('Select * From TRecParcela Where Empresa = %d AND IdRenegociacaoTemp = %d ',
-                             [CDSDados.FieldByName('Empresa').AsInteger,
-                              CDSDados.FieldByName('IdDocumento').AsInteger]));
+                             [CDSDadosOrigem.FieldByName('Empresa').AsInteger,
+                              CDSDadosOrigem.FieldByName('IdDocumento').AsInteger]));
               Open;
               TTBaixado := 0;
               while (not eof) and (not Cancelar) do begin
                  { Ajusta a Parcela }
                  Start(tcUpdate, 'TRecParcela', QueryTrabalho  );
-                    AddWhere('Empresa',                CDSDados.FieldByName('Empresa').AsInteger);
+                    AddWhere('Empresa',                CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                     AddWhere('IdParcela',              FieldByName('IdParcela').AsInteger);
                     AddValue('IdRenegociacao',         fIdRenegociacao);
                     AddValue('BaixadoPorRenegociacao', FieldByName('ValorPendente').AsFloat);
@@ -461,11 +461,11 @@ var
 
                  { Grava baixa da Parcela }
                  Start(tcInsert, 'TRecBaixaParcela', QueryTrabalho  );
-                    AddValue('Empresa',                CDSDados.FieldByName('Empresa').AsInteger);
+                    AddValue('Empresa',                CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                     AddValue('IdBaixa',                fIdBaixa);
                     AddValue('IdParcela',              FieldByName('IdParcela').AsInteger);
                     AddValue('OrigemPendente',         FieldByName('ValorPendente').AsFloat);
-                    AddValue('Data',                   CDSDados.FieldByName('Emissao').AsDateTime);
+                    AddValue('Data',                   CDSDadosOrigem.FieldByName('Emissao').AsDateTime);
                     AddValue('ValorBaixado',           FieldByName('ValorPendente').AsFloat);
                     AddValue('ValorRecebido',          FieldByName('ValorPendente').AsFloat);
                     AddValue('IdRenegociacao',         fIdRenegociacao);
@@ -482,10 +482,10 @@ var
            Inc(fIdBaixa);
            with SqlDados do begin
               Start(tcInsert, 'TRecBaixa', QueryTrabalho  );
-                 AddValue('Empresa',          CDSDados.FieldByName('Empresa').AsInteger);
+                 AddValue('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddValue('IdBaixa',          fIdBaixa);
-                 AddValue('IdCliente',        CDSDados.FieldByName('Cliente').AsInteger);
-                 AddValue('Data',             CDSDados.FieldByName('Emissao').AsDateTime);
+                 AddValue('IdCliente',        CDSDadosOrigem.FieldByName('Cliente').AsInteger);
+                 AddValue('Data',             CDSDadosOrigem.FieldByName('Emissao').AsDateTime);
                  AddValue('ValorBaixado',     0);
                  AddValue('ValorRecebido',    0);
                  AddValue('Usuario',          'IMPORTACAO');
@@ -500,7 +500,7 @@ var
            with SqlDados do begin
               { Ajusta a renegociacao }
               Start(tcUpdate, 'TRenegociacao', QueryTrabalho  );
-                 AddWhere('Empresa',          CDSDados.FieldByName('Empresa').AsInteger);
+                 AddWhere('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddWhere('IdRenegociacao',   fIdRenegociacao);
                  AddValue('ValorBaixado',     TTBaixado);
                  AddValue('ValorRenegociado', TTBaixado);
@@ -508,7 +508,7 @@ var
 
               { Ajusta Baixa }
               Start(tcUpdate, 'TRecBaixa', QueryTrabalho  );
-                 AddWhere('Empresa',          CDSDados.FieldByName('Empresa').AsInteger);
+                 AddWhere('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddWhere('IdBaixa',          fIdBaixa);
                  AddValue('ValorBaixado',     TTBaixado);
                  AddValue('ValorRecebido',    TTBaixado);
@@ -516,7 +516,7 @@ var
 
               { Documento }
               {Start(tcUpdate, 'TRecDocumento', QueryTrabalho  );
-                 AddWhere('Empresa',         CDSDados.FieldByName('Empresa').AsInteger);
+                 AddWhere('Empresa',         CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddWhere('IdDocumento',     fIdDocumento);
                  AddValue('IdRenegociacao',  fIdRenegociacao);
                  AddValue('Origem',          'REN');
@@ -524,7 +524,7 @@ var
 
               { Parcelas }
               {Start(tcUpdate, 'TRecParcela', QueryTrabalho  );
-                 AddWhere('Empresa',         CDSDados.FieldByName('Empresa').AsInteger);
+                 AddWhere('Empresa',         CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddWhere('IdDocumento',     fIdDocumento);
                  AddValue('IdRenegociacao',  fIdRenegociacao);
               Executa;}
@@ -534,7 +534,7 @@ var
 
 
     begin
-       if CDSDados.FieldByName('Origem').AsString='REN' then begin
+       if CDSDadosOrigem.FieldByName('Origem').AsString='REN' then begin
 
           {1} GravaRenegociacao;
           {2} GravaBaixa;
@@ -548,7 +548,7 @@ var
 
     procedure VinculaContratoAoLote;
     begin
-       with SqlDados, CDSDados do begin
+       with SqlDados, CDSDadosOrigem do begin
           Start(tcUpdate, 'TImoLote', QueryTrabalho  );
              AddWhere('IdLote',    FieldByName('IdLote').AsInteger);
              AddValue('IdVenda',   fIdVenda);
@@ -561,23 +561,23 @@ var
 
     procedure GravaSincronizacao;
     begin
-       if CDSDados.FieldByName('Origem').AsString='REN' then begin
+       if CDSDadosOrigem.FieldByName('Origem').AsString='REN' then begin
           fSincronismo.AjustaRenegociacao(fIdRenegociacao);
        end else begin
-          fSincronismo.AjustaContrato(CDSDados.FieldByName('Cliente').AsInteger,
+          fSincronismo.AjustaContrato(CDSDadosOrigem.FieldByName('Cliente').AsInteger,
                                       fIdDocumento,
-                                      CDSDados.FieldByName('Documento').AsString,
+                                      CDSDadosOrigem.FieldByName('Documento').AsString,
                                       TTParcelas);
        end;   
     end;
 
 begin
   inherited;
-   with CDSDados do begin
+   with CDSDadosOrigem do begin
       try
          fIdVenda := GetIdVenda;
 
-         if CDSDados.FieldByName('Origem').AsString='REN' then begin
+         if CDSDadosOrigem.FieldByName('Origem').AsString='REN' then begin
             {1} GravaRenegociacao;
          end else begin
             {1} GravaDocumentoReceber;
@@ -585,7 +585,7 @@ begin
 
          {2} GravaSincronizacao;
 
-      except on e:Exception do GravaLog('Documento: ' + CDSDados.FieldByName('Documento').AsString + ' Mensagem: '+E.Message);
+      except on e:Exception do GravaLog('Documento: ' + CDSDadosOrigem.FieldByName('Documento').AsString + ' Mensagem: '+E.Message);
       end;
    end;
 end;
@@ -617,12 +617,12 @@ begin
 //                       '       Dct.IdDocumento             ',
 //                       [Filtro]));
 //   end;
-//   CDSOpen(CDSDados);
-//   Label1.Caption        := 'Registros '+StrZero(CDSDados.RecordCount,6);
+//   CDSOpen(CDSDadosOrigem);
+//   Label1.Caption        := 'Registros '+StrZero(CDSDadosOrigem.RecordCount,6);
 //   Label1.Visible        := True;
-//   ProgressBar1.Max      := CDSDados.RecordCount;
+//   ProgressBar1.Max      := CDSDadosOrigem.RecordCount;
 //   ProgressBar1.Position := 0;
-//   BImportar.Enabled     := (CDSDados.RecordCount>0);
+//   BImportar.Enabled     := (CDSDadosOrigem.RecordCount>0);
 end;
 
 procedure TFCVD802AA.BImportarClick(Sender: TObject);

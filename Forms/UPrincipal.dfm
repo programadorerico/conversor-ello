@@ -930,7 +930,6 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar2'
         end>
-      Visible = False
     end
     object FRibbonTab3: TdxRibbonTab
       Caption = 'Contas a Pagar'
@@ -940,7 +939,6 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar4'
         end>
-      Visible = False
     end
   end
   object StatusBar1: TdxRibbonStatusBar
@@ -2815,7 +2813,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar3: TdxBar
       Caption = 'Clientes'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2868,7 +2865,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar2: TdxBar
       Caption = 'Documentos'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 80
       DockedTop = 0
       FloatLeft = 421
@@ -2889,7 +2885,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar4: TdxBar
       Caption = 'Fornecedor'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 267

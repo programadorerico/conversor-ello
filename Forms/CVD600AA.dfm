@@ -14,7 +14,16 @@ inherited FCVD600AA: TFCVD600AA
     end
     inherited PanelPrincipal: TEllBox
       Height = 371
-      object CBEstoque: TCheckBox [1]
+      object CBEstoque1: TCheckBox [1]
+        Left = 525
+        Top = 108
+        Width = 244
+        Height = 17
+        Anchors = [akTop, akRight]
+        Caption = 'Importar estoque negativo'
+        TabOrder = 4
+      end
+      object CBEstoque: TCheckBox [2]
         Left = 525
         Top = 92
         Width = 245
@@ -26,18 +35,19 @@ inherited FCVD600AA: TFCVD600AA
         TabOrder = 5
         OnClick = CBEstoqueClick
       end
-      object CBEstoque1: TCheckBox [2]
-        Left = 525
-        Top = 108
-        Width = 244
-        Height = 17
-        Anchors = [akTop, akRight]
-        Caption = 'Importar estoque negativo'
-        TabOrder = 4
-      end
       inherited EBProdutos: TEllBox
         Height = 371
-        inherited EBTampa: TEllBox [1]
+        inherited PtlBox11: TPtlBox1 [0]
+          Top = 241
+        end
+        inherited DBDados: TExlDBGrid
+          Top = 27
+          Height = 207
+        end
+        inherited MError: TcxMemo
+          Top = 261
+        end
+        inherited EBTampa: TEllBox [3]
           Left = 639
           Top = -172
           Width = 500
@@ -51,15 +61,7 @@ inherited FCVD600AA: TFCVD600AA
             Width = 487
           end
         end
-        inherited PtlBox11: TPtlBox1 [2]
-          Top = 241
-        end
-        inherited DBDados: TExlDBGrid [3]
-          Top = 27
-          Height = 207
-        end
-        inherited MError: TcxMemo [4]
-          Top = 261
+        inherited PtlBox14: TPtlBox1 [4]
         end
       end
       inherited BtAbrir: TButton
@@ -97,24 +99,24 @@ inherited FCVD600AA: TFCVD600AA
     Top = 298
   end
   inherited DataSetProvider2: TDataSetProvider
-    DataSet = CDSDados
+    DataSet = ADOQueryOrigem
     Left = 246
     Top = 300
   end
-  inherited CDSDados: TADOQuery
+  inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
       'select * from estoque')
     Left = 405
     Top = 228
   end
-  object ADOTable1: TADOTable
+  object ADOTable1: TADOTable [7]
     Connection = Datam1.ADOConnection
     CursorType = ctStatic
     TableName = 'produto'
     Left = 488
     Top = 160
   end
-  object CDSProdutos: TClientDataSet
+  object CDSProdutos: TClientDataSet [8]
     Aggregates = <>
     Params = <>
     ProviderName = 'DataSetProvider2'

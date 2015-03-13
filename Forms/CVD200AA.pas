@@ -4,7 +4,8 @@ interface
 
 uses
   SysUtils, Variants, Classes, Controls, Forms, PaiConversor, ADODB, DB, SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
-  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
+  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox,
+  DBClient;
 
 type
   TFCVD200AA = class(TFPaiConversor)
@@ -36,7 +37,7 @@ procedure TFCVD200AA.GravaRegistro;
 
    function GetNome: String;
    begin
-      Result := Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Fornecedor').AsString)));
+      Result := Trim(UpperCase(TiraAcentos(CDSDadosOrigem.FieldByName('Fornecedor').AsString)));
    end;
 
    function GetFantasia: String;

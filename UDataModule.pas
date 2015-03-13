@@ -15,6 +15,7 @@ type
     QueryPesquisa: TSQLQuery;
     QueryTrabalho: TSQLQuery;
     ADOTable1: TADOTable;
+    OriginConnection: TEllConnection;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -64,9 +65,9 @@ begin
    sConnection.Params.Values['DataBase'] := Configuracao.BancoDeDados;
    sConnection.Connected   := Configuracao.BancoDeDados <>'';
 
-   ADOConnection.ConnectionString := Format('Provider=MSDASQL.1;Persist Security Info=False;Data Source=%s;Mode=ReadWrite;',
-                                            [Configuracao.NomeConexaoODBC]);
-   ADOConnection.Connected := True;
+//   ADOConnection.ConnectionString := Format('Provider=MSDASQL.1;Persist Security Info=False;Data Source=%s;Mode=ReadWrite;',
+//                                            [Configuracao.NomeConexaoODBC]);
+//   ADOConnection.Connected := True;
 
    TD.TransactionID  := 1;
    TD.IsolationLevel := xilReadCommitted;

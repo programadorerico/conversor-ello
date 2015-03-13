@@ -63,13 +63,13 @@ begin
    inherited;
    produtoConvertido := TProdutoConvertido.Create;
    produtoConvertido.QueryPesquisa := QueryPesquisa;
-   produtoConvertido.CarregaDoDataset(CDSDados);
+   produtoConvertido.CarregaDoDataset(CDSDadosOrigem);
 
    try
       GravaProduto(produtoConvertido);
    except
       on e:Exception do begin
-         GravaLog('Produto: ' + CDSDados.FieldByName('Codigo').AsString + ' Mensagem: ' + E.Message);
+         GravaLog('Produto: ' + CDSDadosOrigem.FieldByName('Codigo').AsString + ' Mensagem: ' + E.Message);
          produtoConvertido.Free;
          raise;
       end;
@@ -79,7 +79,7 @@ begin
       GravaEstoque(produtoConvertido);
    except
       on e:Exception do begin
-         GravaLog('Produto: ' + CDSDados.FieldByName('Codigo').AsString + ' Mensagem: ' + E.Message);
+         GravaLog('Produto: ' + CDSDadosOrigem.FieldByName('Codigo').AsString + ' Mensagem: ' + E.Message);
          produtoConvertido.Free;
          raise;
       end;

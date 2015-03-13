@@ -29,23 +29,21 @@ inherited FCVD604AA: TFCVD604AA
       inherited EBProdutos: TEllBox
         Width = 744
         Height = 326
-        inherited DBDados: TExlDBGrid [0]
-          Width = 730
-          Height = 162
+        inherited PtlBox14: TPtlBox1
+          Width = 743
+          LabelText = 'Marcas'
         end
         inherited MError: TcxMemo [1]
           Top = 216
           Width = 732
         end
-        inherited PtlBox14: TPtlBox1 [2]
-          Width = 743
-          Color = clGray
-          LabelText = 'Marcas'
+        inherited DBDados: TExlDBGrid [2]
+          Width = 730
+          Height = 162
         end
         inherited PtlBox11: TPtlBox1
           Top = 196
           Width = 730
-          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 795
@@ -98,7 +96,7 @@ inherited FCVD604AA: TFCVD604AA
       Left = 755
     end
   end
-  inherited CDSDados: TADOQuery
+  inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
       'select distinct marca from estoque where marca<>'#39#39
       'order by marca')

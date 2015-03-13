@@ -115,26 +115,37 @@ inherited FCVD101AA: TFCVD101AA
     end
   end
   inherited DataSource: TDataSource
-    Left = 427
+    DataSet = CDSDadosOrigem
+    Left = 507
+    Top = 76
   end
   inherited QueryPesquisa: TSQLQuery
     Left = 75
     Top = 138
   end
-  inherited DataSetProvider2: TDataSetProvider
-    Left = 181
-    Top = 268
+  inherited QueryOrigem: TSQLQuery
+    Left = 459
   end
-  inherited CDSDados: TADOQuery
+  inherited DataSetProvider2: TDataSetProvider
+    DataSet = QueryOrigem
+    Left = 509
+    Top = 116
+  end
+  inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
       'select * from cliente')
     Left = 349
   end
-  object ADOTable1: TADOTable
+  object ADOTable1: TADOTable [7]
     Connection = Datam1.ADOConnection
     CursorType = ctStatic
     TableName = 'fabricante'
-    Left = 448
-    Top = 144
+    Left = 408
+    Top = 168
+  end
+  inherited CDSDadosOrigem: TClientDataSet
+    ProviderName = 'DataSetProvider2'
+    Left = 467
+    Top = 115
   end
 end

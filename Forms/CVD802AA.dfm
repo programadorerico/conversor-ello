@@ -48,11 +48,13 @@ inherited FCVD802AA: TFCVD802AA
         end
         inherited PtlBox14: TPtlBox1 [2]
           Width = 679
+          Color = 15658734
           LabelText = 'Documentos a receber'
         end
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
+          Color = 15658734
         end
         inherited EBTampa: TEllBox
           Left = 646

@@ -6,7 +6,7 @@ uses
   Variants, Classes, Controls, Forms, PaiConversor, 
   DB, StdCtrls, FMTBcd, ADODB, Provider, SqlExpr, ComCtrls, Buttons,
   ToolWin, cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids,
-  DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
+  DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
 
 type
   TFCVD602AA = class(TFPaiConversor)
@@ -34,7 +34,7 @@ begin
    SqlDados.Start(tcInsert, 'TEstGrupo', QueryTrabalho);
    SqlDados.AddValue('IdTipo',    1);
    SqlDados.AddValue('IdGrupo',   FIdGrupo);
-   SqlDados.AddValue('Descricao', Trim(CDSDados.FieldByName('Grupo').AsString));
+   SqlDados.AddValue('Descricao', Trim(CDSDadosOrigem.FieldByName('Grupo').AsString));
    SqlDados.AddValue('Tipo',      'REV');
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
@@ -42,7 +42,7 @@ begin
    SqlDados.Start(tcInsert, 'TEstSubGrupo', QueryTrabalho);
    SqlDados.AddValue('IdSubGrupo', FIdRegistro);
    SqlDados.AddValue('IdGrupo',    FIdGrupo);
-   SqlDados.AddValue('Descricao',  Trim(CDSDados.FieldByName('Grupo').AsString));
+   SqlDados.AddValue('Descricao',  Trim(CDSDadosOrigem.FieldByName('Grupo').AsString));
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
 end;

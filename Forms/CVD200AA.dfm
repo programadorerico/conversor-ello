@@ -31,7 +31,6 @@ inherited FCVD200AA: TFCVD200AA
         inherited PtlBox14: TPtlBox1
           Width = 679
           Caption = ''
-          Color = clGray
           LabelText = 'Fornecedores'
         end
         inherited DBDados: TExlDBGrid
@@ -45,7 +44,6 @@ inherited FCVD200AA: TFCVD200AA
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
-          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 646
@@ -101,7 +99,7 @@ inherited FCVD200AA: TFCVD200AA
     Left = 419
     Top = 316
   end
-  inherited CDSDados: TADOQuery
+  inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
       'select distinct fornecedor from estoque'
       'where fornecedor<>'#39#39)

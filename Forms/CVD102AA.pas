@@ -7,7 +7,7 @@ uses
   PaiConversor, StdCtrls, ADODB, DB,
   SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, cxControls,
   cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox;
+  PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
 
 type
   TFCVD102AA = class(TFPaiConversor)
@@ -57,19 +57,19 @@ procedure TFCVD102AA.GravaRegistro;
 var valor, valor_recebido: Currency;
 begin
    inherited;
-   FIdDocumento := CDSDados.FieldByName('CodContaReceber').AsInteger;
-   valor := CDSDados.FieldByName('valor').AsCurrency;
-   valor_recebido := CDSDados.FieldByName('ValorRecebido').AsCurrency;
+   FIdDocumento := CDSDadosOrigem.FieldByName('CodContaReceber').AsInteger;
+   valor := CDSDadosOrigem.FieldByName('valor').AsCurrency;
+   valor_recebido := CDSDadosOrigem.FieldByName('ValorRecebido').AsCurrency;
    with SqlDados do begin
       try
          Start(tcInsert, 'TRecDocumento', QueryTrabalho);
             AddValue('Empresa',     1);
             AddValue('IdDocumento', FIdDocumento);
-            AddValue('IdCliente',   CDSDados.FieldByName('CodCliente').AsInteger);
+            AddValue('IdCliente',   CDSDadosOrigem.FieldByName('CodCliente').AsInteger);
             AddValue('IdTipo',      1);
-            AddValue('Documento',   StrZero(CDSDados.FieldByName('numeroTitulo').AsString, 7));
+            AddValue('Documento',   StrZero(CDSDadosOrigem.FieldByName('numeroTitulo').AsString, 7));
 //            AddValue('Complemento', FieldByName('Observacao').AsString + '  Fatura: ' + FieldByName('FaturaNumero').AsString);
-            AddValue('Emissao',     CDSDados.FieldByName('DataEmissao').AsDateTime);
+            AddValue('Emissao',     CDSDadosOrigem.FieldByName('DataEmissao').AsDateTime);
             AddValue('Valor',       valor);
             AddValue('QtdeParcela', 1);
             AddValue('Origem',      'IMP');
@@ -84,17 +84,17 @@ begin
             AddValue('IdDocumento',        fIdDocumento);
             AddValue('IdPortador',         1);
             AddValue('IdTipoDocumento',    1);
-            AddValue('IdCliente',          CDSDados.FieldByName('CodCliente').AsInteger);
+            AddValue('IdCliente',          CDSDadosOrigem.FieldByName('CodCliente').AsInteger);
             AddValue('Parcela',            1);
-            AddValue('Vencimento',         CDSDados.FieldByName('DataRecebimento').AsDateTime);
+            AddValue('Vencimento',         CDSDadosOrigem.FieldByName('DataRecebimento').AsDateTime);
             AddValue('Valor',              valor);
-            AddValue('DataBaixa',          CDSDados.FieldByName('DataRecebimento').Asdatetime);
+            AddValue('DataBaixa',          CDSDadosOrigem.FieldByName('DataRecebimento').Asdatetime);
             AddValue('ValorBaixado',       valor_recebido);
          Executa;
 
       except
          on e:Exception do
-            GravaLog('Documento: ' + CDSDados.FieldByName('NumeroTitulo').AsString + ' Mensagem: '+E.Message);
+            GravaLog('Documento: ' + CDSDadosOrigem.FieldByName('NumeroTitulo').AsString + ' Mensagem: '+E.Message);
       end;
    end;
 end;

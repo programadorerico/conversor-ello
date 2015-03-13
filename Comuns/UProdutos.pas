@@ -2,10 +2,10 @@ unit UProdutos;
 
 interface
 
-uses DB, SqlExpr, classes;
+uses DB, SqlExpr, Classes, Interfaces;
 
 type
-  TProdutoConvertido = class
+  TProdutoConvertido = class(TInterfacedObject, IRegistroConvertido)
   private
     FQueryPesquisa: TSqlQuery;
     FDataSet: TDataSet;

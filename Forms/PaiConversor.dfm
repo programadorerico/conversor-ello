@@ -75,7 +75,7 @@ inherited FPaiConversor: TFPaiConversor
           Width = 515
           Height = 21
           Caption = ' '
-          Color = 15658734
+          Color = clGray
           BevelOuter = bvNone
           Anchors = [akLeft, akTop, akRight]
           Enabled = False
@@ -126,7 +126,7 @@ inherited FPaiConversor: TFPaiConversor
           Width = 502
           Height = 21
           Caption = ' '
-          Color = 15658734
+          Color = clGray
           BevelOuter = bvNone
           Anchors = [akLeft, akRight, akBottom]
           Enabled = False
@@ -244,15 +244,15 @@ inherited FPaiConversor: TFPaiConversor
       DesignSize = (
         776
         43)
-      inherited btConfirmar: TButton
-        Left = 579
+      inherited btCancelar: TButton [0]
+        Left = 675
         Visible = False
       end
       inherited btSair: TButton [1]
         Left = 675
       end
-      inherited btCancelar: TButton [2]
-        Left = 675
+      inherited btConfirmar: TButton [2]
+        Left = 579
         Visible = False
       end
       inherited ToolBar1: TToolBar
@@ -286,7 +286,7 @@ inherited FPaiConversor: TFPaiConversor
     Left = 59
   end
   object DataSource: TDataSource [2]
-    DataSet = CDSDados
+    DataSet = ADOQueryOrigem
     Left = 451
     Top = 268
   end
@@ -297,17 +297,18 @@ inherited FPaiConversor: TFPaiConversor
     Left = 83
     Top = 170
   end
-  object QueryPesquisaECO: TSQLQuery [4]
+  object QueryOrigem: TSQLQuery [4]
     MaxBlobSize = -1
     Params = <>
-    Left = 179
-    Top = 162
+    SQLConnection = Datam1.OriginConnection
+    Left = 451
+    Top = 170
   end
   object DataSetProvider2: TDataSetProvider [5]
     Left = 157
     Top = 276
   end
-  inherited CDSDados: TADOQuery
+  inherited ADOQueryOrigem: TADOQuery
     BeforeScroll = ClientDataSetAfterScroll
     SQL.Strings = (
       'select distinct '
@@ -316,5 +317,11 @@ inherited FPaiConversor: TFPaiConversor
       'from grupo')
     Left = 373
     Top = 264
+  end
+  object CDSDadosOrigem: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 459
+    Top = 131
   end
 end

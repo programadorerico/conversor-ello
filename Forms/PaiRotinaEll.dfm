@@ -1604,7 +1604,7 @@ object FPaiRotinaEll: TFPaiRotinaEll
     Left = 83
     Top = 266
   end
-  object CDSDados: TADOQuery
+  object ADOQueryOrigem: TADOQuery
     Connection = Datam1.ADOConnection
     CursorType = ctStatic
     Parameters = <>

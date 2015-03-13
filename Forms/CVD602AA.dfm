@@ -17,7 +17,6 @@ inherited FCVD602AA: TFCVD602AA
       inherited EBProdutos: TEllBox
         Height = 326
         inherited PtlBox14: TPtlBox1
-          Color = clGray
           LabelText = 'Grupos'
         end
         inherited DBDados: TExlDBGrid
@@ -28,7 +27,6 @@ inherited FCVD602AA: TFCVD602AA
         end
         inherited PtlBox11: TPtlBox1
           Top = 196
-          Color = clGray
         end
         inherited EBTampa: TEllBox
           Width = 501
@@ -61,7 +59,7 @@ inherited FCVD602AA: TFCVD602AA
       Top = 293
     end
   end
-  inherited CDSDados: TADOQuery
+  inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
       'select distinct grupo from estoque')
   end

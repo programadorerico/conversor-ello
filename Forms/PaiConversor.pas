@@ -8,7 +8,7 @@ uses
   cxMemo, Grids, DBGrids, 
   ExlDBGrid, PtlBox1, SqlExpr, StdCtrls, EllBox, FMTBcd, cxControls,
   cxContainer, cxEdit, cxTextEdit, ADODB, Buttons, ToolWin, Graphics,
-  ExtCtrls;
+  ExtCtrls, DBClient;
 
 type
   TFPaiConversor = class(TFPaiRotinaEll)
@@ -28,15 +28,16 @@ type
     Label11: TLabel;
     BEdita: TButton;
     QueryPesquisa: TSQLQuery;
-    QueryPesquisaECO: TSQLQuery;
+    QueryOrigem: TSQLQuery;
     DataSetProvider2: TDataSetProvider;
+    CDSDadosOrigem: TClientDataSet;
     procedure BtAbrirClick(Sender: TObject);
     procedure BImportarClick(Sender: TObject);
     procedure BLimparClick(Sender: TObject);
     procedure BIniciaClick(Sender: TObject);
     procedure BEditaClick(Sender: TObject);
     procedure ClientDataSetAfterScroll(DataSet: TDataSet);
-    procedure FormCreate(Sender: TObject);
+    procedure FormCreate(Sender: TObject); virtual;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure btSairClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -82,7 +83,7 @@ end;
 procedure TFPaiConversor.BImportarClick(Sender: TObject);
 begin
   inherited;
-   {if (not CDSDados.Active) or  CDSDados.isEmpty then begin
+   {if (not CDSDadosOrigem.Active) or  CDSDadosOrigem.isEmpty then begin
       MensagemEllo('Não á registros para importação', tmInforma);
       Exit;
    end;}
@@ -139,13 +140,13 @@ end;
 procedure TFPaiConversor.Importa;
 begin
    FIdRegistro := 1;
-   CDSDados.First;
-   while (not CDSDados.eof) and (not Cancelar) do begin
+   CDSDadosOrigem.First;
+   while (not CDSDadosOrigem.eof) and (not Cancelar) do begin
       try
          GravaRegistro;
       except
       end;
-      CDSDados.Next;
+      CDSDadosOrigem.Next;
       Inc(FIdRegistro);
    end;
 end;
@@ -159,7 +160,7 @@ begin
       MensagemEllo('Houve erro na importação dos dados, Verique o Log !!!', tmErro);
    end else begin
       MensagemEllo('Importação concluída com exito !', tmErro);
-      CDSDados.Close;
+      CDSDadosOrigem.Close;
       Application.ProcessMessages;
       Self.Close;
    end;
@@ -241,7 +242,7 @@ end;
 
 procedure TFPaiConversor.FormCreate(Sender: TObject);
 begin
-  inherited;
+   inherited;
    Application.onException := AppException;
    SqlGrava := TQueryGrava.Create;
 end;
@@ -437,12 +438,12 @@ end;
 
 procedure TFPaiConversor.Open;
 begin
-   ADOOpen(CDSDados);
-   Label1.Caption        := 'Registros '+StrZero(CDSDados.RecordCount,6);
+   CDSDadosOrigem.Open;
+   Label1.Caption        := 'Registros '+StrZero(CDSDadosOrigem.RecordCount,6);
    Label1.Visible        := True;
-   ProgressBar1.Max      := CDSDados.RecordCount;
+   ProgressBar1.Max      := CDSDadosOrigem.RecordCount;
    ProgressBar1.Position := 0;
-   BImportar.Enabled     := CDSDados.RecordCount>0;
+   BImportar.Enabled     := CDSDadosOrigem.RecordCount>0;
 end;
 
 procedure TFPaiConversor.FormDestroy(Sender: TObject);

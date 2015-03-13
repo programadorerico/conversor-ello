@@ -82,4 +82,31 @@ object Datam1: TDatam1
     Left = 40
     Top = 152
   end
+  object OriginConnection: TEllConnection
+    ConnectionName = 'IBConnection'
+    DriverName = 'Interbase'
+    GetDriverFunc = 'getSQLDriverINTERBASE'
+    LibraryName = 'dbexpint.dll'
+    LoginPrompt = False
+    Params.Strings = (
+      'DriverName=Interbase'
+      'Database=c:\dev\dados\hf.fdb.ello'
+      'RoleName=RoleName'
+      'User_Name=sysdba'
+      'Password=masterkey'
+      'ServerCharSet='
+      'SQLDialect=1'
+      'ErrorResourceFile='
+      'LocaleCode=0000'
+      'BlobSize=-1'
+      'CommitRetain=False'
+      'WaitOnLocks=True'
+      'Interbase TransIsolation=ReadCommited'
+      'Trim Char=False')
+    VendorLib = 'GDS32.DLL'
+    Connected = True
+    Empresa = 0
+    Left = 324
+    Top = 24
+  end
 end

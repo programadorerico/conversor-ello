@@ -7,7 +7,7 @@ uses
   PaiConversor, StdCtrls, DB,
   SqlExpr, FMTBcd, ADODB, Provider, ComCtrls, Buttons, ToolWin, cxControls,
   cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox;
+  PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
 
 type
   TFCVD603AA = class(TFPaiConversor)
@@ -41,8 +41,8 @@ procedure TFCVD603AA.GravaRegistro;
 begin
    SqlDados.Start(tcInsert, 'TEstSubGrupo', QueryTrabalho);
    SqlDados.AddValue('IdSubGrupo', FIdRegistro);
-   SqlDados.AddValue('IdGrupo',    getIdGrupo(CDSDados.FieldByName('grupo').AsString));
-   SqlDados.AddValue('Descricao',  Trim(CDSDados.FieldByName('subgrupo').AsString));
+   SqlDados.AddValue('IdGrupo',    getIdGrupo(CDSDadosOrigem.FieldByName('grupo').AsString));
+   SqlDados.AddValue('Descricao',  Trim(CDSDadosOrigem.FieldByName('subgrupo').AsString));
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
 end;

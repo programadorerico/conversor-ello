@@ -23,7 +23,7 @@ type
     ImageTitulo: TImage;
     ToolBar1: TToolBar;
     SBBotao1: TSpeedButton;
-    CDSDados: TADOQuery;
+    ADOQueryOrigem: TADOQuery;
     procedure btSairClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word;  Shift: TShiftState);
     procedure ConfereEdicao(Sender: TObject); virtual;

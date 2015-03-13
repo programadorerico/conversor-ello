@@ -1,3 +1,56 @@
+{$A8,B-,C+,D+,E-,F-,G+,H+,I+,J-,K-,L+,M-,N+,O-,P+,Q-,R-,S-,T-,U-,V+,W+,X+,Y+,Z1}
+{$MINSTACKSIZE $00004000}
+{$MAXSTACKSIZE $00100000}
+{$IMAGEBASE $00400000}
+{$APPTYPE GUI}
+{$WARN SYMBOL_DEPRECATED ON}
+{$WARN SYMBOL_LIBRARY ON}
+{$WARN SYMBOL_PLATFORM ON}
+{$WARN UNIT_LIBRARY ON}
+{$WARN UNIT_PLATFORM ON}
+{$WARN UNIT_DEPRECATED ON}
+{$WARN HRESULT_COMPAT ON}
+{$WARN HIDING_MEMBER ON}
+{$WARN HIDDEN_VIRTUAL ON}
+{$WARN GARBAGE ON}
+{$WARN BOUNDS_ERROR ON}
+{$WARN ZERO_NIL_COMPAT ON}
+{$WARN STRING_CONST_TRUNCED ON}
+{$WARN FOR_LOOP_VAR_VARPAR ON}
+{$WARN TYPED_CONST_VARPAR ON}
+{$WARN ASG_TO_TYPED_CONST ON}
+{$WARN CASE_LABEL_RANGE ON}
+{$WARN FOR_VARIABLE ON}
+{$WARN CONSTRUCTING_ABSTRACT ON}
+{$WARN COMPARISON_FALSE ON}
+{$WARN COMPARISON_TRUE ON}
+{$WARN COMPARING_SIGNED_UNSIGNED ON}
+{$WARN COMBINING_SIGNED_UNSIGNED ON}
+{$WARN UNSUPPORTED_CONSTRUCT ON}
+{$WARN FILE_OPEN ON}
+{$WARN FILE_OPEN_UNITSRC ON}
+{$WARN BAD_GLOBAL_SYMBOL ON}
+{$WARN DUPLICATE_CTOR_DTOR ON}
+{$WARN INVALID_DIRECTIVE ON}
+{$WARN PACKAGE_NO_LINK ON}
+{$WARN PACKAGED_THREADVAR ON}
+{$WARN IMPLICIT_IMPORT ON}
+{$WARN HPPEMIT_IGNORED ON}
+{$WARN NO_RETVAL ON}
+{$WARN USE_BEFORE_DEF ON}
+{$WARN FOR_LOOP_VAR_UNDEF ON}
+{$WARN UNIT_NAME_MISMATCH ON}
+{$WARN NO_CFG_FILE_FOUND ON}
+{$WARN MESSAGE_DIRECTIVE ON}
+{$WARN IMPLICIT_VARIANTS ON}
+{$WARN UNICODE_TO_LOCALE ON}
+{$WARN LOCALE_TO_UNICODE ON}
+{$WARN IMAGEBASE_MULTIPLE ON}
+{$WARN SUSPICIOUS_TYPECAST ON}
+{$WARN PRIVATE_PROPACCESSOR ON}
+{$WARN UNSAFE_TYPE OFF}
+{$WARN UNSAFE_CODE OFF}
+{$WARN UNSAFE_CAST OFF}
 unit CVD101AA;
 
 interface
@@ -5,20 +58,22 @@ interface
 uses
   SysUtils, Variants, Classes, Controls, Forms, PaiConversor, ADODB, DB, SqlExpr, FMTBcd, Provider, ComCtrls,
   Buttons, ToolWin, StdCtrls, cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox;
+  PtlBox1, Graphics, ExtCtrls, EllBox, UClientes, DBClient;
 
 type
   TFCVD101AA = class(TFPaiConversor)
     ADOTable1: TADOTable;
-    procedure BImportarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject); override;
   private
     { Private declarations }
     fIdCliente: Integer;
     fIdReferencia: Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
+    procedure GravaCliente(Cliente: TClienteConvertido);
+    procedure GravaEndereco(Cliente: TClienteConvertido);
   public
-    { Public declarations }
+    procedure Open; override;
   end;
 
 var
@@ -26,145 +81,33 @@ var
 
 implementation
 
-uses UDataModule, Utils, UnSql, UClientes;
+uses UDataModule, Utils, UnSql, StdConvs;
 
 {$R *.dfm}
 
-procedure TFCVD101AA.GravaRegistro;
-var Observacao: TStringList;
-    Tipo: String;
-    Ordem: Integer;
-    IdCliente: Integer;
-
-   function RetornaEstadoCivil: String;
-   begin
-      Result := 'OUTROS';
-      {with CDSDados do begin
-         if FieldByName('EstadoCivil').AsString = 'C' then Result := 'CASADO';
-         if FieldByName('EstadoCivil').AsString = 'S' then Result := 'SOLTEIRO';
-         if FieldByName('EstadoCivil').AsString = 'D' then Result := 'DIVORCIADO';
-         if FieldByName('EstadoCivil').AsString = 'V' then Result := 'VIUVO';
-      end;}
-   end;
-
-   function GetTipoPessoa: String;
-   begin
-      Result := CDSDados.FieldByName('TipoPessoa').AsString;
-   end;
-
-   function GetNome: String;
-   begin
-      Result := Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Nome').AsString)));
-   end;
-
-   function GetFantasia: String;
-   begin
-      Result := CDSDados.FieldByName('NomeFantasia').AsString;
-   end;
-
-   function GetCNPJCPF: String;
-   begin
-      Result := ApenasDigitos(CDSDados.FieldByName('CNPJ_CPF').AsString);
-   end;
-
-   function GetRGIE: String;
-   begin
-      Result := CDSDados.FieldByName('InscricaoEstadual').AsString;
-   end;
-
-   function GetCidade: Integer;
-   begin
-      Result := 3998;
-      if cdsdados.FieldByName('CodMunicipio').AsString = '' then exit;
-      with QueryPesquisa do begin
-         Sql.Clear;
-         Sql.Add(Format('Select IdCidade From TGerCidade Where CodigoIBGE = ''%s'' ', [CDSDados.FieldByName('codmunicipio').AsString]));
-         Open;
-         if not QueryPesquisa.IsEmpty then begin
-            Result := FieldbyName('IdCidade').AsInteger;
-         end;
-      end;
-   end;
-
+procedure TFCVD101AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   IdCliente := CDSDados.FieldByName('CodCliente').AsInteger;
-   with SqlDados do begin
-      try
-         Start(tcInsert, 'TRecCliente', QueryTrabalho);
-            AddValue('IdCliente',    IdCliente);
-            AddValue('Nome',         GetNome);
-            AddValue('Pessoa',       GetTipoPessoa);
-            AddValue('Fantasia',     GetFantasia);
-            AddValue('Endereco',     Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString))));
-            AddValue('Bairro',       Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString))));
-            AddValue('Cep',          ApenasDigitos(CDSDados.FieldByName('Cep').AsString));
-            AddValue('IdCidade',     GetCidade);
-            AddValue('Numero',       CDSDados.FieldByName('numero').AsString);
-            AddValue('Complemento',  CDSDados.FieldByName('Complemento').AsString);
-            AddValue('DataCadastro', CDSDados.FieldByName('DataCadastro').AsDateTime);
-            AddValue('Fone',         ApenasDigitos(CDSDados.FieldByName('telefone').AsString));
-            AddValue('CpfCnpj',      GetCNPJCPF);
-            AddValue('RGIE',         GetRGIE);
-            AddValue('Email',        CDSDados.FieldByName('email').AsString);
-            AddValue('Celular',      ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
-            AddValue('Ativo',        CDSDados.FieldByName('Ativo').AsString);
-            AddValue('Contato',      ApenasDigitos(CDSDados.FieldByName('Contato').AsString) );
-            AddValue('OrgaoExpedidor',         '');
-            AddValue('EstadoCivil',            RetornaEstadoCivil);
-            AddValue('HomePage',               '');
-            //AddValue('Sexo',                   FieldByName('Sexo').AsString);
-            AddValue('Conjuge',                '');
-//            AddValue('Nascimento',             FieldByName('Data_Nascimento').AsDateTime);
-            AddValue('PercentualJuros',        0);
-            AddValue('PercentualMulta',        0);
-            AddValue('JuroMultaDiferenciado',  'N');
-            AddValue('EndComercial',           1);
-            AddValue('EndEntrega',             2);
-            AddValue('EndCobranca',            3);
-            AddValue('Limite',                 'UNICO');
-            AddValue('LimiteValor',            0);
-            AddValue('LimiteVcto',             DataValida('31.12.2015') );
-            AddValue('DescontoNaVenda',        'N');
-            AddValue('DescontoNaVendaValor',   0);
-            AddValue('AcrescimoNaVenda',       'N');
-            AddValue('AcrescimoNaVendaValor',  0);
-            AddValue('JurosReceber',           'N');
-            AddValue('JurosReceberValor',      0);
-            AddValue('JurosReceberCarencia',   0);
-            AddValue('DescontoReceber',        'N');
-            AddValue('DescontoReceberValor',   0);
-            AddValue('FormaCrediario',        'S');
-            AddValue('FormaCheque',           'S');
-            AddValue('FormaCartao',           'S');
-            AddValue('FormaConvenio',         'S');
-//            AddValue('Obs',                   FieldByName('Obs').AsString);
-            AddValue('Usuario',            'IMPLANTACAO');
-         Executa;
+   QueryOrigem.SQL.Text := UClientes.QUERY;
+end;
 
-         { Endereco Comercial }
-         Start(tcInsert, 'TRecClienteEndereco', QueryTrabalho  );
-            AddValue('IdCliente',              IdCliente);
-            AddValue('Tipo',                   1);
-            AddValue('Endereco',               UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString)) );
-            AddValue('Numero',                 '');
-            AddValue('Complemento',            '');
-            AddValue('Bairro',                 UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString)) );
-            AddValue('EstadoCivil',            RetornaEstadoCivil);
-            AddValue('IdCidade',               GetCidade);
-            AddValue('Cep',                    ApenasDigitos(CDSDados.FieldByName('Cep').AsString) );
-            AddValue('Fone',                   ApenasDigitos(CDSDados.FieldByName('telefone').AsString) );
-            AddValue('Celular',                ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
-            AddValue('Email',                  CDSDados.FieldByName('Email').AsString);
-//            AddValue('HomePage',               FieldByName('HomePage').AsString);
-//            AddValue('Observacao',             FieldByName('Obs').AsString);
-         Executa;
+procedure TFCVD101AA.GravaRegistro;
+var
+   ClienteConvertido: TClienteConvertido;
+begin
+   inherited;
+   ClienteConvertido := TClienteConvertido.Create;
+   ClienteConvertido.QueryPesquisa := QueryPesquisa;
+   ClienteConvertido.CarregaDoDataset(CDSDadosOrigem);
 
-      except on e:Exception do begin
-            GravaLog('Cliente: ' + CDSDados.FieldByName('Codigo').AsString + ' Mensagem: '+E.Message);
-         end;
+   try
+      GravaCliente(ClienteConvertido);
+   except on e:Exception do begin
+         GravaLog('Cliente: ' + IntToStr(ClienteConvertido.Idcliente) + ' Mensagem: '+E.Message);
       end;
    end;
+
+   ClienteConvertido.Free;
 end;
 
 procedure TFCVD101AA.LimpaRegistros;
@@ -173,12 +116,91 @@ begin
    inherited;
 end;
 
-procedure TFCVD101AA.BImportarClick(Sender: TObject);
+procedure TFCVD101AA.GravaCliente(Cliente: TClienteConvertido);
 begin
-   fIdCliente := 0;
-   fIdReferencia := 0;
-   //ImportaClassificacao;
-   inherited;
+   with SqlDados do begin
+      Start(tcInsert, 'TRecCliente', QueryTrabalho);
+         AddValue('IdCliente',             Cliente.IdCliente);
+         AddValue('Nome',                  Cliente.Nome);
+         AddValue('Pessoa',                Cliente.Pessoa);
+         AddValue('Fantasia',              Cliente.Fantasia);
+         AddValue('Endereco',              Cliente.Endereco);
+         AddValue('Bairro',                Cliente.Bairro);
+         AddValue('Cep',                   Cliente.Cep);
+         AddValue('IdCidade',              Cliente.IdCidade);
+         AddValue('Numero',                Cliente.Numero);
+         AddValue('Complemento',           Cliente.Complemento);
+         AddValue('DataCadastro',          Cliente.DataCadastro);
+         AddValue('Fone',                  Cliente.Fone);
+         AddValue('CpfCnpj',               Cliente.CpfCnpj);
+         AddValue('RGIE',                  Cliente.RGIE);
+         AddValue('Email',                 Cliente.Email);
+         AddValue('Celular',               Cliente.Celular);
+         AddValue('Ativo',                 Cliente.Ativo);
+         AddValue('Contato',               Cliente.Contato);
+         AddValue('OrgaoExpedidor',        Cliente.OrgaoExpedidor);
+         AddValue('EstadoCivil',           Cliente.EstadoCivil);
+         AddValue('HomePage',              Cliente.HomePage);
+         AddValue('Sexo',                  Cliente.Sexo);
+         AddValue('Conjuge',               Cliente.Conjuge);
+         AddValue('Nascimento',            Cliente.Nascimento);
+         AddValue('PercentualJuros',       Cliente.PercentualJuros);
+         AddValue('PercentualMulta',       Cliente.PercentualMulta);
+         AddValue('JuroMultaDiferenciado', Cliente.JuroMultaDiferenciado);
+         AddValue('EndComercial',          Cliente.EndComercial);
+         AddValue('EndEntrega',            Cliente.EndEntrega);
+         AddValue('EndCobranca',           Cliente.EndCobranca);
+         AddValue('Limite',                Cliente.Limite);
+         AddValue('LimiteValor',           Cliente.LimiteValor);
+         AddValue('LimiteVcto',            Cliente.LimiteVcto);
+         AddValue('DescontoNaVenda',       Cliente.DescontoNaVenda);
+         AddValue('DescontoNaVendaValor',  Cliente.DescontoNaVendaValor);
+         AddValue('AcrescimoNaVenda',      Cliente.AcrescimoNaVenda);
+         AddValue('AcrescimoNaVendaValor', Cliente.AcrescimoNaVendaValor);
+         AddValue('JurosReceber',          Cliente.JurosReceber);
+         AddValue('JurosReceberValor',     Cliente.JurosReceberValor);
+         AddValue('JurosReceberCarencia',  Cliente.JurosReceberCarencia);
+         AddValue('DescontoReceber',       Cliente.DescontoReceber);
+         AddValue('DescontoReceberValor',  Cliente.DescontoReceberValor);
+         AddValue('FormaCrediario',        Cliente.FormaCrediario);
+         AddValue('FormaCheque',           Cliente.FormaCheque);
+         AddValue('FormaCartao',           Cliente.FormaCartao);
+         AddValue('FormaConvenio',         Cliente.FormaConvenio);
+         AddValue('Obs',                   Cliente.Obs);
+         AddValue('Usuario',               Cliente.Usuario);
+      Executa;
+   end;
+end;
+
+procedure TFCVD101AA.GravaEndereco(Cliente: TClienteConvertido);
+begin
+         { Endereco Comercial }
+//         Start(tcInsert, 'TRecClienteEndereco', QueryTrabalho  );
+//            AddValue('IdCliente',              IdCliente);
+//            AddValue('Tipo',                   1);
+//            AddValue('Endereco',               UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString)) );
+//            AddValue('Numero',                 '');
+//            AddValue('Complemento',            '');
+//            AddValue('Bairro',                 UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString)) );
+//            AddValue('EstadoCivil',            RetornaEstadoCivil);
+//            AddValue('IdCidade',               GetCidade);
+//            AddValue('Cep',                    ApenasDigitos(CDSDados.FieldByName('Cep').AsString) );
+//            AddValue('Fone',                   ApenasDigitos(CDSDados.FieldByName('telefone').AsString) );
+//            AddValue('Celular',                ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
+//            AddValue('Email',                  CDSDados.FieldByName('Email').AsString);
+//            AddValue('HomePage',               FieldByName('HomePage').AsString);
+//            AddValue('Observacao',             FieldByName('Obs').AsString);
+//         Executa;
+end;
+
+procedure TFCVD101AA.Open;
+begin
+   CDSDadosOrigem.Open;
+   Label1.Caption        := 'Registros '+StrZero(CDSDadosOrigem.RecordCount,6);
+   Label1.Visible        := True;
+   ProgressBar1.Max      := CDSDadosOrigem.RecordCount;
+   ProgressBar1.Position := 0;
+   BImportar.Enabled     := CDSDadosOrigem.RecordCount>0;
 end;
 
 initialization RegisterClass(TFCVD101AA);

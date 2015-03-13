@@ -7,7 +7,7 @@ uses
   PaiConversor, ADODB, DB,
   SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
   cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids,
-  ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox;
+  ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
 
 type
   TFCVD201AA = class(TFPaiConversor)
@@ -56,13 +56,13 @@ end;
 procedure TFCVD201AA.GravaRegistro;
 begin
    inherited;
-   with SqlDados, CDSDados do begin
+   with SqlDados, CDSDadosOrigem do begin
       try
          Inc(fIdDocumento);
          Start(tcInsert, 'TPagDocumento', QueryTrabalho);
             AddValue('Empresa',      1);
             AddValue('IdDocumento',  fIdDocumento);
-            AddValue('IdFornecedor', CDSDados.FieldByName('fornecedor_codigo').AsInteger);
+            AddValue('IdFornecedor', CDSDadosOrigem.FieldByName('fornecedor_codigo').AsInteger);
             AddValue('IdTipo',       1);
             AddValue('Documento',    FieldByName('numero_documento').AsString);
             AddValue('Complemento',  UpperCase(TiraAcentos(FieldByName('obs').AsString)));
