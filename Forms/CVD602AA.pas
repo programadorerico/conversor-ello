@@ -10,7 +10,10 @@ uses
 
 type
   TFCVD602AA = class(TFPaiConversor)
+    procedure BImportarClick(Sender: TObject);
   private
+    FIdGrupo: Integer;
+    procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
   end;
 
@@ -26,20 +29,34 @@ uses SysUtils, EllTypes, UnSql, UDataModule, UProdutos;
 { Chamado para cada registro da tabela }
 procedure TFCVD602AA.GravaRegistro;
 begin
+   Inc(FIdGrupo);
+
    SqlDados.Start(tcInsert, 'TEstGrupo', QueryTrabalho);
    SqlDados.AddValue('IdTipo',    1);
-   SqlDados.AddValue('IdGrupo',   CDSDados.FieldByName('codgrupoproduto').AsInteger);
-   SqlDados.AddValue('Descricao', Trim(CDSDados.FieldByName('nome').AsString));
+   SqlDados.AddValue('IdGrupo',   FIdGrupo);
+   SqlDados.AddValue('Descricao', Trim(CDSDados.FieldByName('Grupo').AsString));
    SqlDados.AddValue('Tipo',      'REV');
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
 
    SqlDados.Start(tcInsert, 'TEstSubGrupo', QueryTrabalho);
    SqlDados.AddValue('IdSubGrupo', FIdRegistro);
-   SqlDados.AddValue('IdGrupo',    CDSDados.FieldByName('codgrupoproduto').AsInteger);
-   SqlDados.AddValue('Descricao',  Trim(CDSDados.FieldByName('nome').AsString));
+   SqlDados.AddValue('IdGrupo',    FIdGrupo);
+   SqlDados.AddValue('Descricao',  Trim(CDSDados.FieldByName('Grupo').AsString));
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
+end;
+
+procedure TFCVD602AA.BImportarClick(Sender: TObject);
+begin
+   inherited;
+   FIdGrupo := 0;
+end;
+
+procedure TFCVD602AA.LimpaRegistros;
+begin
+   inherited;
+   LimpaGrupos(QueryTrabalho);
 end;
 
 initialization RegisterClass(TFCVD602AA);

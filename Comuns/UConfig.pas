@@ -50,7 +50,7 @@ begin
    FBancoDeDadosOrigem := FIniFile.ReadString ('Dados', 'DatabaseOrigem', '');
    FCaminhoDll         := FIniFile.ReadString ('Preferencias', 'Firebird', 'GDS32.DLL');
    FIdEmpresa          := FIniFile.ReadInteger('Opcoes',  'EmpresaPadrao', 1);
-   FNomeConexaoODBC    := FIniFile.ReadString('conexao_odbc_conversao', 'DataSource', 'sete');
+   FNomeConexaoODBC    := FIniFile.ReadString('conexao_odbc_conversao', 'DataSource', 'teste');
 end;
 
 end.

@@ -76,13 +76,13 @@ inherited FCVD200AA: TFCVD200AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 839
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 839
       end
       inherited ToolBar1: TToolBar
@@ -103,7 +103,8 @@ inherited FCVD200AA: TFCVD200AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'select * from fornecedor')
+      'select distinct fornecedor from estoque'
+      'where fornecedor<>'#39#39)
     Left = 341
     Top = 312
   end

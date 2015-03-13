@@ -141,7 +141,10 @@ begin
    FIdRegistro := 1;
    CDSDados.First;
    while (not CDSDados.eof) and (not Cancelar) do begin
-      GravaRegistro;
+      try
+         GravaRegistro;
+      except
+      end;
       CDSDados.Next;
       Inc(FIdRegistro);
    end;

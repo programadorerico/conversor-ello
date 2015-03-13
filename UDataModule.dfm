@@ -2,8 +2,8 @@ object Datam1: TDatam1
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Left = 782
-  Top = 319
+  Left = 545
+  Top = 320
   Height = 293
   Width = 481
   object sConnection: TEllConnection
@@ -37,7 +37,6 @@ object Datam1: TDatam1
       'Provider=MSDASQL.1;Persist Security Info=False;Data Source=sete;' +
       'Mode=ReadWrite;'
     LoginPrompt = False
-    Mode = cmReadWrite
     Provider = 'MSDASQL.1'
     Left = 36
     Top = 68

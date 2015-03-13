@@ -581,7 +581,7 @@ object FPrincipal: TFPrincipal
     Align = alClient
     Alignment = taCenter
     AutoSize = False
-    Caption = 'Conversor - 7 Sistemas'
+    Caption = 'Conversor - Henrique/Matup'#225
     Font.Charset = ANSI_CHARSET
     Font.Color = clSilver
     Font.Height = -32
@@ -912,6 +912,7 @@ object FPrincipal: TFPrincipal
     QuickAccessToolbar.Toolbar = BarManagerBar1
     TabOrder = 3
     object FRibbonTab2: TdxRibbonTab
+      Active = True
       Caption = 'Produtos'
       Groups = <
         item
@@ -929,9 +930,9 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar2'
         end>
+      Visible = False
     end
     object FRibbonTab3: TdxRibbonTab
-      Active = True
       Caption = 'Contas a Pagar'
       Groups = <
         item
@@ -939,6 +940,7 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar4'
         end>
+      Visible = False
     end
   end
   object StatusBar1: TdxRibbonStatusBar
@@ -2813,6 +2815,7 @@ object FPrincipal: TFPrincipal
     object BarManagerBar3: TdxBar
       Caption = 'Clientes'
       CaptionButtons = <>
+      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2850,6 +2853,10 @@ object FPrincipal: TFPrincipal
         end
         item
           Visible = True
+          ItemName = 'dxBarLargeButton29'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarLargeButton4'
         end>
       OneOnRow = True
@@ -2861,6 +2868,7 @@ object FPrincipal: TFPrincipal
     object BarManagerBar2: TdxBar
       Caption = 'Documentos'
       CaptionButtons = <>
+      DockedDockingStyle = dsTop
       DockedLeft = 80
       DockedTop = 0
       FloatLeft = 421
@@ -2881,6 +2889,7 @@ object FPrincipal: TFPrincipal
     object BarManagerBar4: TdxBar
       Caption = 'Fornecedor'
       CaptionButtons = <>
+      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 267
@@ -2978,10 +2987,10 @@ object FPrincipal: TFPrincipal
       Visible = ivAlways
     end
     object dxBarLargeButton4: TdxBarLargeButton
-      Caption = '3-Produtos'
+      Caption = '4-Produtos'
       Category = 0
       Description = 'FCVD600AA'
-      Hint = '3-Produtos'
+      Hint = '4-Produtos'
       Visible = ivAlways
       LargeImageIndex = 60
       OnClick = dxBarLargeButton4Click
@@ -3334,6 +3343,17 @@ object FPrincipal: TFPrincipal
       OnClick = dxBarLargeButton4Click
       SyncImageIndex = False
       ImageIndex = 55
+    end
+    object dxBarLargeButton29: TdxBarLargeButton
+      Caption = '3-Fornecedores'
+      Category = 0
+      Description = 'FCVD200AA'
+      Hint = '3-Fornecedores'
+      Visible = ivAlways
+      LargeImageIndex = 54
+      OnClick = dxBarLargeButton4Click
+      SyncImageIndex = False
+      ImageIndex = 54
     end
     object CustomdxBarCombo1: TCustomdxBarCombo
       Caption = 'New Item'

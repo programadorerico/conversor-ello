@@ -1,4 +1,6 @@
 inherited FCVD604AA: TFCVD604AA
+  Left = 203
+  Top = 162
   Width = 1028
   Height = 449
   Caption = 'Marcas'
@@ -27,18 +29,18 @@ inherited FCVD604AA: TFCVD604AA
       inherited EBProdutos: TEllBox
         Width = 744
         Height = 326
-        inherited PtlBox14: TPtlBox1
-          Width = 743
-          Color = clGray
-          LabelText = 'Marcas'
+        inherited DBDados: TExlDBGrid [0]
+          Width = 730
+          Height = 162
         end
         inherited MError: TcxMemo [1]
           Top = 216
           Width = 732
         end
-        inherited DBDados: TExlDBGrid [2]
-          Width = 730
-          Height = 162
+        inherited PtlBox14: TPtlBox1 [2]
+          Width = 743
+          Color = clGray
+          LabelText = 'Marcas'
         end
         inherited PtlBox11: TPtlBox1
           Top = 196
@@ -98,6 +100,7 @@ inherited FCVD604AA: TFCVD604AA
   end
   inherited CDSDados: TADOQuery
     SQL.Strings = (
-      'select codmarca, nome from marca')
+      'select distinct marca from estoque where marca<>'#39#39
+      'order by marca')
   end
 end

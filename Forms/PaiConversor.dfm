@@ -1,7 +1,7 @@
 inherited FPaiConversor: TFPaiConversor
-  Left = 310
-  Top = 81
-  Width = 953
+  Left = 0
+  Top = 82
+  Width = 800
   BorderStyle = bsSizeable
   Caption = 'Conversao'
   Constraints.MinHeight = 356
@@ -15,31 +15,31 @@ inherited FPaiConversor: TFPaiConversor
   PixelsPerInch = 96
   TextHeight = 13
   inherited EllBox1: TEllBox
-    Width = 937
+    Width = 784
     DesignSize = (
-      937
+      784
       407)
     inherited EllBox3: TEllBox
-      Width = 929
+      Width = 776
       DesignSize = (
-        929
+        776
         29)
       inherited ImageTitulo: TImage
-        Width = 929
+        Width = 776
       end
       inherited LTitulo: TLabel
-        Width = 861
+        Width = 708
         Caption = 'TABELA'
       end
     end
     inherited PanelPrincipal: TEllBox
-      Width = 929
+      Width = 776
       Height = 323
       DesignSize = (
-        929
+        776
         323)
       object Label1: TLabel
-        Left = 679
+        Left = 526
         Top = 72
         Width = 65
         Height = 13
@@ -50,7 +50,7 @@ inherited FPaiConversor: TFPaiConversor
       object EBProdutos: TEllBox
         Left = 1
         Top = 0
-        Width = 669
+        Width = 516
         Height = 323
         Colors.Enabled = 16776176
         Colors.Disabled = 16776176
@@ -66,13 +66,13 @@ inherited FPaiConversor: TFPaiConversor
         Font.Style = []
         ParentFont = False
         DesignSize = (
-          669
+          516
           323)
         object PtlBox14: TPtlBox1
           Tag = 2
           Left = 0
           Top = 0
-          Width = 668
+          Width = 515
           Height = 21
           Caption = ' '
           Color = 15658734
@@ -94,7 +94,7 @@ inherited FPaiConversor: TFPaiConversor
         object DBDados: TExlDBGrid
           Left = 6
           Top = 23
-          Width = 655
+          Width = 502
           Height = 159
           Anchors = [akLeft, akTop, akRight, akBottom]
           Ctl3D = False
@@ -117,13 +117,13 @@ inherited FPaiConversor: TFPaiConversor
           Properties.ScrollBars = ssBoth
           TabOrder = 2
           Height = 105
-          Width = 657
+          Width = 504
         end
         object PtlBox11: TPtlBox1
           Tag = 2
           Left = 6
           Top = 193
-          Width = 655
+          Width = 502
           Height = 21
           Caption = ' '
           Color = 15658734
@@ -145,7 +145,7 @@ inherited FPaiConversor: TFPaiConversor
         object EBTampa: TEllBox
           Left = 6
           Top = 23
-          Width = 655
+          Width = 502
           Height = 159
           Colors.Enabled = 15527920
           Colors.Disabled = 15527920
@@ -162,12 +162,12 @@ inherited FPaiConversor: TFPaiConversor
           ParentFont = False
           Visible = False
           DesignSize = (
-            655
+            502
             159)
           object Label12: TLabel
             Left = 23
             Top = 27
-            Width = 642
+            Width = 489
             Height = 29
             Alignment = taCenter
             Anchors = [akLeft, akRight]
@@ -183,7 +183,7 @@ inherited FPaiConversor: TFPaiConversor
           object Label11: TLabel
             Left = 7
             Top = 65
-            Width = 642
+            Width = 489
             Height = 16
             Alignment = taCenter
             Anchors = [akLeft, akRight]
@@ -199,7 +199,7 @@ inherited FPaiConversor: TFPaiConversor
         end
       end
       object BtAbrir: TButton
-        Left = 676
+        Left = 523
         Top = 2
         Width = 247
         Height = 30
@@ -212,7 +212,7 @@ inherited FPaiConversor: TFPaiConversor
         OnClick = BtAbrirClick
       end
       object BImportar: TButton
-        Left = 676
+        Left = 523
         Top = 285
         Width = 247
         Height = 30
@@ -226,7 +226,7 @@ inherited FPaiConversor: TFPaiConversor
         OnClick = BImportarClick
       end
       object BEdita: TButton
-        Left = 676
+        Left = 523
         Top = 34
         Width = 247
         Height = 30
@@ -240,28 +240,28 @@ inherited FPaiConversor: TFPaiConversor
     end
     inherited EllBox5: TEllBox
       Top = 361
-      Width = 929
+      Width = 776
       DesignSize = (
-        929
+        776
         43)
-      inherited btCancelar: TButton [0]
-        Left = 828
+      inherited btConfirmar: TButton
+        Left = 579
         Visible = False
       end
       inherited btSair: TButton [1]
-        Left = 828
+        Left = 675
       end
-      inherited btConfirmar: TButton [2]
-        Left = 732
+      inherited btCancelar: TButton [2]
+        Left = 675
         Visible = False
       end
       inherited ToolBar1: TToolBar
-        Width = 632
+        Width = 479
       end
       object ProgressBar1: TProgressBar
         Left = 8
         Top = 10
-        Width = 811
+        Width = 658
         Height = 22
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 4
@@ -269,7 +269,7 @@ inherited FPaiConversor: TFPaiConversor
       end
     end
     object BLimpar: TButton
-      Left = 680
+      Left = 527
       Top = 288
       Width = 247
       Height = 30
@@ -300,7 +300,6 @@ inherited FPaiConversor: TFPaiConversor
   object QueryPesquisaECO: TSQLQuery [4]
     MaxBlobSize = -1
     Params = <>
-    SQLConnection = Datam1.ConnectionOrigem
     Left = 179
     Top = 162
   end

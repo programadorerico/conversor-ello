@@ -1,6 +1,6 @@
 object FPaiRotinaEll: TFPaiRotinaEll
-  Left = 440
-  Top = 47
+  Left = 161
+  Top = 49
   BorderIcons = []
   BorderStyle = bsSingle
   Caption = 'Titulo'

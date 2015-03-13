@@ -8,8 +8,10 @@ uses
 
 type
   TFCVD200AA = class(TFPaiConversor)
+    procedure BImportarClick(Sender: TObject);
   private
     { Private declarations }
+    FIdFornecedor : Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
   public
@@ -26,8 +28,6 @@ uses UnSql, UDataModule, Utils, UFornecedores;
 {$R *.dfm}
 
 procedure TFCVD200AA.GravaRegistro;
-var
-   IdFornecedor : Integer;
 
    function GetTipoPessoa: String;
    begin
@@ -36,29 +36,29 @@ var
 
    function GetNome: String;
    begin
-      Result := Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('NomeFantasia').AsString)));
+      Result := Trim(UpperCase(TiraAcentos(CDSDados.FieldByName('Fornecedor').AsString)));
    end;
 
    function GetFantasia: String;
    begin
-      Result := CDSDados.FieldByName('NomeFantasia').AsString;
+      Result := GetNome;
    end;
 
    function GetCNPJCPF: String;
    begin
-      Result := ApenasDigitos(CDSDados.FieldByName('CNPJ_CPF').AsString);
+      Result := ApenasDigitos('00.000.000/0000-00');
    end;
 
    function GetRGIE: String;
    begin
-      Result := ApenasDigitos(CDSDados.FieldByName('InscricaoEstadual').AsString);
+      Result := ApenasDigitos('00000000');
    end;
 
    function GetCidade: Integer;
    var codigo_ibge : string;
    begin
-      codigo_ibge := CDSDados.FieldByName('CodMunicipio').AsString;
-      Result := 3998;
+      codigo_ibge := '5105606';
+      Result := 4077;
       if codigo_ibge='' then Exit;
       with QueryPesquisa do begin
          Sql.Clear;
@@ -72,28 +72,28 @@ var
 
 begin
    inherited;
-   IdFornecedor := CDSDados.FieldByName('CodFornecedor').AsInteger;
+   Inc(FIdFornecedor);
    with SqlDados do begin
       try
          Start(tcInsert, 'TPagFornecedor', QueryTrabalho);
-            AddValue('IdFornecedor',     IdFornecedor);
+            AddValue('IdFornecedor',     FIdFornecedor);
             AddValue('Nome',             GetNome);
             AddValue('Tipo',             GetTipoPessoa);
             AddValue('Fantasia',         GetFantasia);
             AddValue('CpfCnpj',          GetCNPJCPF);
             AddValue('RGIE',             GetRGIE);
             AddValue('OrgaoExpedidor',   '');
-            AddValue('Endereco',         UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString)) );
-            AddValue('Numero',           CDSDados.FieldByName('Numero').AsString);
+            AddValue('Endereco',         'INDEFINIDO');
+            AddValue('Numero',           '0');
             AddValue('Complemento',      '');
-            AddValue('Bairro',           UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString)) );
+            AddValue('Bairro',           'INDEFINIDO');
             AddValue('CaixaPostal',      '' );
             AddValue('IdCidade',         GetCidade);
 
-            AddValue('Cep',              ApenasDigitos(CDSDados.FieldByName('Cep').AsString) );
-            AddValue('Fax',              ApenasDigitos(CDSDados.FieldByName('Fax').AsString));
+            AddValue('Cep',              '78525000');
+            AddValue('Fax',              '');
             AddValue('Contato',          GetFantasia);
-            AddValue('Email',            CDSDados.FieldByName('Email').AsString);
+            AddValue('Email',            'naoinformado@nada.com.br');
             AddValue('DiaEspecifico',    0);
             AddValue('Usuario',          'IMPLANTACAO');
             AddValue('DataCadastro',     Now);
@@ -115,6 +115,12 @@ procedure TFCVD200AA.LimpaRegistros;
 begin
    LimpaFornecedores(QueryTrabalho);
    inherited;
+end;
+
+procedure TFCVD200AA.BImportarClick(Sender: TObject);
+begin
+   inherited;
+   FIdFornecedor := 0;
 end;
 
 initialization RegisterClass(TFCVD200AA);
