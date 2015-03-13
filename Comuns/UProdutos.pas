@@ -71,7 +71,7 @@ type
     function GetIdMarca: Integer;
     function GetPrecoVenda: Currency;
     function GetPagaComissao: String;
-    function GetIdNCM: Integer;
+    function GetCodigoNCM: String;
     function GetIdGrupoICMS: Integer;
     function GetIdTributacao: Integer;
     function GetIdClasse: Integer;
@@ -90,7 +90,7 @@ type
     property PrecoVenda        : Currency read GetPrecoVenda;
     property PagaComissao      : String read GetPagaComissao;
     property Status            : String read FStatus;
-    property CodNCM            : Integer read GetIdNCM;
+    property CodNCM            : String read GetCodigoNCM;
     property IdGrupoICMS       : Integer read GetIdGrupoICMS;
     property IdTributacao      : Integer read GetIdTributacao;
     property IdGrupoCredito    : Integer read FIdGrupoCredito;
@@ -286,17 +286,9 @@ begin
    Result := 1;
 end;
 
-function TProdutoConvertido.GetIdNCM: Integer;
-var
-   codncm: String;
+function TProdutoConvertido.GetCodigoNCM: String;
 begin
-   codncm := FDataSet.FieldByName('CODIGO_NCM').AsString;
-   FQueryPesquisa.SQL.Text := format('select idncm from testncm where codigo=%s', [QuotedStr(codncm)]);
-   FQueryPesquisa.Open;
-   if FQueryPesquisa.IsEmpty then
-      Result := 1
-   else
-      Result := FQueryPesquisa.FieldByName('idncm').AsInteger;
+   Result := FDataSet.FieldByName('CODIGO_NCM').AsString;
 end;
 
 function TProdutoConvertido.GetIdSubGrupo: Integer;
