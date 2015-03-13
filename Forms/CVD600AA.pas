@@ -12,14 +12,12 @@ type
     CBEstoque: TCheckBox;
     CBEstoque1: TCheckBox;
     ADOTable1: TADOTable;
-    CDSProdutos: TClientDataSet;
     procedure CBEstoqueClick(Sender: TObject);
     procedure BImportarClick(Sender: TObject);
-    procedure CDSProdutosAfterOpen(DataSet: TDataSet);
     procedure CDSProdutosBeforeScroll(DataSet: TDataSet);
+    procedure FormCreate(Sender: TObject); override;
   private
     { Private declarations }
-    FIdProduto   : Integer;
     FIdMovimento : Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
@@ -38,10 +36,14 @@ implementation
 uses Utils, UnSql, UDataModule, PaiRotinaEll;
 
 var  fIdInventario: Integer;
-     fIdLote: Integer;
-     fIdMovimentoLote: Integer;
 
 {$R *.dfm}
+
+procedure TFCVD600AA.FormCreate(Sender: TObject);
+begin
+   inherited;
+   QueryOrigem.SQL.Text := UProdutos.QUERY;
+end;
 
 procedure TFCVD600AA.LimpaRegistros;
 begin
@@ -69,7 +71,7 @@ begin
       GravaProduto(produtoConvertido);
    except
       on e:Exception do begin
-         GravaLog('Produto: ' + CDSDadosOrigem.FieldByName('Codigo').AsString + ' Mensagem: ' + E.Message);
+         GravaLog('Produto: ' + IntToStr(produtoConvertido.IdProduto) + ' Mensagem: ' + E.Message);
          produtoConvertido.Free;
          raise;
       end;
@@ -79,7 +81,7 @@ begin
       GravaEstoque(produtoConvertido);
    except
       on e:Exception do begin
-         GravaLog('Produto: ' + CDSDadosOrigem.FieldByName('Codigo').AsString + ' Mensagem: ' + E.Message);
+         GravaLog('Produto: ' + IntToStr(produtoConvertido.IdProduto) + ' Mensagem: ' + E.Message);
          produtoConvertido.Free;
          raise;
       end;
@@ -196,22 +198,9 @@ end;
 
 procedure TFCVD600AA.BImportarClick(Sender: TObject);
 begin
-   fIdProduto       := 0;
    fIdInventario    := 0;
    FIdMovimento     := 0;
-   fIdLote          := 0;
-   fIdMovimentoLote := 0;
    inherited;
-end;
-
-procedure TFCVD600AA.CDSProdutosAfterOpen(DataSet: TDataSet);
-begin
-   inherited;
-   Label1.Caption        := 'Registros '+StrZero(CDSProdutos.RecordCount,6);
-   Label1.Visible        := True;
-   ProgressBar1.Max      := CDSProdutos.RecordCount;
-   ProgressBar1.Position := 0;
-   BImportar.Enabled     := CDSProdutos.RecordCount>0;
 end;
 
 procedure TFCVD600AA.CDSProdutosBeforeScroll(DataSet: TDataSet);

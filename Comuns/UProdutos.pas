@@ -4,6 +4,24 @@ interface
 
 uses DB, SqlExpr, Classes, Interfaces;
 
+const
+   QUERY = 'SELECT                                                                                             ' +
+           '   a.ID_PRODUTO,                                                                                   ' +
+           '   (select first 1 descricao from PRODUTOS_DESCRICOES where id_produto=a.ID_PRODUTO) AS DESCRICAO, ' +
+           '   a.CODIGO_BARRAS,                                                                                ' +
+           '   a.ID_FABRICANTE_FORNECEDOR,                                                                     ' +
+           '   a.CODIGO_FABRICANTE,                                                                            ' +
+           '   a.ID_GRUPO_PRODUTOS, a.ID_SUB_GRUPO_PRODUTOS,                                                   ' +
+           '   a.QUANT_UNITARIA,                                                                               ' +
+           '   a.UNIDADE,                                                                                      ' +
+           '   a.DATA_CADASTRO, a.ULTIMA_ATUALIZACAO_CADASTRO,                                                 ' +
+           '   a.CODIGO_NCM                                                                                    ' +
+           '   , c.ESTOQUE_INTEIRO, c.ESTOQUE_FRACAO                                                           ' +
+           '   , d.PRECO_COMPRA, d.PRECO_CUSTO, d.CUSTO_MEDIO, d.PRECO_VENDA, d.PRECO_VENDA_ANTERIOR           ' +
+           'FROM PRODUTOS a                                                                                    ' +
+           'inner JOIN PRODUTOS_ESTOQUES c ON (c.ID_PRODUTO=a.ID_PRODUTO)                                      ' +
+           'inner JOIN PRODUTOS_PRECOS d ON (d.ID_PRODUTO=a.ID_PRODUTO)                                        ';
+
 type
   TProdutoConvertido = class(TInterfacedObject, IRegistroConvertido)
   private
@@ -207,10 +225,10 @@ procedure TProdutoConvertido.CarregaDoDataset(DataSet: TDataSet);
 begin
    FDataSet := DataSet;
    
-   FIdProduto         := FDataSet.FieldByName('Codigo').AsInteger;
-   FDescricao         := Copy(Trim(UpperCase(TirarAcentos(FDataSet.FieldByName('Discriminacao').AsString))), 1, 50);
-   FPrecoCusto        := StrToFloat(StringReplace(FDataSet.FieldByName('ValorCusto').AsString, '.', ',', []));
-   FDataCadastro      := FDataSet.FieldByName('DataEntrada').AsDateTime;
+   FIdProduto         := FDataSet.FieldByName('ID_PRODUTO').AsInteger;
+   FDescricao         := Copy(Trim(UpperCase(TirarAcentos(FDataSet.FieldByName('DESCRICAO').AsString))), 1, 50);
+   FPrecoCusto        := FDataSet.FieldByName('PRECO_CUSTO').AsFloat;
+   FDataCadastro      := FDataSet.FieldByName('DATA_CADASTRO').AsDateTime;
    FStatus            := 'ATIVO'; // 'ATIVO', 'INATIVO'
    FIdGrupoCredito    := 1;
    FMargemGarantido   := 0;
@@ -230,7 +248,7 @@ begin
    FComissaoPrazo     := 0;
    FEstoqueAutomatico := 'N';
    FEstoqueMaximo     := 0;
-   FEstoqueMinimo     := FDataSet.FieldByName('QuantidadeMinima').AsCurrency;
+   FEstoqueMinimo     := 0;
    FEstoqueCritico    := 0;
    FBonificacao       := 0;
    FFabricacao        := 'N';
@@ -264,20 +282,15 @@ begin
 end;
 
 function TProdutoConvertido.GetIdMarca: Integer;
-var
-   nomeMarca: String;
 begin
-   nomeMarca := Trim(FDataSet.FieldByName('Marca').AsString);
-   FQueryPesquisa.SQL.Text := format('select idmarca from TEstMarca where descricao=%s', [QuotedStr(nomeMarca)]);
-   FQueryPesquisa.Open;
-   Result := FQueryPesquisa.FieldByName('idmarca').AsInteger;
+   Result := 1;
 end;
 
 function TProdutoConvertido.GetIdNCM: Integer;
 var
    codncm: String;
 begin
-   codncm := FDataSet.FieldByName('CodigoFiscal').AsString;
+   codncm := FDataSet.FieldByName('CODIGO_NCM').AsString;
    FQueryPesquisa.SQL.Text := format('select idncm from testncm where codigo=%s', [QuotedStr(codncm)]);
    FQueryPesquisa.Open;
    if FQueryPesquisa.IsEmpty then
@@ -287,28 +300,23 @@ begin
 end;
 
 function TProdutoConvertido.GetIdSubGrupo: Integer;
-var
-   nomeSubgrupo: String;
 begin
-   nomeSubgrupo := Trim(FDataSet.FieldByName('Grupo').AsString);
-   FQueryPesquisa.SQL.Text := format('select idsubgrupo from testsubgrupo where descricao=%s', [QuotedStr(nomeSubgrupo)]);
-   FQueryPesquisa.Open;
-   Result := FQueryPesquisa.FieldByName('idsubgrupo').AsInteger;
+   Result := 1;
 end;
 
 function TProdutoConvertido.GetPagaComissao: String;
 begin
-   Result := iif(FDataSet.FieldByName('Comis').AsInteger=1, 'S', 'N');
+   Result := 'N';
 end;
 
 function TProdutoConvertido.GetPrecoVenda: Currency;
 begin
-   Result := FDataSet.FieldByName('ValorVenda').AsCurrency;
+   Result := FDataSet.FieldByName('PRECO_VENDA').AsCurrency;
 end;
 
 function TProdutoConvertido.GetUnidadeDeMedida: String;
 begin
-   Result := Copy(Trim(UpperCase(FDataSet.FieldByName('Medida').AsString)), 1, 2);
+   Result := Copy(Trim(UpperCase(FDataSet.FieldByName('UNIDADE').AsString)), 1, 2);
    if Result = '' then Result := 'UN';
    if Result = '1' then Result := 'UN';
    if Result = '81' then Result := 'UN';
@@ -318,7 +326,7 @@ function TProdutoConvertido.GetCodBarras: String;
 var
    codbarras: String;
 begin
-   codbarras := FDataSet.FieldByName('CodBar').AsString;
+   codbarras := FDataSet.FieldByName('CODIGO_BARRAS').AsString;
    if Length(codbarras)<13 then
       Result := GeraNovoEAN13(IntToStr(fIdProduto))
    else
@@ -340,19 +348,14 @@ end;
 
 function TProdutoConvertido.GetQuantidadeEmEstoque: Currency;
 begin
-   Result := FDataSet.FieldByName('Quantidade').AsCurrency;
+   Result := FDataSet.FieldByName('ESTOQUE_INTEIRO').AsCurrency;
    if Result > 9999999 then
       Result := 0;     
 end;
 
 function TProdutoConvertido.GetIdFornecedor: Integer;
-var
-   nomeFornecedor: String;
 begin
-   nomeFornecedor := Trim(FDataSet.FieldByName('Grupo').AsString);
-   FQueryPesquisa.SQL.Text := format('select IdFornecedor from TPagFornecedor where Nome=%s', [QuotedStr(nomeFornecedor)]);
-   FQueryPesquisa.Open;
-   Result := FQueryPesquisa.FieldByName('IdFornecedor').AsInteger;
+   Result := FDataSet.FieldByName('ID_FABRICANTE_FORNECEDOR').AsInteger;
 end;
 
 { TEstProdutoMovimento }

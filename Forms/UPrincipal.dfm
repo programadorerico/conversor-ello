@@ -581,7 +581,7 @@ object FPrincipal: TFPrincipal
     Align = alClient
     Alignment = taCenter
     AutoSize = False
-    Caption = 'Conversor - Henrique/Matup'#225
+    Caption = 'Conversor - Vector/Solution'
     Font.Charset = ANSI_CHARSET
     Font.Color = clSilver
     Font.Height = -32
@@ -919,6 +919,7 @@ object FPrincipal: TFPrincipal
         item
           ToolbarName = 'BarManagerBar4'
         end>
+      Visible = False
     end
     object FRibbonTab2: TdxRibbonTab
       Active = True
@@ -2842,14 +2843,6 @@ object FPrincipal: TFPrincipal
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarLargeButton25'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarLargeButton27'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarLargeButton29'
         end
         item
@@ -2982,10 +2975,10 @@ object FPrincipal: TFPrincipal
       Visible = ivAlways
     end
     object dxBarLargeButton4: TdxBarLargeButton
-      Caption = '4-Produtos'
+      Caption = '2-Produtos'
       Category = 0
       Description = 'FCVD600AA'
-      Hint = '4-Produtos'
+      Hint = '2-Produtos'
       Visible = ivAlways
       LargeImageIndex = 60
       OnClick = dxBarLargeButton4Click
@@ -3340,10 +3333,10 @@ object FPrincipal: TFPrincipal
       ImageIndex = 55
     end
     object dxBarLargeButton29: TdxBarLargeButton
-      Caption = '3-Fornecedores'
+      Caption = '1-Fornecedores'
       Category = 0
       Description = 'FCVD200AA'
-      Hint = '3-Fornecedores'
+      Hint = '1-Fornecedores'
       Visible = ivAlways
       LargeImageIndex = 54
       OnClick = dxBarLargeButton4Click

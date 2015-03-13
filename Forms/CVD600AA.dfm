@@ -89,8 +89,9 @@ inherited FCVD600AA: TFCVD600AA
     Top = 202
   end
   inherited DataSource: TDataSource
+    DataSet = CDSDadosOrigem
     Left = 467
-    Top = 300
+    Top = 76
   end
   inherited QueryPesquisa: TSQLQuery
     SQL.Strings = (
@@ -98,10 +99,14 @@ inherited FCVD600AA: TFCVD600AA
     Left = 147
     Top = 298
   end
+  inherited QueryOrigem: TSQLQuery
+    Left = 419
+    Top = 330
+  end
   inherited DataSetProvider2: TDataSetProvider
-    DataSet = ADOQueryOrigem
-    Left = 246
-    Top = 300
+    DataSet = QueryOrigem
+    Left = 462
+    Top = 228
   end
   inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
@@ -116,13 +121,7 @@ inherited FCVD600AA: TFCVD600AA
     Left = 488
     Top = 160
   end
-  object CDSProdutos: TClientDataSet [8]
-    Aggregates = <>
-    Params = <>
+  inherited CDSDadosOrigem: TClientDataSet
     ProviderName = 'DataSetProvider2'
-    AfterOpen = CDSProdutosAfterOpen
-    BeforeScroll = CDSProdutosBeforeScroll
-    Left = 342
-    Top = 300
   end
 end

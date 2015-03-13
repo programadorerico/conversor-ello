@@ -1,6 +1,6 @@
 inherited FCVD200AA: TFCVD200AA
-  Left = 359
-  Top = 143
+  Left = 298
+  Top = 204
   Width = 964
   Height = 494
   Caption = 'Fornecedores'
@@ -96,8 +96,18 @@ inherited FCVD200AA: TFCVD200AA
     end
   end
   inherited DataSource: TDataSource
-    Left = 419
-    Top = 316
+    DataSet = CDSDadosOrigem
+    Left = 579
+    Top = 84
+  end
+  inherited QueryOrigem: TSQLQuery
+    Left = 547
+    Top = 194
+  end
+  inherited DataSetProvider2: TDataSetProvider
+    DataSet = QueryOrigem
+    Left = 573
+    Top = 124
   end
   inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
@@ -105,5 +115,10 @@ inherited FCVD200AA: TFCVD200AA
       'where fornecedor<>'#39#39)
     Left = 341
     Top = 312
+  end
+  inherited CDSDadosOrigem: TClientDataSet
+    ProviderName = 'DataSetProvider2'
+    Left = 515
+    Top = 123
   end
 end
