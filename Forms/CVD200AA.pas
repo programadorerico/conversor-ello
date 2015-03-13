@@ -5,16 +5,17 @@ interface
 uses
   SysUtils, Variants, Classes, Controls, Forms, PaiConversor, ADODB, DB, SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
   cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox,
-  DBClient;
+  DBClient, UFornecedores;
 
 type
   TFCVD200AA = class(TFPaiConversor)
-    procedure BImportarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject); override;
   private
     { Private declarations }
     FIdFornecedor : Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
+    procedure GravaFornecedor(Fornecedor: TFornecedorConvertido);
   public
     { Public declarations }
   end;
@@ -24,92 +25,34 @@ var
 
 implementation
 
-uses UnSql, UDataModule, Utils, UFornecedores;
+uses UnSql, UDataModule, Utils;
 
 {$R *.dfm}
 
-procedure TFCVD200AA.GravaRegistro;
+{ TFCVD200AA }
 
-   function GetTipoPessoa: String;
-   begin
-      Result := 'J';
-   end;
-
-   function GetNome: String;
-   begin
-      Result := Trim(UpperCase(TiraAcentos(CDSDadosOrigem.FieldByName('Fornecedor').AsString)));
-   end;
-
-   function GetFantasia: String;
-   begin
-      Result := GetNome;
-   end;
-
-   function GetCNPJCPF: String;
-   begin
-      Result := ApenasDigitos('00.000.000/0000-00');
-   end;
-
-   function GetRGIE: String;
-   begin
-      Result := ApenasDigitos('00000000');
-   end;
-
-   function GetCidade: Integer;
-   var codigo_ibge : string;
-   begin
-      codigo_ibge := '5105606';
-      Result := 4077;
-      if codigo_ibge='' then Exit;
-      with QueryPesquisa do begin
-         Sql.Clear;
-         Sql.Add(Format('Select IdCidade From TGerCidade Where CodigoIBGE = ''%s'' ', [codigo_ibge]));
-         Open;
-         if not QueryPesquisa.IsEmpty then begin
-            Result := FieldbyName('IdCidade').AsInteger;
-         end;
-      end;
-   end;
-
+procedure TFCVD200AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   Inc(FIdFornecedor);
-   with SqlDados do begin
-      try
-         Start(tcInsert, 'TPagFornecedor', QueryTrabalho);
-            AddValue('IdFornecedor',     FIdFornecedor);
-            AddValue('Nome',             GetNome);
-            AddValue('Tipo',             GetTipoPessoa);
-            AddValue('Fantasia',         GetFantasia);
-            AddValue('CpfCnpj',          GetCNPJCPF);
-            AddValue('RGIE',             GetRGIE);
-            AddValue('OrgaoExpedidor',   '');
-            AddValue('Endereco',         'INDEFINIDO');
-            AddValue('Numero',           '0');
-            AddValue('Complemento',      '');
-            AddValue('Bairro',           'INDEFINIDO');
-            AddValue('CaixaPostal',      '' );
-            AddValue('IdCidade',         GetCidade);
+   QueryOrigem.SQL.Text := UFornecedores.QUERY;
+end;
 
-            AddValue('Cep',              '78525000');
-            AddValue('Fax',              '');
-            AddValue('Contato',          GetFantasia);
-            AddValue('Email',            'naoinformado@nada.com.br');
-            AddValue('DiaEspecifico',    0);
-            AddValue('Usuario',          'IMPLANTACAO');
-            AddValue('DataCadastro',     Now);
+procedure TFCVD200AA.GravaRegistro;
+var
+   FornecedorConvertido: TFornecedorConvertido;
+begin
+   inherited;
 
-            AddValue('Homepage',         '');
-            AddValue('Contatofone',      '');
-            AddValue('Fone',             '');
-            AddValue('Obs',              '');
-         Executa;
-
-      except on e:Exception do begin
-            GravaLog('Fornecedor: ' + GetNome + ' Mensagem: '+E.Message);
-         end;
+   FornecedorConvertido := TFornecedorConvertido.Create;
+   FornecedorConvertido.QueryPesquisa := QueryPesquisa;
+   FornecedorConvertido.CarregaDoDataset(CDSDadosOrigem);
+   try
+      GravaFornecedor(FornecedorConvertido);
+   except on e:Exception do begin
+         GravaLog('Fornecedor: ' + FornecedorConvertido.Nome + ' Mensagem: '+E.Message);
       end;
    end;
+   FornecedorConvertido.Free;
 end;
 
 procedure TFCVD200AA.LimpaRegistros;
@@ -118,10 +61,38 @@ begin
    inherited;
 end;
 
-procedure TFCVD200AA.BImportarClick(Sender: TObject);
+procedure TFCVD200AA.GravaFornecedor(Fornecedor: TFornecedorConvertido);
 begin
-   inherited;
-   FIdFornecedor := 0;
+   with SqlDados do begin
+      Start(tcInsert, 'TPagFornecedor', QueryTrabalho);
+         AddValue('IdFornecedor',     Fornecedor.IdFornecedor);
+         AddValue('Nome',             Fornecedor.Nome);
+         AddValue('Tipo',             Fornecedor.Tipo);
+         AddValue('Fantasia',         Fornecedor.Fantasia);
+         AddValue('CpfCnpj',          Fornecedor.CpfCnpj);
+         AddValue('RGIE',             Fornecedor.RGIE);
+         AddValue('OrgaoExpedidor',   '');
+         AddValue('Endereco',         'INDEFINIDO');
+         AddValue('Numero',           '0');
+         AddValue('Complemento',      '');
+         AddValue('Bairro',           'INDEFINIDO');
+         AddValue('CaixaPostal',      '' );
+         AddValue('IdCidade',         Fornecedor.IdCidade);
+
+         AddValue('Cep',              '78525000');
+         AddValue('Fax',              '');
+         AddValue('Contato',          Fornecedor.Contato);
+         AddValue('Email',            'naoinformado@nada.com.br');
+         AddValue('DiaEspecifico',    0);
+         AddValue('Usuario',          'IMPLANTACAO');
+         AddValue('DataCadastro',     Fornecedor.DataCadastro);
+
+         AddValue('Homepage',         '');
+         AddValue('Contatofone',      '');
+         AddValue('Fone',             '');
+         AddValue('Obs',              '');
+      Executa;
+   end;
 end;
 
 initialization RegisterClass(TFCVD200AA);

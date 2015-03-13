@@ -911,6 +911,15 @@ object FPrincipal: TFPrincipal
     PopupMenuItems = [rpmiItems, rpmiMinimizeRibbon]
     QuickAccessToolbar.Toolbar = BarManagerBar1
     TabOrder = 3
+    object FRibbonTab3: TdxRibbonTab
+      Caption = 'Contas a Pagar'
+      Groups = <
+        item
+        end
+        item
+          ToolbarName = 'BarManagerBar4'
+        end>
+    end
     object FRibbonTab2: TdxRibbonTab
       Active = True
       Caption = 'Produtos'
@@ -929,15 +938,6 @@ object FPrincipal: TFPrincipal
         end
         item
           ToolbarName = 'BarManagerBar2'
-        end>
-    end
-    object FRibbonTab3: TdxRibbonTab
-      Caption = 'Contas a Pagar'
-      Groups = <
-        item
-        end
-        item
-          ToolbarName = 'BarManagerBar4'
         end>
     end
   end
