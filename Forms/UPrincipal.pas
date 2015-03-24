@@ -90,10 +90,8 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SBSairClick(Sender: TObject);
-    procedure BtBaseClick(Sender: TObject);
     procedure BtBotaoClick(Sender: TObject);
     procedure TreeView1Expanding(Sender: TObject; Node: TTreeNode; var AllowExpansion: Boolean);
-    procedure ApplicationMenuExtraPaneItemClick(Sender: TObject; AIndex: Integer);
     procedure dxBarLargeButton4Click(Sender: TObject);
   private
     { Private declarations }
@@ -128,68 +126,40 @@ var
 
 {$R *.DFM}
 
-procedure TFPrincipal.FormShow(Sender: TObject);
-begin
-   with Datam1.ADOQuery do begin
-{      Sql.Clear;
-      Sql.Add('Select * From Empresa ');
-      Open;
-      StatusBar1.Panels.Items[1].Text := FieldByName('Nome').AsString;
-      StatusBar1.Panels.Items[2].Text := 'Desc';
-      StatusBar1.Panels.Items[3].Text := FieldByName('Telefone').AsString;
-}      
-      StatusBar1.Panels.Items[5].Text := Datam1.sConnection.Params.Values['DataBase'];
-   end;
-end;
-
 procedure TFPrincipal.FormCreate(Sender: TObject);
 begin
    sUsuario := 'PAULO TRIBURTINI';
    Usuario  := 'TRIBURTINI';
 end;
 
-procedure TFPrincipal.BtBaseClick(Sender: TObject);
+procedure TFPrincipal.FormShow(Sender: TObject);
 begin
-  inherited;
-   if assigned(TdxBarLargeButton(Sender).Data) then
-//   ProgramaSelecionado(TMenuItem(TdxBarLargeButton(Sender).Data).Programa);
+   with Datam1.ADOQuery do begin
+      StatusBar1.Panels.Items[5].Text := Datam1.sConnection.Params.Values['DataBase'];
+   end;
 end;
-
 
 procedure TFPrincipal.SBSairClick(Sender: TObject);
 begin
-  inherited;
+   inherited;
    Application.Terminate;
 end;
 
 procedure TFPrincipal.TreeView1Expanding(Sender: TObject; Node: TTreeNode;  var AllowExpansion: Boolean);
 begin
-  inherited;
+   inherited;
    if not Node.Selected then Node.Selected := True;
 end;
 
 procedure TFPrincipal.SetColorScheme(const AName: string);
 begin
-  fRibbon.ColorSchemeName := AName;
-  StatusBar1.Invalidate;
+   fRibbon.ColorSchemeName := AName;
+   StatusBar1.Invalidate;
 end;
 
 procedure TFPrincipal.BtBotaoClick(Sender: TObject);
 begin
    SetColorScheme(TdxBarLargeButton(Sender).Hint);
-end;
-
-procedure TFPrincipal.ApplicationMenuExtraPaneItemClick(Sender: TObject;  AIndex: Integer);
-var fItem: TdxBarExtraPaneItem;
-//    fPrograma: TPrograma;
-begin
-  inherited;
-   fItem := ApplicationMenu.ExtraPaneItems[AIndex];
-   if fItem.Data>0 then begin
-{      fPrograma := fUsuarioLogado.GetPrograma(fItem.Data);
-      if Assigned(fPrograma) then
-         ProgramaSelecionado(fPrograma);}
-   end;
 end;
 
 procedure TFPrincipal.dxBarLargeButton4Click(Sender: TObject);
@@ -235,9 +205,7 @@ begin
          Form.Show;
          Result := (Form.ModalResult = mrOK);
       end;
-
    end;
-
 end;
 
 

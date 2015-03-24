@@ -8,7 +8,6 @@ uses
 
 type
   TDatam1 = class(TDataModule)
-    { Private declarations }
     sConnection: TEllConnection;
     ADOConnection: TADOConnection;
     ADOQuery: TADOQuery;
@@ -19,10 +18,7 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    { Private declarations }
     FUsuario: String;
-  public
-    { Public declarations }
   end;
 
   function MensagemEllo(msg : string; Tipo: TTipoMensagem):boolean;

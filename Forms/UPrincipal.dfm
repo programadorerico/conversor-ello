@@ -2811,6 +2811,7 @@ object FPrincipal: TFPrincipal
     object BarManagerBar3: TdxBar
       Caption = 'Clientes'
       CaptionButtons = <>
+      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2855,6 +2856,7 @@ object FPrincipal: TFPrincipal
     object BarManagerBar4: TdxBar
       Caption = 'Fornecedor'
       CaptionButtons = <>
+      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 267
@@ -3876,7 +3878,6 @@ object FPrincipal: TFPrincipal
     ExtraPane.WidthRatio = 2.000000000000000000
     ExtraPane.Items = <>
     ExtraPane.Header = 'Ultimas rotinas'
-    ExtraPane.OnItemClick = ApplicationMenuExtraPaneItemClick
     ItemLinks = <>
     UseOwnFont = False
     Left = 351
