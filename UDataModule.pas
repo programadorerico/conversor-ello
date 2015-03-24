@@ -3,8 +3,8 @@ unit UDataModule;
 interface
 
 uses
-  SysUtils, Forms, Controls, Classes, DBXpress, DB, ADODB, SqlExpr, IniFiles, EllTypes, unSql,
-  EllConnection, FMTBcd;
+  SysUtils, Forms, Controls, Classes, DBXpress, DB, ADODB, SqlExpr, EllTypes, unSql,
+  EllConnection, FMTBcd, UConfig;
 
 type
   TDatam1 = class(TDataModule)
@@ -17,8 +17,13 @@ type
     OriginConnection: TEllConnection;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
+    procedure AppException(Sender: TObject; E: Exception);
   private
-    FUsuario: String;
+    FConfiguracao: TConfiguracao;
+    function PerguntaLocalizacaoArquivo: String;
+    procedure VerificaDataDoServidor;
+    procedure InicializaDatabaseOrigem;
+    procedure InicializaDatabaseDestino;
   end;
 
   function MensagemEllo(msg : string; Tipo: TTipoMensagem):boolean;
@@ -30,19 +35,78 @@ var
 
 implementation
 
-uses Dialogs, dfMensagem, UConfig;
+uses Dialogs, dfMensagem;
 
 {$R *.dfm}
 
 procedure TDatam1.DataModuleCreate(Sender: TObject);
+begin
+   Application.onException := AppException;
+   FConfiguracao := TConfiguracao.Create;
+   SqlDados      := TEllQuery.Create(sConnection);
+
+   InicializaDatabaseOrigem;
+   InicializaDatabaseDestino;
+   VerificaDataDoServidor;
+
+   FConfiguracao.Free;
+end;
+
+procedure TDatam1.InicializaDatabaseOrigem;
 var
-   BancoDeDadosOrigem : String;
-   sMens              : String;
-   DataArq            : TDate;
-   Retorno            : Integer;
+   BancoDeDados: String;
+begin
+   BancoDeDados := PerguntaLocalizacaoArquivo;
+   OriginConnection.Params.Values['Database'] := BancoDeDados;
 
-   Configuracao : TConfiguracao;
+   try
+      OriginConnection.Connected := True;
+   except
+      Application.Terminate;
+      raise Exception.Create('Erro ao conectar no banco de dados origem.');
+   end;
+end;
 
+procedure TDatam1.InicializaDatabaseDestino;
+begin
+   sConnection.LibraryName := 'dbexpint.dll';
+   sConnection.Empresa     := FConfiguracao.IdEmpresa;
+   sConnection.Params.Values['DataBase'] := FConfiguracao.BancoDeDados;
+
+   try
+      sConnection.Connected   := FConfiguracao.BancoDeDados <>'';
+   except
+      Application.Terminate;
+      raise Exception.Create('Erro ao conectar no banco de dados destino.');
+   end;
+
+   TD.TransactionID  := 1;
+   TD.IsolationLevel := xilReadCommitted;
+end;
+
+procedure TDatam1.VerificaDataDoServidor;
+var
+   sMens   : String;
+   DataArq : TDate;
+   Retorno : Integer;
+begin
+   if Pos('C:\', UpperCase(FConfiguracao.BancoDeDados)) > 0 then begin
+      Retorno := FileAge(FConfiguracao.BancoDeDados);
+      if Retorno <= 0 then begin
+         MensagemEllo('O caminho para os dados em: '+FConfiguracao.BancoDeDados+', não foi encontrado, ' +
+                      'ou a senha do usuário SYSDBA está incorreta.             ' + #13#10 +
+                      'Verifique o arquivo ' + FConfiguracao.NomeArquivo, tmErro);
+         Application.Terminate;
+      end;
+      DataArq := Trunc(FileDateToDateTime(Retorno));
+      if Date < DataArq then begin
+         sMens := 'ATENÇÃO: A data deste computador não coincide com a data do banco de dados !';
+      end;
+   end;
+end;
+
+function TDatam1.PerguntaLocalizacaoArquivo: String;
+var
    OpenDialog: TOpenDialog;
 begin
    OpenDialog := TOpenDialog.Create(nil);
@@ -52,50 +116,12 @@ begin
    OpenDialog.FilterIndex := 1;
    OpenDialog.Title := 'Selecione o arquivo do banco de dados de origem';
    if openDialog.Execute then
-      BancoDeDadosOrigem := openDialog.FileName
+      Result := openDialog.FileName
    else begin
       Application.Terminate;
-      Application.ProcessMessages;
-      Exit;
+      Abort;
    end;
    OpenDialog.Free;
-
-   Configuracao       := TConfiguracao.Create;
-   FUsuario           := 'IMPORTACAO';
-
-   sConnection.LibraryName := 'dbexpint.dll';
-   sConnection.Empresa     := Configuracao.IdEmpresa;
-   sConnection.Params.Values['DataBase'] := Configuracao.BancoDeDados;
-   sConnection.Connected   := Configuracao.BancoDeDados <>'';
-
-   OriginConnection.Params.Values['Database'] := BancoDeDadosOrigem;
-   OriginConnection.Connected := True;
-
-   TD.TransactionID  := 1;
-   TD.IsolationLevel := xilReadCommitted;
-   SqlDados          := TEllQuery.Create(sConnection);
-
-   if Pos('C:\', UpperCase(Configuracao.BancoDeDados)) > 0 then begin
-      Retorno := FileAge(Configuracao.BancoDeDados);
-      if Retorno <= 0 then begin
-         MensagemEllo('O caminho para os dados em: '+Configuracao.BancoDeDados+', não foi encontrado, ' +
-                      'ou a senha do usuário SYSDBA está incorreta.             ' + #13#10 +
-                      'Verifique o arquivo ' + Configuracao.NomeArquivo, tmErro);
-         Application.Terminate;
-      end;
-      DataArq := Trunc(FileDateToDateTime(Retorno));
-      if Date < DataArq then begin
-         sMens := 'ATENÇÃO: A data deste computador não coincide com a data do banco de dados !';
-      end;
-   end;
-
-   Configuracao.Free;
-   
-   if sMens <> '' then begin
-      MensagemEllo(sMens, tmInforma);
-      Application.Terminate;
-      Exit;
-   end;
 end;
 
 procedure TDatam1.DataModuleDestroy(Sender: TObject);
@@ -115,6 +141,32 @@ begin
   finally
     fdtMensagem.Free;
   end;
+end;
+
+procedure TDatam1.AppException(Sender: TObject; E: Exception);
+const
+   Arquivo = 'conversor.log';
+var
+   Linha: String;
+   Texto: TextFile;
+begin
+   if not FileExists(Arquivo) then begin
+      try
+         AssignFile(Texto, Arquivo);
+         ReWrite(Texto);
+      finally
+         CloseFile(Texto);
+      end;
+   end;
+   AssignFile(Texto, Arquivo);
+   Append(Texto);
+   Linha := DateToStr(Date) + ' ' + TimeToStr(Time) + ' -> ' + E.Message;
+   try
+      WriteLn(Texto, Linha);
+      Flush(Texto);
+   finally
+      CloseFile(Texto);
+   end;
 end;
 
 end.
