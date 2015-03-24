@@ -62,7 +62,7 @@ begin
    valor_recebido := CDSDadosOrigem.FieldByName('ValorRecebido').AsCurrency;
    with SqlDados do begin
       try
-         Start(tcInsert, 'TRecDocumento', QueryTrabalho);
+         Start(tcInsert, 'TRecDocumento');
             AddValue('Empresa',     1);
             AddValue('IdDocumento', FIdDocumento);
             AddValue('IdCliente',   CDSDadosOrigem.FieldByName('CodCliente').AsInteger);
@@ -78,7 +78,7 @@ begin
          Executa;
 
          Inc(fIdParcela);
-         Start(tcInsert, 'TRecParcela', QueryTrabalho);
+         Start(tcInsert, 'TRecParcela');
             AddValue('Empresa',            1);
             AddValue('IdParcela',          fIdParcela);
             AddValue('IdDocumento',        fIdDocumento);

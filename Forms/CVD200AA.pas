@@ -64,7 +64,7 @@ end;
 procedure TFCVD200AA.GravaFornecedor(Fornecedor: TFornecedorConvertido);
 begin
    with SqlDados do begin
-      Start(tcInsert, 'TPagFornecedor', QueryTrabalho);
+      Start(tcInsert, 'TPagFornecedor');
          AddValue('IdFornecedor',     Fornecedor.IdFornecedor);
          AddValue('Nome',             Fornecedor.Nome);
          AddValue('Tipo',             Fornecedor.Tipo);

@@ -4,7 +4,6 @@ uses
   Forms,
   UDataModule in 'UDataModule.pas' {Datam1: TDataModule},
   EllTypes in 'Comuns\EllTypes.pas',
-  GravaDados in 'Comuns\GravaDados.pas',
   UProdutos in 'Comuns\UProdutos.pas',
   dfMensagem in 'Forms\dfMensagem.pas' {fdtMensagem},
   TeladeErro in 'Forms\TeladeErro.pas' {FTeladeErro},

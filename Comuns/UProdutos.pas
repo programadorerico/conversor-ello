@@ -355,7 +355,7 @@ end;
 procedure TEstProdutoMovimento.Grava;
 begin
    with SqlDados do begin
-      Start(tcInsert,'TEstProdutoMovimento', Datam1.QueryTrabalho);
+      Start(tcInsert,'TEstProdutoMovimento');
          AddValue('Empresa',              1);
          AddValue('IdMovimento',          fIdMovimento       );
          AddValue('IdMovimentoOrigem',    fIdMovimentoOrigem );

@@ -28,24 +28,22 @@ inherited FCVD201AA: TFCVD201AA
       inherited EBProdutos: TEllBox
         Width = 680
         Height = 371
-        inherited PtlBox14: TPtlBox1
-          Width = 679
-          Color = 15658734
-          LabelText = 'Documentos'
+        inherited DBDados: TExlDBGrid [0]
+          Top = 24
+          Width = 666
+          Height = 207
         end
         inherited MError: TcxMemo [1]
           Top = 261
           Width = 668
         end
-        inherited DBDados: TExlDBGrid [2]
-          Top = 24
-          Width = 666
-          Height = 207
+        inherited PtlBox14: TPtlBox1 [2]
+          Width = 679
+          LabelText = 'Documentos'
         end
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
-          Color = 15658734
         end
         inherited EBTampa: TEllBox
           Left = 646
@@ -76,13 +74,13 @@ inherited FCVD201AA: TFCVD201AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 839
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 839
       end
       inherited ToolBar1: TToolBar

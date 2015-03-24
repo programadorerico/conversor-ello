@@ -93,7 +93,7 @@ end;
 procedure TFCVD600AA.GravaProduto(produtoConvertido: TProdutoConvertido);
 begin
    with SqlDados do begin
-      Start(tcInsert, 'TEstProduto', QueryTrabalho);
+      Start(tcInsert, 'TEstProduto');
       AddValue('IdProduto',                produtoConvertido.IdProduto);
       AddValue('Matricula',                produtoConvertido.IdProduto);
       AddValue('IdProdutoPrincipal',       produtoConvertido.IdProduto);

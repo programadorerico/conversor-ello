@@ -31,7 +31,7 @@ procedure TFCVD602AA.GravaRegistro;
 begin
    Inc(FIdGrupo);
 
-   SqlDados.Start(tcInsert, 'TEstGrupo', QueryTrabalho);
+   SqlDados.Start(tcInsert, 'TEstGrupo');
    SqlDados.AddValue('IdTipo',    1);
    SqlDados.AddValue('IdGrupo',   FIdGrupo);
    SqlDados.AddValue('Descricao', Trim(CDSDadosOrigem.FieldByName('Grupo').AsString));
@@ -39,7 +39,7 @@ begin
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');
    SqlDados.Executa;
 
-   SqlDados.Start(tcInsert, 'TEstSubGrupo', QueryTrabalho);
+   SqlDados.Start(tcInsert, 'TEstSubGrupo');
    SqlDados.AddValue('IdSubGrupo', FIdRegistro);
    SqlDados.AddValue('IdGrupo',    FIdGrupo);
    SqlDados.AddValue('Descricao',  Trim(CDSDadosOrigem.FieldByName('Grupo').AsString));

@@ -66,7 +66,7 @@ end;
 procedure TFCVD101AA.GravaCliente(Cliente: TClienteConvertido);
 begin
    with SqlDados do begin
-      Start(tcInsert, 'TRecCliente', QueryTrabalho);
+      Start(tcInsert, 'TRecCliente');
          AddValue('IdCliente',             Cliente.IdCliente);
          AddValue('Nome',                  Cliente.Nome);
          AddValue('Pessoa',                Cliente.Pessoa);

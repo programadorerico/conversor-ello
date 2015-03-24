@@ -50,7 +50,7 @@ type
   public
     { Public declarations }
     Cancelar: Boolean;
-    SqlGrava: TQueryGrava;
+    SqlGrava: TEllQuery;
     procedure AppException(Sender: TObject; E: Exception);
     procedure AntesDeImportar; virtual;
     procedure DepoisDeImportar; virtual;
@@ -244,7 +244,7 @@ procedure TFPaiConversor.FormCreate(Sender: TObject);
 begin
    inherited;
    Application.onException := AppException;
-   SqlGrava := TQueryGrava.Create;
+   SqlGrava := TEllQuery.Create(Datam1.sConnection);
 end;
 
 procedure TFPaiConversor.AppException(Sender: TObject; E: Exception);

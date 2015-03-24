@@ -47,7 +47,7 @@ procedure TFCVD604AA.GravaRegistro;
 begin
    inherited;
    Inc(FIdMarca);
-   SqlDados.Start(tcInsert, 'TEstMarca', QueryTrabalho);
+   SqlDados.Start(tcInsert, 'TEstMarca');
    SqlDados.AddValue('IdMarca',    FIdMarca);
    SqlDados.AddValue('Descricao',  Trim(CDSDadosOrigem.FieldByName('Marca').AsString));
    SqlDados.AddValue('Usuario',   'IMPLANTACAO');

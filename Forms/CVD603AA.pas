@@ -39,7 +39,7 @@ procedure TFCVD603AA.GravaRegistro;
    end;
 
 begin
-   SqlDados.Start(tcInsert, 'TEstSubGrupo', QueryTrabalho);
+   SqlDados.Start(tcInsert, 'TEstSubGrupo');
    SqlDados.AddValue('IdSubGrupo', FIdRegistro);
    SqlDados.AddValue('IdGrupo',    getIdGrupo(CDSDadosOrigem.FieldByName('grupo').AsString));
    SqlDados.AddValue('Descricao',  Trim(CDSDadosOrigem.FieldByName('subgrupo').AsString));

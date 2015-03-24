@@ -34,7 +34,7 @@ var
 
 implementation
 
-uses Dialogs, dfMensagem, GravaDados, UConfig;
+uses Dialogs, dfMensagem, UConfig;
 
 {$R *.dfm}
 
@@ -73,9 +73,6 @@ begin
    Configuracao       := TConfiguracao.Create(ArquivoIni);
    FUsuario           := 'IMPORTACAO';
 
-   GravaDados.Empresa := Configuracao.IdEmpresa;
-   GravaDados.Usuario := FUsuario;
-
    sConnection.LibraryName := 'dbexpint.dll';
    sConnection.Empresa     := Configuracao.IdEmpresa;
    sConnection.Params.Values['DataBase'] := Configuracao.BancoDeDados;
@@ -86,7 +83,7 @@ begin
 
    TD.TransactionID  := 1;
    TD.IsolationLevel := xilReadCommitted;
-   SqlDados          := TEllQuery.Create;
+   SqlDados          := TEllQuery.Create(sConnection);
 
    if Pos('C:\', UpperCase(Configuracao.BancoDeDados)) > 0 then begin
       Retorno := FileAge(Configuracao.BancoDeDados);

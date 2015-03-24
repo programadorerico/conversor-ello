@@ -55,7 +55,7 @@ type
     fQuery: TSqlQuery;
     fQueryAux: TSqlQuery;
     fQueryGrava: TSqlQuery;
-    fSqlGrava: TQueryGrava;
+    fSqlGrava: TEllQuery;
     fEmpresa: Integer;
     function  AddRateio(pIdImovelVenda: Integer; pRateio: Double): TImo_Rateio;
   protected
@@ -137,7 +137,7 @@ var
        with SqlDados, CDSDadosOrigem do begin
           { Venda }
           Inc(fIdVenda);
-          Start(tcInsert, 'TImoVenda', QueryTrabalho  );
+          Start(tcInsert, 'TImoVenda');
              AddValue('Empresa',         FieldByName('Empresa').AsInteger);
              AddValue('IdVenda',         fIdVenda);
              AddValue('IdLote',          FieldByName('IdLote').AsString);
@@ -169,7 +169,7 @@ var
     begin
        with SqlDados, CDSDadosOrigem do begin
           { Comprador(s) }
-          Start(tcInsert, 'TImoVendaComprador', QueryTrabalho  );
+          Start(tcInsert, 'TImoVendaComprador');
              AddValue('Empresa',   FieldByName('Empresa').AsInteger);
              AddValue('IdVenda',   fIdVenda);
              AddValue('IdCliente', FieldByName('Cliente').AsString);
@@ -188,7 +188,7 @@ var
                           CDSDadosOrigem.FieldByName('Documento').AsString]));
           Open;
           while (not eof) and (not Cancelar) do begin
-             Start(tcInsert, 'TImoVendaParcela', QueryTrabalho  );
+             Start(tcInsert, 'TImoVendaParcela');
                 AddValue('Empresa', FieldByName('Empresa').AsInteger);
                 AddValue('IdVenda', fIdVenda);
                 AddValue('Parcela', FieldByName('Parcela').AsInteger);
@@ -263,7 +263,7 @@ var
           while (not eof) and (not Cancelar) do begin
              { Parcela }
              Inc(fIdParcela);
-             Start(tcInsert, 'TRecParcela', QueryTrabalho  );
+             Start(tcInsert, 'TRecParcela');
                 AddValue('Empresa',                FieldByName('Empresa').AsInteger);
                 AddValue('IdParcela',              fIdParcela);
                 AddValue('IdDocumento',            fIdDocumento);
@@ -287,7 +287,7 @@ var
              TTParcelas := TTParcelas + FieldByName('Valor').AsFloat;
 
              if (fIdVenda<>0) and (CDSDadosOrigem.FieldByName('Origem').AsString='IMO') then begin
-                Start(tcInsert, 'TRecParcelaImovel', QueryTrabalho  );
+                Start(tcInsert, 'TRecParcelaImovel');
                    AddValue('Empresa',         FieldByName('Empresa').AsInteger);
                    AddValue('IdDocumento',     fIdDocumento);
                    AddValue('IdParcela',       fIdParcela);
@@ -390,7 +390,7 @@ var
        { Documento  }
        Inc(fIdDocumento);
        with SqlDados do begin
-          Start(tcInsert, 'TRecDocumento', QueryTrabalho  );
+          Start(tcInsert, 'TRecDocumento');
              AddValue('Empresa',         CDSDadosOrigem.FieldByName('Empresa').AsInteger);
              AddValue('IdDocumento',     fIdDocumento);
              AddValue('IdCliente',       CDSDadosOrigem.FieldByName('Cliente').AsString);
@@ -409,7 +409,7 @@ var
 
           GravaParcelas(CDSDadosOrigem.FieldByName('Documento').AsString, CDSDadosOrigem.FieldByName('Tipo').AsString);
 
-          Start(tcUpdate, 'TRecDocumento', QueryTrabalho  );
+          Start(tcUpdate, 'TRecDocumento');
              AddWhere('Empresa',         CDSDadosOrigem.FieldByName('Empresa').AsInteger);
              AddWhere('IdDocumento',     fIdDocumento);
              AddValue('Valor',           TTParcelas);
@@ -425,7 +425,7 @@ var
         begin
            with SqlDados do begin
               Inc(fIdRenegociacao); 
-              Start(tcInsert, 'TRenegociacao', QueryTrabalho  );
+              Start(tcInsert, 'TRenegociacao');
                  AddValue('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddValue('IdRenegociacao',   fIdRenegociacao);
                  AddValue('IdCliente',        CDSDadosOrigem.FieldByName('Cliente').AsInteger);
@@ -451,7 +451,7 @@ var
               TTBaixado := 0;
               while (not eof) and (not Cancelar) do begin
                  { Ajusta a Parcela }
-                 Start(tcUpdate, 'TRecParcela', QueryTrabalho  );
+                 Start(tcUpdate, 'TRecParcela');
                     AddWhere('Empresa',                CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                     AddWhere('IdParcela',              FieldByName('IdParcela').AsInteger);
                     AddValue('IdRenegociacao',         fIdRenegociacao);
@@ -460,7 +460,7 @@ var
 
 
                  { Grava baixa da Parcela }
-                 Start(tcInsert, 'TRecBaixaParcela', QueryTrabalho  );
+                 Start(tcInsert, 'TRecBaixaParcela');
                     AddValue('Empresa',                CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                     AddValue('IdBaixa',                fIdBaixa);
                     AddValue('IdParcela',              FieldByName('IdParcela').AsInteger);
@@ -481,7 +481,7 @@ var
         begin
            Inc(fIdBaixa);
            with SqlDados do begin
-              Start(tcInsert, 'TRecBaixa', QueryTrabalho  );
+              Start(tcInsert, 'TRecBaixa');
                  AddValue('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddValue('IdBaixa',          fIdBaixa);
                  AddValue('IdCliente',        CDSDadosOrigem.FieldByName('Cliente').AsInteger);
@@ -499,7 +499,7 @@ var
         begin
            with SqlDados do begin
               { Ajusta a renegociacao }
-              Start(tcUpdate, 'TRenegociacao', QueryTrabalho  );
+              Start(tcUpdate, 'TRenegociacao');
                  AddWhere('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddWhere('IdRenegociacao',   fIdRenegociacao);
                  AddValue('ValorBaixado',     TTBaixado);
@@ -507,7 +507,7 @@ var
               Executa;
 
               { Ajusta Baixa }
-              Start(tcUpdate, 'TRecBaixa', QueryTrabalho  );
+              Start(tcUpdate, 'TRecBaixa');
                  AddWhere('Empresa',          CDSDadosOrigem.FieldByName('Empresa').AsInteger);
                  AddWhere('IdBaixa',          fIdBaixa);
                  AddValue('ValorBaixado',     TTBaixado);
@@ -549,7 +549,7 @@ var
     procedure VinculaContratoAoLote;
     begin
        with SqlDados, CDSDadosOrigem do begin
-          Start(tcUpdate, 'TImoLote', QueryTrabalho  );
+          Start(tcUpdate, 'TImoLote');
              AddWhere('IdLote',    FieldByName('IdLote').AsInteger);
              AddValue('IdVenda',   fIdVenda);
              AddValue('Cod_Vda',   FieldByName('Documento').AsString);
@@ -668,12 +668,12 @@ begin
       Open;
       if not fQuery.IsEmpty then begin
          { Elimina sincronismos gravados }
-         Start(tcDelete, 'TRecDocumentoImovel', fQueryGrava);
+         Start(tcDelete, 'TRecDocumentoImovel');
             AddWhere('Empresa',     fEmpresa);
             AddWhere('IdDocumento', pIdDocumento);
          Executa;
 
-         Start(tcInsert,'TRecDocumentoImovel', fQueryGrava);
+         Start(tcInsert,'TRecDocumentoImovel');
             AddValue('Empresa',        fEmpresa);
             AddValue('IdDocumento',    pIdDocumento);
             AddValue('IdImovelVenda',  fQuery.FieldByName('IdVenda').AsInteger);
@@ -732,7 +732,7 @@ begin
          ffValorDocumento := FieldByName('ValorDocumento').AsFloat;
 
          { Elimina sincronismos gravados }
-         Start(tcDelete, 'TRecDocumentoImovel', fQueryAux);
+         Start(tcDelete, 'TRecDocumentoImovel');
             AddWhere('Empresa',     fEmpresa);
             AddWhere('IdDocumento', ffIdDocumento);
          Executa;
@@ -766,7 +766,7 @@ begin
          with fSqlGrava do begin
 
             { Elimina sincronismos gravados }
-            Start(tcDelete, 'TRecDocumentoImovel', fQueryAux);
+            Start(tcDelete, 'TRecDocumentoImovel');
                AddWhere('Empresa',     fEmpresa);
                AddWhere('IdDocumento', ffIdDocumento);
             Executa;
@@ -775,7 +775,7 @@ begin
             for contador := 0 to Self.Rateios.Count - 1 do begin
                fRateio := TImo_Rateio(Self.Rateios.Items[Contador]);
 
-               Start(tcInsert,'TRecDocumentoImovel', fQueryAux);
+               Start(tcInsert,'TRecDocumentoImovel');
                   AddValue('Empresa',        fEmpresa);
                   AddValue('IdDocumento',    ffIdDocumento);
                   AddValue('IdImovelVenda',  fRateio.IdImovelVenda);
@@ -798,7 +798,7 @@ begin
    fRateios := TObjectList.Create;
    fEmpresa := pEmpresa;
 
-   fSqlGrava                 := TQueryGrava.Create;   
+   fSqlGrava                 := TEllQuery.Create(fConnection);   
 
    fQuery                    := TSqlQuery.Create(Nil);
    fQuery.NoMetadata         := True;

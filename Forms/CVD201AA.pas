@@ -59,7 +59,7 @@ begin
    with SqlDados, CDSDadosOrigem do begin
       try
          Inc(fIdDocumento);
-         Start(tcInsert, 'TPagDocumento', QueryTrabalho);
+         Start(tcInsert, 'TPagDocumento');
             AddValue('Empresa',      1);
             AddValue('IdDocumento',  fIdDocumento);
             AddValue('IdFornecedor', CDSDadosOrigem.FieldByName('fornecedor_codigo').AsInteger);
@@ -77,7 +77,7 @@ begin
 
          { Parcela }
          Inc(fIdParcela);
-         Start(tcInsert, 'TPagParcela', QueryTrabalho  );
+         Start(tcInsert, 'TPagParcela');
             AddValue('Empresa',          1);
             AddValue('IdParcela',        fIdParcela);
             AddValue('IdDocumento',      fIdDocumento);
