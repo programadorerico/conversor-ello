@@ -15,7 +15,7 @@ type
     FNomeConexaoODBC: String;
     FIdEmpresa: Integer;
   public
-    constructor Create(ArquivoConf: String);
+    constructor Create;
     destructor Destroy; override;
     procedure LeConfiguracoes;
   published
@@ -24,15 +24,25 @@ type
     property CaminhoDLL: String read FCaminhoDLL;
     property IdEmpresa: Integer read FIdEmpresa;
     property NomeConexaoODBC: String read FNomeConexaoODBC;
+    property NomeArquivo: String read FArquivoConf;
   end;
 
 implementation
 
+uses Forms, SysUtils;
+
 { TConfiguracao }
 
-constructor TConfiguracao.Create(ArquivoConf: String);
+constructor TConfiguracao.Create;
+var
+   ArquivoIni: String;
 begin
-   FArquivoConf := ArquivoConf;
+   ArquivoIni := ChangeFileExt(Application.ExeName, '.ini');
+   if not FileExists(ArquivoIni) then begin
+      ArquivoIni := ExtractFilePath(Application.ExeName) + 'Ello.ini';
+   end;
+
+   FArquivoConf := ArquivoIni;
    FIniFile     := TIniFile.Create(FArquivoConf);
 
    LeConfiguracoes;

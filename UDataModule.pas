@@ -36,7 +36,6 @@ uses Dialogs, dfMensagem, UConfig;
 
 procedure TDatam1.DataModuleCreate(Sender: TObject);
 var
-   ArquivoIni         : String;
    BancoDeDadosOrigem : String;
    sMens              : String;
    DataArq            : TDate;
@@ -46,11 +45,6 @@ var
 
    OpenDialog: TOpenDialog;
 begin
-   ArquivoIni := ChangeFileExt(Application.ExeName, '.ini');
-   if not FileExists(ArquivoIni) then begin
-      ArquivoIni := ExtractFilePath(Application.ExeName) + 'Ello.ini';
-   end;
-
    OpenDialog := TOpenDialog.Create(nil);
    OpenDialog.InitialDir := GetCurrentDir;
    OpenDialog.Options := [ofFileMustExist];
@@ -66,7 +60,7 @@ begin
    end;
    OpenDialog.Free;
 
-   Configuracao       := TConfiguracao.Create(ArquivoIni);
+   Configuracao       := TConfiguracao.Create;
    FUsuario           := 'IMPORTACAO';
 
    sConnection.LibraryName := 'dbexpint.dll';
@@ -86,7 +80,7 @@ begin
       if Retorno <= 0 then begin
          MensagemEllo('O caminho para os dados em: '+Configuracao.BancoDeDados+', não foi encontrado, ' +
                       'ou a senha do usuário SYSDBA está incorreta.             ' + #13#10 +
-                      'Verifique o arquivo '+ArquivoIni, tmErro);
+                      'Verifique o arquivo ' + Configuracao.NomeArquivo, tmErro);
          Application.Terminate;
       end;
       DataArq := Trunc(FileDateToDateTime(Retorno));
