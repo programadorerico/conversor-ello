@@ -57,6 +57,10 @@ var
    BancoDeDados: String;
 begin
    BancoDeDados := PerguntaLocalizacaoArquivo;
+   BancoDeDados := StringReplace(BancoDeDados, '\', '/', [rfReplaceAll]);
+   BancoDeDados := StringReplace(BancoDeDados, 'C:', '', [rfReplaceAll, rfIgnoreCase]);
+   BancoDeDados := '127.0.0.1:' + BancoDeDados;
+
    OriginConnection.Params.Values['Database'] := BancoDeDados;
 
    try
