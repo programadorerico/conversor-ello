@@ -581,7 +581,7 @@ object FPrincipal: TFPrincipal
     Align = alClient
     Alignment = taCenter
     AutoSize = False
-    Caption = 'Conversor - Vector/Solution'
+    Caption = 'Conversor - EcoCentauro Easy'
     Font.Charset = ANSI_CHARSET
     Font.Color = clSilver
     Font.Height = -32
@@ -922,7 +922,6 @@ object FPrincipal: TFPrincipal
       Visible = False
     end
     object FRibbonTab2: TdxRibbonTab
-      Active = True
       Caption = 'Produtos'
       Groups = <
         item
@@ -932,6 +931,7 @@ object FPrincipal: TFPrincipal
         end>
     end
     object FRibbonTab1: TdxRibbonTab
+      Active = True
       Caption = 'Contas a receber'
       Groups = <
         item
@@ -2811,7 +2811,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar3: TdxBar
       Caption = 'Clientes'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2841,10 +2840,6 @@ object FPrincipal: TFPrincipal
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarLargeButton29'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarLargeButton4'
         end>
       OneOnRow = True
@@ -2856,7 +2851,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar4: TdxBar
       Caption = 'Fornecedor'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 267
@@ -2954,10 +2948,10 @@ object FPrincipal: TFPrincipal
       Visible = ivAlways
     end
     object dxBarLargeButton4: TdxBarLargeButton
-      Caption = '2-Produtos'
+      Caption = '1-Produtos'
       Category = 0
       Description = 'FCVD600AA'
-      Hint = '2-Produtos'
+      Hint = '1-Produtos'
       Visible = ivAlways
       LargeImageIndex = 60
       OnClick = dxBarLargeButton4Click

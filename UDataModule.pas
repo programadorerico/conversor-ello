@@ -15,12 +15,13 @@ type
     QueryTrabalho: TSQLQuery;
     ADOTable1: TADOTable;
     OriginConnection: TEllConnection;
+    ProdutosConnection: TADOConnection;
+    ClientesConnection: TADOConnection;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure AppException(Sender: TObject; E: Exception);
   private
     FConfiguracao: TConfiguracao;
-    function PerguntaLocalizacaoArquivo: String;
     procedure VerificaDataDoServidor;
     procedure InicializaDatabaseOrigem;
     procedure InicializaDatabaseDestino;
@@ -35,7 +36,7 @@ var
 
 implementation
 
-uses Dialogs, dfMensagem;
+uses Dialogs, dfMensagem, stdActns;
 
 {$R *.dfm}
 
@@ -54,21 +55,24 @@ end;
 
 procedure TDatam1.InicializaDatabaseOrigem;
 var
-   BancoDeDados: String;
+   ConnectionString: String;
 begin
-   BancoDeDados := PerguntaLocalizacaoArquivo;
-   BancoDeDados := StringReplace(BancoDeDados, '\', '/', [rfReplaceAll]);
-   BancoDeDados := StringReplace(BancoDeDados, 'C:', '', [rfReplaceAll, rfIgnoreCase]);
-   BancoDeDados := '127.0.0.1:' + BancoDeDados;
+   ConnectionString := 'Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=%s\%s;Mode=ReadWrite;Persist Security Info=False;' +
+                       'Jet OLEDB:System database="";Jet OLEDB:Registry Path="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;' +
+                       'Jet OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=2;Jet OLEDB:Global Bulk Transactions=1;' +
+                       'Jet OLEDB:New Database Password="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encrypt Database=False;' +
+                       'Jet OLEDB:Don''t Copy Locale on Compact=False;Jet OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=False;';
 
-   OriginConnection.Params.Values['Database'] := BancoDeDados;
-
-   try
-      OriginConnection.Connected := True;
-   except
+   if FConfiguracao.CaminhoOrigem='' then begin
       Application.Terminate;
-      raise Exception.Create('Erro ao conectar no banco de dados origem.');
+      raise Exception.Create('Caminho do banco de dados de Origem não configurado!');
    end;
+
+   ProdutosConnection.ConnectionString := Format(ConnectionString, [FConfiguracao.CaminhoOrigem, 'ESTOQUE.MDB']);
+   ProdutosConnection.Connected := True;
+
+   ClientesConnection.ConnectionString := Format(ConnectionString, [FConfiguracao.CaminhoOrigem, 'CLIENTES.MDB']);
+   ClientesConnection.Connected := True;
 end;
 
 procedure TDatam1.InicializaDatabaseDestino;
@@ -107,25 +111,6 @@ begin
          sMens := 'ATENÇÃO: A data deste computador não coincide com a data do banco de dados !';
       end;
    end;
-end;
-
-function TDatam1.PerguntaLocalizacaoArquivo: String;
-var
-   OpenDialog: TOpenDialog;
-begin
-   OpenDialog := TOpenDialog.Create(nil);
-   OpenDialog.InitialDir := GetCurrentDir;
-   OpenDialog.Options := [ofFileMustExist];
-   OpenDialog.Filter := 'Arquivos do firebird |*.fdb';
-   OpenDialog.FilterIndex := 1;
-   OpenDialog.Title := 'Selecione o arquivo do banco de dados de origem';
-   if openDialog.Execute then
-      Result := openDialog.FileName
-   else begin
-      Application.Terminate;
-      Abort;
-   end;
-   OpenDialog.Free;
 end;
 
 procedure TDatam1.DataModuleDestroy(Sender: TObject);

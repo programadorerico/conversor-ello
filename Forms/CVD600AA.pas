@@ -42,7 +42,7 @@ var  fIdInventario: Integer;
 procedure TFCVD600AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   QueryOrigem.SQL.Text := UProdutos.QUERY;
+   ADOQueryOrigem.SQL.Text := UProdutos.QUERY;
 end;
 
 procedure TFCVD600AA.LimpaRegistros;

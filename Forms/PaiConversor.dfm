@@ -1,6 +1,6 @@
 inherited FPaiConversor: TFPaiConversor
-  Left = 0
-  Top = 82
+  Left = 345
+  Top = 77
   Width = 800
   BorderStyle = bsSizeable
   Caption = 'Conversao'
@@ -244,15 +244,15 @@ inherited FPaiConversor: TFPaiConversor
       DesignSize = (
         776
         43)
-      inherited btCancelar: TButton [0]
-        Left = 675
+      inherited btConfirmar: TButton
+        Left = 579
         Visible = False
       end
       inherited btSair: TButton [1]
         Left = 675
       end
-      inherited btConfirmar: TButton [2]
-        Left = 579
+      inherited btCancelar: TButton [2]
+        Left = 675
         Visible = False
       end
       inherited ToolBar1: TToolBar
@@ -309,7 +309,6 @@ inherited FPaiConversor: TFPaiConversor
     Top = 276
   end
   inherited ADOQueryOrigem: TADOQuery
-    BeforeScroll = ClientDataSetAfterScroll
     SQL.Strings = (
       'select distinct '
       '    cast(c_cod as integer) as codigo,'
@@ -321,6 +320,7 @@ inherited FPaiConversor: TFPaiConversor
   object CDSDadosOrigem: TClientDataSet
     Aggregates = <>
     Params = <>
+    AfterScroll = ClientDataSetAfterScroll
     Left = 459
     Top = 131
   end

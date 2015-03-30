@@ -12,7 +12,6 @@ type
     ADOTable1: TADOTable;
     procedure FormCreate(Sender: TObject); override;
   private
-    { Private declarations }
     fIdCliente: Integer;
     fIdReferencia: Integer;
     procedure LimpaRegistros; override;
@@ -35,7 +34,7 @@ uses UDataModule, Utils, UnSql, StdConvs;
 procedure TFCVD101AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   QueryOrigem.SQL.Text := UClientes.QUERY;
+   AdoQueryOrigem.SQL.Text := UClientes.QUERY;
 end;
 
 procedure TFCVD101AA.GravaRegistro;

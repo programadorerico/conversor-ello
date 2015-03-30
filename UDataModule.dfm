@@ -4,8 +4,8 @@ object Datam1: TDatam1
   OnDestroy = DataModuleDestroy
   Left = 545
   Top = 320
-  Height = 293
-  Width = 481
+  Height = 375
+  Width = 734
   object sConnection: TEllConnection
     ConnectionName = 'IBLocal'
     DriverName = 'Interbase'
@@ -38,8 +38,8 @@ object Datam1: TDatam1
       'Mode=ReadWrite;'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 36
-    Top = 68
+    Left = 340
+    Top = 92
   end
   object ADOQuery: TADOQuery
     Connection = ADOConnection
@@ -107,5 +107,33 @@ object Datam1: TDatam1
     Empresa = 0
     Left = 324
     Top = 24
+  end
+  object ProdutosConnection: TADOConnection
+    ConnectionString = 
+      'Provider=Microsoft.Jet.OLEDB.4.0;Data Source=C:\dev\dados\Casara' +
+      'o\Base\ESTOQUE.MDB;Persist Security Info=False;'
+    LoginPrompt = False
+    Mode = cmReadWrite
+    Provider = 'Microsoft.Jet.OLEDB.4.0'
+    Left = 588
+    Top = 20
+  end
+  object ClientesConnection: TADOConnection
+    ConnectionString = 
+      'Provider=Microsoft.Jet.OLEDB.4.0;User ID=Admin;Data Source=C:\de' +
+      'v\dados\Casarao\Base\CLIENTES.MDB;Mode=ReadWrite;Persist Securit' +
+      'y Info=False;Jet OLEDB:System database="";Jet OLEDB:Registry Pat' +
+      'h="";Jet OLEDB:Database Password="";Jet OLEDB:Engine Type=5;Jet ' +
+      'OLEDB:Database Locking Mode=1;Jet OLEDB:Global Partial Bulk Ops=' +
+      '2;Jet OLEDB:Global Bulk Transactions=1;Jet OLEDB:New Database Pa' +
+      'ssword="";Jet OLEDB:Create System Database=False;Jet OLEDB:Encry' +
+      'pt Database=False;Jet OLEDB:Don'#39't Copy Locale on Compact=False;J' +
+      'et OLEDB:Compact Without Replica Repair=False;Jet OLEDB:SFP=Fals' +
+      'e;'
+    LoginPrompt = False
+    Mode = cmReadWrite
+    Provider = 'Microsoft.Jet.OLEDB.4.0'
+    Left = 588
+    Top = 76
   end
 end

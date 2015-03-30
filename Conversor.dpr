@@ -22,7 +22,8 @@ uses
   UFornecedores in 'Comuns\UFornecedores.pas',
   UClientes in 'Comuns\UClientes.pas',
   UConfig in 'Comuns\UConfig.pas',
-  Interfaces in 'Comuns\Interfaces.pas';
+  Interfaces in 'Comuns\Interfaces.pas',
+  unSQL in '..\..\Componentes\Triburtini\unSql.pas';
 
 {$R *.res}
 {$R winxp.res}

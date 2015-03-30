@@ -59,7 +59,6 @@ type
     procedure Importa; virtual;
     procedure GravaLog(fMsg: String);
     procedure GravaRegistro; virtual; abstract;
-    procedure LimpaSngpc;
     procedure Open; virtual;
   end;
 
@@ -142,12 +141,10 @@ begin
    FIdRegistro := 1;
    CDSDadosOrigem.First;
    while (not CDSDadosOrigem.eof) and (not Cancelar) do begin
-      try
-         GravaRegistro;
-      except
-      end;
+      GravaRegistro;
       CDSDadosOrigem.Next;
       Inc(FIdRegistro);
+      Application.ProcessMessages;
    end;
 end;
 
@@ -197,47 +194,10 @@ end;
 
 procedure TFPaiConversor.ClientDataSetAfterScroll(DataSet: TDataSet);
 begin
-  inherited;
+   inherited;
    ProgressBar1.Position := ProgressBar1.Position + 1;
    Label12.Caption       := StrZero(ProgressBar1.Position,6)+ ' / ' + StrZero(ProgressBar1.Max,6);
    Application.ProcessMessages;
-end;
-
-procedure TFPaiConversor.LimpaSngpc;
-begin
-   with QueryTrabalho do begin
-      Sql.Clear;
-      Sql.Add('Delete From TSngpc');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete From TEstProdutoMovimento Mvt                             ' +
-              'Where Exists (Select IdInventario                                ' +
-              '              From   TEstInventario A                            ' +
-              '              Where  A.IdInventario = Mvt.IdInventario AND       ' +
-              '                     A.Usuario      = ''SNGPC_INVENTARIO'')      ');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete From TEstInventario Where Usuario = ''SNGPC_INVENTARIO''  ');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete From TEstProdutoMovimento Mvt                             ' +
-              'Where Exists (Select IdInventario                                ' +
-              '              From   TEstInventario A                            ' +
-              '              Where  A.IdInventario = Mvt.IdInventario AND       ' +
-              '                     A.Usuario      = ''SNGPC_ENTRADA'')         ');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete From TEstInventario Where Usuario = ''SNGPC_ENTRADA''     ');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete From TEstProdutoLote');
-      ExecSql;
-   end;
 end;
 
 procedure TFPaiConversor.FormCreate(Sender: TObject);

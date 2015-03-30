@@ -127,11 +127,12 @@ inherited FCVD101AA: TFCVD101AA
     Left = 459
   end
   inherited DataSetProvider2: TDataSetProvider
-    DataSet = QueryOrigem
+    DataSet = ADOQueryOrigem
     Left = 509
     Top = 116
   end
   inherited ADOQueryOrigem: TADOQuery
+    Connection = Datam1.ClientesConnection
     SQL.Strings = (
       'select * from cliente')
     Left = 349

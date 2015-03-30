@@ -10,7 +10,7 @@ type
     FIniFile: TIniFile;
     FArquivoConf: String;
     FBancoDeDados: String;
-    FBancoDeDadosOrigem: String;
+    FCaminhoOrigem: String;
     FCaminhoDLL: String;
     FNomeConexaoODBC: String;
     FIdEmpresa: Integer;
@@ -20,7 +20,7 @@ type
     procedure LeConfiguracoes;
   published
     property BancoDeDados: String read FBancoDeDados;
-    property BancoDeDadosOrigem: String read FBancoDeDadosOrigem;
+    property CaminhoOrigem: String read FCaminhoOrigem;
     property CaminhoDLL: String read FCaminhoDLL;
     property IdEmpresa: Integer read FIdEmpresa;
     property NomeConexaoODBC: String read FNomeConexaoODBC;
@@ -56,11 +56,11 @@ end;
 
 procedure TConfiguracao.LeConfiguracoes;
 begin
-   FBancoDeDados       := FIniFile.ReadString ('Dados', 'Database', '');
-   FBancoDeDadosOrigem := FIniFile.ReadString ('Dados', 'DatabaseOrigem', '');
-   FCaminhoDll         := FIniFile.ReadString ('Preferencias', 'Firebird', 'GDS32.DLL');
-   FIdEmpresa          := FIniFile.ReadInteger('Opcoes',  'EmpresaPadrao', 1);
-   FNomeConexaoODBC    := FIniFile.ReadString('conexao_odbc_conversao', 'DataSource', 'teste');
+   FBancoDeDados    := FIniFile.ReadString ('Dados', 'Database', '');
+   FCaminhoOrigem   := FIniFile.ReadString ('Conversao', 'CaminhoOrigem', '');
+   FCaminhoDll      := FIniFile.ReadString ('Preferencias', 'Firebird', 'GDS32.DLL');
+   FIdEmpresa       := FIniFile.ReadInteger('Opcoes',  'EmpresaPadrao', 1);
+   FNomeConexaoODBC := FIniFile.ReadString('conexao_odbc_conversao', 'DataSource', 'teste');
 end;
 
 end.
