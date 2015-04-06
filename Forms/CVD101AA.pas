@@ -9,10 +9,8 @@ uses
 
 type
   TFCVD101AA = class(TFPaiConversor)
-    ADOTable1: TADOTable;
     procedure FormCreate(Sender: TObject); override;
   private
-    { Private declarations }
     fIdCliente: Integer;
     fIdReferencia: Integer;
     procedure LimpaRegistros; override;
@@ -35,7 +33,7 @@ uses UDataModule, Utils, UnSql, StdConvs;
 procedure TFCVD101AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   QueryOrigem.SQL.Text := UClientes.QUERY;
+   ADOQueryOrigem.SQL.Text := UClientes.QUERY;
 end;
 
 procedure TFCVD101AA.GravaRegistro;
@@ -114,6 +112,8 @@ begin
          AddValue('FormaCartao',           Cliente.FormaCartao);
          AddValue('FormaConvenio',         Cliente.FormaConvenio);
          AddValue('Obs',                   Cliente.Obs);
+         AddValue('FILIACAOPAI',           Cliente.FiliacaoPai);
+         AddValue('FILIACAOMAE',           Cliente.FiliacaoMae);
          AddValue('Usuario',               Cliente.Usuario);
       Executa;
    end;

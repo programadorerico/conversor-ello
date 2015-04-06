@@ -581,7 +581,7 @@ object FPrincipal: TFPrincipal
     Align = alClient
     Alignment = taCenter
     AutoSize = False
-    Caption = 'Conversor - Vector/Solution'
+    Caption = 'Conversor - Ni10'
     Font.Charset = ANSI_CHARSET
     Font.Color = clSilver
     Font.Height = -32
@@ -922,7 +922,6 @@ object FPrincipal: TFPrincipal
       Visible = False
     end
     object FRibbonTab2: TdxRibbonTab
-      Active = True
       Caption = 'Produtos'
       Groups = <
         item
@@ -932,6 +931,7 @@ object FPrincipal: TFPrincipal
         end>
     end
     object FRibbonTab1: TdxRibbonTab
+      Active = True
       Caption = 'Contas a receber'
       Groups = <
         item
@@ -2811,7 +2811,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar3: TdxBar
       Caption = 'Clientes'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2832,6 +2831,7 @@ object FPrincipal: TFPrincipal
     object BarManagerBar5: TdxBar
       Caption = 'Produtos'
       CaptionButtons = <>
+      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421

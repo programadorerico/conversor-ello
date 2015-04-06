@@ -5,20 +5,7 @@ interface
 uses SqlExpr, DB, Classes, Interfaces;
 
 const
-  QUERY = 'SELECT cli.*,                                                                                                                           ' +
-          '   (select first 1 identificador from CLIENTES_COMUNICACAO where id_cliente=cli.ID_CLIENTE and tipo_comunicacao in (7, 5)) as email,    ' +
-          '   (select first 1 identificador from CLIENTES_COMUNICACAO where id_cliente=cli.ID_CLIENTE and tipo_comunicacao in (1, 2)) as telefone, ' +
-          '   e.endereco,                                                                                                                          ' +
-          '   e.cep,                                                                                                                               ' +
-          '   CAST(e.COMPL_ENDERECO AS VARCHAR(200)) AS COMPLEMENTO,                                                                               ' +
-          '   b.nome_bairro as bairro,                                                                                                             ' +
-          '   m.NOME_MUNICIPIO as cidade,                                                                                                          ' +
-          '   m.ID_ESTADO as uf,                                                                                                                   ' +
-          '   m.COD_IBGE                                                                                                                           ' +
-          'FROM CLIENTES cli                                                                                                                       ' +
-          'left join CLIENTES_ENDERECOS e on (e.id_cliente=cli.id_cliente)                                                                         ' +
-          'left join bairros b on (b.ID_BAIRRO=e.ID_BAIRRO)                                                                                        ' +
-          'left join municipios m on (m.ID_MUNICIPIO=b.ID_MUNICIPIO)                                                                               ';
+  QUERY = 'SELECT * FROM Clientes';
 
 type
   TClienteConvertido = class(TInterfacedObject, IRegistroConvertido)
@@ -71,10 +58,13 @@ type
     FAcrescimoNaVenda: String;
     FLimiteVcto: TDateTime;
     FObs: String;
+    FFiliacaoPai: String;
+    FFiliacaoMae: String;
     function GetCpfCnpj: String;
     function GetRGIE: String;
     function GetIdCidade: Integer;
     function GetEstadoCivil: String;
+    function GetTipoPessoa: String;
   public
     procedure CarregaDoDataset(DataSet: TDataSet);
     property QueryPesquisa: TSqlQuery read FQueryPesquisa write FQueryPesquisa;
@@ -126,6 +116,8 @@ type
     property FormaCartao: String read FFormaCartao;
     property FormaConvenio: String read FFormaConvenio;
     property Obs: String read FObs;
+    property FiliacaoPai: String read FFiliacaoPai;
+    property FiliacaoMae: String read FFiliacaoMae;
     property Usuario: String read FUsuario;
   end;
 
@@ -141,21 +133,21 @@ procedure TClienteConvertido.CarregaDoDataset(DataSet: TDataSet);
 begin
    FDataSet := DataSet;
 
-   FIdCliente             := FDataset.FieldByName('ID_CLIENTE').AsInteger;
-   FNome                  := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('RAZAO_SOCIAL_NOME').AsString)));
-   FFantasia              := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('NOME_FANTASIA').AsString)));
-   FPessoa                := FDataset.FieldByName('PESSOA_FISICA_JURIDICA').AsString;
-   FNascimento            := FDataset.FieldByName('DATA_NASCIMENTO').AsDateTime;
+   FIdCliente             := FDataset.FieldByName('CODIGO').AsInteger;
+   FNome                  := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('DESCRICAO').AsString)));
+   FFantasia              := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('FANTASIA').AsString)));
+   FPessoa                := GetTipoPessoa;
+   FNascimento            := FDataset.FieldByName('DATA NASCIMENTO').AsDateTime;
    FSexo                  := FDataset.FieldByName('SEXO').AsString;
-   FDataCadastro          := FDataSet.FieldByName('DATA_INCLUSAO_CADASTRO').AsDateTime;
+   FDataCadastro          := FDataSet.FieldByName('DATACAD').AsDateTime;
    FEmail                 := FDataSet.FieldByName('EMAIL').AsString;
-   FFone                  := ApenasDigitos(FDataSet.FieldByName('TELEFONE').AsString);
-   FCelular               := '';
+   FFone                  := ApenasDigitos(FDataSet.FieldByName('FONE').AsString);
+   FCelular               := ApenasDigitos(FDataSet.FieldByName('CELULAR').AsString);
    FAtivo                 := 'S';
    FEndereco              := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('ENDERECO').AsString)));
-   FCep                   := ApenasDigitos(FDataSet.FieldByName('CEP').AsString);
-   FComplemento           := FDataSet.FieldByName('COMPLEMENTO').AsString;
    FBairro                := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('BAIRRO').AsString)));
+   FCep                   := ApenasDigitos(FDataSet.FieldByName('CEP').AsString);
+   FComplemento           := '';
    FIdCidade              := GetIdCidade;
    FNumero                := '';
    FContato               := '';
@@ -185,41 +177,45 @@ begin
    FFormaCheque           := 'S';
    FFormaCartao           := 'S';
    FFormaConvenio         := 'S';
+   FObs                   := FDataSet.FieldByName('OBSERVACAO').AsString;
+   FFiliacaoPai           := FDataSet.FieldByName('FILIACAO PAI').AsString;
+   FFiliacaoMae           := FDataSet.FieldByName('FILIACAO MAE').AsString;
    FUsuario               := 'IMPLANTACAO';
 end;
 
 function TClienteConvertido.GetCpfCnpj: String;
 begin
-   if FPessoa='J' then
-      Result := FDataset.FieldByName('CNPJ').AsString
-   else
-      Result := FDataset.FieldByName('CPF').AsString;
-   Result := ApenasDigitos(Result);
+   Result := ApenasDigitos(FDataset.FieldByName('CPF OU CGC').AsString);
 end;
 
 function TClienteConvertido.GetIdCidade: Integer;
 begin
    Result := 3998;
-   if FDataSet.FieldByName('COD_IBGE').AsString = '' then exit;
    with FQueryPesquisa do begin
       Sql.Clear;
-      Sql.Add(Format('Select IdCidade From TGerCidade Where CodigoIBGE = ''%s'' ', [FDataSet.FieldByName('COD_IBGE').AsString]));
+      Sql.Add(Format('Select IdCidade From TGerCidade Where CEP = ''%s'' ', [FCep]));
       Open;
-      if not FQueryPesquisa.IsEmpty then begin
+      if not FQueryPesquisa.IsEmpty then
          Result := FieldbyName('IdCidade').AsInteger;
-      end;
    end;
 end;
 
 function TClienteConvertido.GetEstadoCivil: String;
 begin
-   Result := 'OUTROS';
-   {with CDSDados do begin
-      if FieldByName('EstadoCivil').AsString = 'C' then Result := 'CASADO';
-      if FieldByName('EstadoCivil').AsString = 'S' then Result := 'SOLTEIRO';
-      if FieldByName('EstadoCivil').AsString = 'D' then Result := 'DIVORCIADO';
-      if FieldByName('EstadoCivil').AsString = 'V' then Result := 'VIUVO';
-   end;}
+   Result := FDataSet.FieldByName('ESTADO CIVIL').Asstring;
+end;
+
+function TClienteConvertido.GetRGIE: String;
+begin
+   Result := FDataset.FieldByName('RG OU INSCRICAO ESTADUAL').AsString;
+end;
+
+function TClienteConvertido.GetTipoPessoa: String;
+begin
+   if Length(GetCpfCnpj)<18 then
+      Result := 'F'
+   else
+      Result := 'J';
 end;
 
 { Limpeza }
@@ -294,13 +290,6 @@ begin
    query.SQLConnection.ExecuteDirect('DELETE FROM TSolSolicitacao');
    query.SQLConnection.ExecuteDirect('DELETE FROM TRecCliente');
    query.SQLConnection.ExecuteDirect('ALTER TRIGGER TESTPRODUTOMOVIMENTO_ALL_AF ACTIVE');
-end;
-
-function TClienteConvertido.GetRGIE: String;
-begin
-   Result := FDataset.FieldByName('DOC_IDENTIDADE').AsString;
-   if Length(Result)<=1 then
-      Result := FDataset.FieldByName('INSC_ESTADUAL').AsString;
 end;
 
 end.

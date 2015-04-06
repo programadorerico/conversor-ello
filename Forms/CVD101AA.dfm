@@ -43,6 +43,7 @@ inherited FCVD101AA: TFCVD101AA
           316)
         inherited PtlBox14: TPtlBox1
           Width = 548
+          Color = clGray
           LabelText = 'Clientes'
         end
         inherited DBDados: TExlDBGrid
@@ -57,6 +58,7 @@ inherited FCVD101AA: TFCVD101AA
         inherited PtlBox11: TPtlBox1
           Top = 186
           Width = 535
+          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 510
@@ -127,7 +129,7 @@ inherited FCVD101AA: TFCVD101AA
     Left = 459
   end
   inherited DataSetProvider2: TDataSetProvider
-    DataSet = QueryOrigem
+    DataSet = ADOQueryOrigem
     Left = 509
     Top = 116
   end
@@ -135,13 +137,6 @@ inherited FCVD101AA: TFCVD101AA
     SQL.Strings = (
       'select * from cliente')
     Left = 349
-  end
-  object ADOTable1: TADOTable [7]
-    Connection = Datam1.ADOConnection
-    CursorType = ctStatic
-    TableName = 'fabricante'
-    Left = 408
-    Top = 168
   end
   inherited CDSDadosOrigem: TClientDataSet
     ProviderName = 'DataSetProvider2'
