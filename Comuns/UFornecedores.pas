@@ -5,12 +5,30 @@ interface
 uses DB, SqlExpr, Interfaces;
 
 const
-   QUERY = 'SELECT a.ID_FABRICANTE_FORNECEDOR, a.PESSOA_FISICA_JURIDICA, a.RAZAO_SOCIAL_NOME, a.NOME_FANTASIA, ' +
-           'a.CNPJ_CPF, a.INSCRICAO_ESTADUAL_RG, a.NOME_CONTATO, a.TELEFONE_1, a.TELEFONE_2, a.FAX, a.EMAIL, a.ENDERECO_INTERNET, ' +
-           'a.ENDERECO, a.NUMERO, a.COMPLEMENTO, a.CEP, ' +
-           'b.NOME_BAIRRO as bairro ' +
-           'FROM FABRICANTES_FORNECEDORES a ' +
-           'left join BAIRROS b on b.ID_BAIRRO=a.ID_BAIRRO';
+   QUERY = 'SELECT                              ' +
+           '      [Codigo]                      ' +
+           '      ,[Descricao]                  ' +
+           '      ,[Cgc ou Cpf] AS cpfcnpj      ' +
+           '      ,[Fone]                       ' +
+           '      ,[Endereco]                   ' +
+           '      ,[Bairro]                     ' +
+           '      ,[Cep]                        ' +
+           '      ,[Cidade]                     ' +
+           '      ,[Uf]                         ' +
+           '      ,[Rg]                         ' +
+           '      ,[Contato]                    ' +
+           '      ,[Fax]                        ' +
+           '      ,[GrupoRegiao]                ' +
+           '      ,[Fantasia]                   ' +
+           '      ,[Representante]              ' +
+           '      ,[Fone1]                      ' +
+           '      ,[Fax1]                       ' +
+           '      ,[Celular]                    ' +
+           '      ,[IscEst]                     ' +
+           '      ,[Internet]                   ' +
+           '      ,[Email]                      ' +
+           '  FROM [BD_NI10].[dbo].[Fornecedor] ';
+
 
 type
   TFornecedorConvertido = class(TInterfacedObject, IRegistroConvertido)
@@ -44,6 +62,8 @@ type
     function GetCidade: Integer;
     function GetCNPJCPF: String;
     function GetRGIE: String;
+    function GetTipoPessoa: String;
+    function GetCEP: String;
   public
     procedure CarregaDoDataset(DataSet: TDataSet);
     property QueryPesquisa: TSqlQuery read FQueryPesquisa write FQueryPesquisa;
@@ -86,27 +106,27 @@ procedure TFornecedorConvertido.CarregaDoDataset(DataSet: TDataSet);
 begin
    FDataSet := DataSet;
 
-   FIdFornecedor   := FDataSet.FieldByName('ID_FABRICANTE_FORNECEDOR').AsInteger;
-   FNome           := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('RAZAO_SOCIAL_NOME').AsString)));
-   FTipo           := FDataSet.FieldByName('PESSOA_FISICA_JURIDICA').AsString;
-   FFantasia       := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('NOME_FANTASIA').AsString)));
+   FIdFornecedor   := FDataSet.FieldByName('CODIGO').AsInteger;
+   FNome           := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('DESCRICAO').AsString)));
    FCpfCnpj        := GetCNPJCPF;
+   FTipo           := GetTipoPessoa;
+   FFantasia       := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('FANTASIA').AsString)));
    FRGIE           := GetRGIE;
    FOrgaoExpedidor := '';
-   FEndereco       := FDataSet.FieldByName('ENDERECO').AsString;
-   FNumero         := FDataSet.FieldByName('NUMERO').AsString;
-   FComplemento    := FDataSet.FieldByName('COMPLEMENTO').AsString;
-   FBairro         := FDataSet.FieldByName('BAIRRO').AsString;
+   FEndereco       := UpperCase(FDataSet.FieldByName('ENDERECO').AsString);
+   FNumero         := '';
+   FComplemento    := '';
+   FBairro         := UpperCase(FDataSet.FieldByName('BAIRRO').AsString);
    FCaixaPostal    := '';
+   FCep            := GetCEP;
    FIdCidade       := GetCidade;
-   FCep            := '78525000';
-   FFax            := '';
-   FContato        := FDataSet.FieldByName('NOME_CONTATO').AsString;
+   FFax            := FDataSet.FieldByName('FAX').AsString;
+   FContato        := UpperCase(FDataSet.FieldByName('CONTATO').AsString);
    FEmail          := FDataSet.FieldByName('EMAIL').AsString;
    FDiaEspecifico  := 0;
-   FHomepage       := FDataSet.FieldByName('ENDERECO_INTERNET').AsString;
+   FHomepage       := FDataSet.FieldByName('INTERNET').AsString;
    FContatofone    := '';
-   FFone           := FDataSet.FieldByName('TELEFONE_1').AsString;
+   FFone           := FDataSet.FieldByName('FONE').AsString;
    FObs            := '';
    FUsuario        := 'IMPLANTACAO';
    FDataCadastro   := Now;
@@ -114,17 +134,40 @@ end;
 
 function TFornecedorConvertido.GetCNPJCPF: String;
 begin
-   Result := ApenasDigitos(FDataSet.FieldByName('CNPJ_CPF').AsString);
+   Result := ApenasDigitos(FDataSet.FieldByName('CPFCNPJ').AsString);
 end;
 
 function TFornecedorConvertido.GetRGIE: String;
 begin
-   Result := ApenasDigitos(FDataSet.FieldByName('INSCRICAO_ESTADUAL_RG').AsString);
+   Result := ApenasDigitos(FDataSet.FieldByName('RG').AsString);
 end;
 
 function TFornecedorConvertido.GetCidade: Integer;
 begin
-   Result := 4077;
+   QueryPesquisa.SQL.Text := Format('SELECT IdCidade FROM TGerCidade WHERE CEP=''%s''', [FCep]);
+   QueryPesquisa.Open;
+   Result := QueryPesquisa.FieldByName('IDCIDADE').AsInteger;
+end;
+
+function TFornecedorConvertido.GetTipoPessoa: String;
+begin
+   if Length(FCpfCnpj) < 18 then
+      Result := 'F'
+   else
+      Result := 'J';
+end;
+
+function TFornecedorConvertido.GetCEP: String;
+begin
+   Result := ApenasDigitos(FDataSet.FieldByName('CEP').AsString);
+   if Result='' then
+      Result := '78580000';
+
+   QueryPesquisa.SQL.Text := Format('SELECT IdCidade FROM TGerCidade WHERE CEP=''%s''', [Result]);
+   QueryPesquisa.Open;
+
+   if QueryPesquisa.IsEmpty then
+      Result := '78580000';
 end;
 
 { Limpeza }

@@ -31,6 +31,7 @@ inherited FCVD200AA: TFCVD200AA
         inherited PtlBox14: TPtlBox1
           Width = 679
           Caption = ''
+          Color = clGray
           LabelText = 'Fornecedores'
         end
         inherited DBDados: TExlDBGrid
@@ -44,6 +45,7 @@ inherited FCVD200AA: TFCVD200AA
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
+          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 646
@@ -74,13 +76,13 @@ inherited FCVD200AA: TFCVD200AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 839
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 839
       end
       inherited ToolBar1: TToolBar
@@ -105,11 +107,12 @@ inherited FCVD200AA: TFCVD200AA
     Top = 194
   end
   inherited DataSetProvider2: TDataSetProvider
-    DataSet = QueryOrigem
+    DataSet = ADOQueryOrigem
     Left = 573
     Top = 124
   end
   inherited ADOQueryOrigem: TADOQuery
+    BeforeScroll = nil
     SQL.Strings = (
       'select distinct fornecedor from estoque'
       'where fornecedor<>'#39#39)
@@ -118,6 +121,7 @@ inherited FCVD200AA: TFCVD200AA
   end
   inherited CDSDadosOrigem: TClientDataSet
     ProviderName = 'DataSetProvider2'
+    AfterScroll = ClientDataSetAfterScroll
     Left = 515
     Top = 123
   end

@@ -11,13 +11,10 @@ type
   TFCVD200AA = class(TFPaiConversor)
     procedure FormCreate(Sender: TObject); override;
   private
-    { Private declarations }
     FIdFornecedor : Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
     procedure GravaFornecedor(Fornecedor: TFornecedorConvertido);
-  public
-    { Public declarations }
   end;
 
 var
@@ -34,7 +31,7 @@ uses UnSql, UDataModule, Utils;
 procedure TFCVD200AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   QueryOrigem.SQL.Text := UFornecedores.QUERY;
+   ADOQueryOrigem.SQL.Text := UFornecedores.QUERY;
 end;
 
 procedure TFCVD200AA.GravaRegistro;
@@ -48,7 +45,8 @@ begin
    FornecedorConvertido.CarregaDoDataset(CDSDadosOrigem);
    try
       GravaFornecedor(FornecedorConvertido);
-   except on e:Exception do begin
+   except
+      on e:Exception do begin
          GravaLog('Fornecedor: ' + FornecedorConvertido.Nome + ' Mensagem: '+E.Message);
       end;
    end;
