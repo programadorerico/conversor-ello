@@ -37,9 +37,6 @@ inherited FCVD600AA: TFCVD600AA
       end
       inherited EBProdutos: TEllBox
         Height = 371
-        inherited PtlBox11: TPtlBox1 [0]
-          Top = 241
-        end
         inherited EBTampa: TEllBox [1]
           Left = 639
           Top = -172
@@ -54,7 +51,8 @@ inherited FCVD600AA: TFCVD600AA
             Width = 487
           end
         end
-        inherited PtlBox14: TPtlBox1 [2]
+        inherited PtlBox11: TPtlBox1 [2]
+          Top = 241
         end
         inherited DBDados: TExlDBGrid [3]
           Top = 27
@@ -104,7 +102,7 @@ inherited FCVD600AA: TFCVD600AA
     Top = 330
   end
   inherited DataSetProvider2: TDataSetProvider
-    DataSet = QueryOrigem
+    DataSet = ADOQueryOrigem
     Left = 462
     Top = 228
   end
@@ -113,13 +111,6 @@ inherited FCVD600AA: TFCVD600AA
       'select * from estoque')
     Left = 405
     Top = 228
-  end
-  object ADOTable1: TADOTable [7]
-    Connection = Datam1.ADOConnection
-    CursorType = ctStatic
-    TableName = 'produto'
-    Left = 488
-    Top = 160
   end
   inherited CDSDadosOrigem: TClientDataSet
     ProviderName = 'DataSetProvider2'

@@ -5,22 +5,24 @@ interface
 uses DB, SqlExpr, Classes, Interfaces;
 
 const
-   QUERY = 'SELECT                                                                                             ' +
-           '   a.ID_PRODUTO,                                                                                   ' +
-           '   (select first 1 descricao from PRODUTOS_DESCRICOES where id_produto=a.ID_PRODUTO) AS DESCRICAO, ' +
-           '   a.CODIGO_BARRAS,                                                                                ' +
-           '   a.ID_FABRICANTE_FORNECEDOR,                                                                     ' +
-           '   a.CODIGO_FABRICANTE,                                                                            ' +
-           '   a.ID_GRUPO_PRODUTOS, a.ID_SUB_GRUPO_PRODUTOS,                                                   ' +
-           '   a.QUANT_UNITARIA,                                                                               ' +
-           '   a.UNIDADE,                                                                                      ' +
-           '   a.DATA_CADASTRO, a.ULTIMA_ATUALIZACAO_CADASTRO,                                                 ' +
-           '   a.CODIGO_NCM                                                                                    ' +
-           '   , c.ESTOQUE_INTEIRO, c.ESTOQUE_FRACAO                                                           ' +
-           '   , d.PRECO_COMPRA, d.PRECO_CUSTO, d.CUSTO_MEDIO, d.PRECO_VENDA, d.PRECO_VENDA_ANTERIOR           ' +
-           'FROM PRODUTOS a                                                                                    ' +
-           'inner JOIN PRODUTOS_ESTOQUES c ON (c.ID_PRODUTO=a.ID_PRODUTO)                                      ' +
-           'inner JOIN PRODUTOS_PRECOS d ON (d.ID_PRODUTO=a.ID_PRODUTO)                                        ';
+   QUERY = 'select                                              ' + 
+           '	codigo                                           ' +
+           '	, Descricao                                      ' +
+           '	, NumSerie                                       ' +
+           '	, EAN                                            ' +
+           '	, Unidade                                        ' +
+           '	, QtdEmbalagem                                   ' +
+           '	, PrecoVenda                                     ' +
+           '	, PrecoCompra                                    ' +
+           '	, PrecoCusto                                     ' +
+           '	, PrecoVista                                     ' +
+           '	, DataCad                                        ' +
+           '	, Fornecedor                                     ' +
+           '	, NCM                                            ' +
+           '   , e.saldoinicial                                 ' +
+           'from produtos p                                     ' +
+           'left join ProdutosEstoque e on (p.codigo=e.produto) ';
+
 
 type
   TProdutoConvertido = class(TInterfacedObject, IRegistroConvertido)
@@ -154,7 +156,6 @@ type
 
   TEstProdutoMovimento = class(TPersistent)
   private
-    { Private declarations }
     fQtde: Extended;
     fPrVenda: Extended;
     fUnitarioLiquido: Extended;
@@ -180,10 +181,8 @@ type
     fIdMovimento: Integer;
     FIdProduto: Integer;
   public
-    { Public declarations }
     procedure Grava;
   published
-    { Published declarations }
     property IdMovimento: Integer              read fIdMovimento           write fIdMovimento;
     property IdMovimentoOrigem: Integer        read fIdMovimentoOrigem     write fIdMovimentoOrigem;
     property IdTransfAlmox: Integer            read fIdTransfAlmox         write fIdTransfAlmox;
@@ -224,11 +223,11 @@ uses SysUtils, Utils, UCodigoEAN, UDataModule, UnSQL;
 procedure TProdutoConvertido.CarregaDoDataset(DataSet: TDataSet);
 begin
    FDataSet := DataSet;
-   
-   FIdProduto         := FDataSet.FieldByName('ID_PRODUTO').AsInteger;
+
+   FIdProduto         := FDataSet.FieldByName('CODIGO').AsInteger;
    FDescricao         := Copy(Trim(UpperCase(TirarAcentos(FDataSet.FieldByName('DESCRICAO').AsString))), 1, 50);
-   FPrecoCusto        := FDataSet.FieldByName('PRECO_CUSTO').AsFloat;
-   FDataCadastro      := FDataSet.FieldByName('DATA_CADASTRO').AsDateTime;
+   FPrecoCusto        := FDataSet.FieldByName('PRECOCUSTO').AsFloat;
+   FDataCadastro      := FDataSet.FieldByName('DATACAD').AsDateTime;
    FStatus            := 'ATIVO'; // 'ATIVO', 'INATIVO'
    FIdGrupoCredito    := 1;
    FMargemGarantido   := 0;
@@ -288,7 +287,7 @@ end;
 
 function TProdutoConvertido.GetCodigoNCM: String;
 begin
-   Result := FDataSet.FieldByName('CODIGO_NCM').AsString;
+   Result := FDataSet.FieldByName('NCM').AsString;
 end;
 
 function TProdutoConvertido.GetIdSubGrupo: Integer;
@@ -303,7 +302,7 @@ end;
 
 function TProdutoConvertido.GetPrecoVenda: Currency;
 begin
-   Result := FDataSet.FieldByName('PRECO_VENDA').AsCurrency;
+   Result := FDataSet.FieldByName('PRECOVENDA').AsCurrency;
 end;
 
 function TProdutoConvertido.GetUnidadeDeMedida: String;
@@ -318,7 +317,7 @@ function TProdutoConvertido.GetCodBarras: String;
 var
    codbarras: String;
 begin
-   codbarras := FDataSet.FieldByName('CODIGO_BARRAS').AsString;
+   codbarras := FDataSet.FieldByName('EAN').AsString;
    if Length(codbarras)<13 then
       Result := GeraNovoEAN13(IntToStr(fIdProduto))
    else
@@ -340,14 +339,14 @@ end;
 
 function TProdutoConvertido.GetQuantidadeEmEstoque: Currency;
 begin
-   Result := FDataSet.FieldByName('ESTOQUE_INTEIRO').AsCurrency;
+   Result := FDataSet.FieldByName('SALDOINICIAL').AsCurrency;
    if Result > 9999999 then
       Result := 0;     
 end;
 
 function TProdutoConvertido.GetIdFornecedor: Integer;
 begin
-   Result := FDataSet.FieldByName('ID_FABRICANTE_FORNECEDOR').AsInteger;
+   Result := FDataSet.FieldByName('FORNECEDOR').AsInteger;
 end;
 
 { TEstProdutoMovimento }

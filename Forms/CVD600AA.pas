@@ -11,21 +11,17 @@ type
   TFCVD600AA = class(TFPaiConversor)
     CBEstoque: TCheckBox;
     CBEstoque1: TCheckBox;
-    ADOTable1: TADOTable;
     procedure CBEstoqueClick(Sender: TObject);
     procedure BImportarClick(Sender: TObject);
     procedure CDSProdutosBeforeScroll(DataSet: TDataSet);
     procedure FormCreate(Sender: TObject); override;
   private
-    { Private declarations }
     FIdMovimento : Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
     procedure AntesDeImportar; override;
     procedure GravaProduto(produtoConvertido: TProdutoConvertido);
     procedure GravaEstoque(produtoConvertido: TProdutoConvertido);
-  public
-    { Public declarations }
   end;
 
 var
@@ -35,14 +31,15 @@ implementation
 
 uses Utils, UnSql, UDataModule, PaiRotinaEll;
 
-var  fIdInventario: Integer;
+var
+   fIdInventario: Integer;
 
 {$R *.dfm}
 
 procedure TFCVD600AA.FormCreate(Sender: TObject);
 begin
    inherited;
-   QueryOrigem.SQL.Text := UProdutos.QUERY;
+   ADOQueryOrigem.SQL.Text := UProdutos.QUERY;
 end;
 
 procedure TFCVD600AA.LimpaRegistros;

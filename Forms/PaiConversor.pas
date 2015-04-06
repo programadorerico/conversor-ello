@@ -43,12 +43,10 @@ type
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
-    { Private declarations }
     procedure Inicia; virtual;
   protected
     FIdRegistro: Integer;
   public
-    { Public declarations }
     Cancelar: Boolean;
     SqlGrava: TEllQuery;
     procedure AppException(Sender: TObject; E: Exception);
