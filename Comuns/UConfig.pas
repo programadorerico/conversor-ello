@@ -14,6 +14,8 @@ type
     FCaminhoDLL: String;
     FNomeConexaoODBC: String;
     FIdEmpresa: Integer;
+    FUsernameODBC: String;
+    FPasswordODBC: String;
   public
     constructor Create;
     destructor Destroy; override;
@@ -23,8 +25,11 @@ type
     property BancoDeDadosOrigem: String read FBancoDeDadosOrigem;
     property CaminhoDLL: String read FCaminhoDLL;
     property IdEmpresa: Integer read FIdEmpresa;
-    property NomeConexaoODBC: String read FNomeConexaoODBC;
     property NomeArquivo: String read FArquivoConf;
+
+    property NomeConexaoODBC: String read FNomeConexaoODBC;
+    property UsernameODBC: String read FUsernameODBC;
+    property PasswordODBC: String read FPasswordODBC;
   end;
 
 implementation
@@ -60,7 +65,10 @@ begin
    FBancoDeDadosOrigem := FIniFile.ReadString ('Dados', 'DatabaseOrigem', '');
    FCaminhoDll         := FIniFile.ReadString ('Preferencias', 'Firebird', 'GDS32.DLL');
    FIdEmpresa          := FIniFile.ReadInteger('Opcoes',  'EmpresaPadrao', 1);
-   FNomeConexaoODBC    := FIniFile.ReadString('conexao_odbc_conversao', 'DataSource', 'teste');
+
+   FNomeConexaoODBC := FIniFile.ReadString('Conversao', 'ODBC_Source', '');
+   FUsernameODBC    := FIniFile.ReadString('Conversao', 'ODBC_Username', '');
+   FPasswordODBC    := FIniFile.ReadString('Conversao', 'ODBC_Password', '');
 end;
 
 end.

@@ -54,17 +54,14 @@ end;
 
 procedure TDatam1.InicializaDatabaseOrigem;
 var
-   BancoDeDados: String;
+   ConnectionString: String;
 begin
-   BancoDeDados := PerguntaLocalizacaoArquivo;
-   BancoDeDados := StringReplace(BancoDeDados, '\', '/', [rfReplaceAll]);
-   BancoDeDados := StringReplace(BancoDeDados, 'C:', '', [rfReplaceAll, rfIgnoreCase]);
-   BancoDeDados := '127.0.0.1:' + BancoDeDados;
-
-   OriginConnection.Params.Values['Database'] := BancoDeDados;
+   ConnectionString := 'Provider=MSDASQL.1;Password=%s;Persist Security Info=True;User ID=%s;Data Source=%s;Mode=ReadWrite';
+   ConnectionString := Format(ConnectionString, [FConfiguracao.PasswordODBC, FConfiguracao.UsernameODBC, FConfiguracao.NomeConexaoODBC]);
+   ADOConnection.ConnectionString := ConnectionString;
 
    try
-      OriginConnection.Connected := True;
+      ADOConnection.Connected := True;
    except
       Application.Terminate;
       raise Exception.Create('Erro ao conectar no banco de dados origem.');
