@@ -121,6 +121,45 @@ type
     property Usuario: String read FUsuario;
   end;
 
+  TEnderecoConvertido = class(TInterfacedObject, IRegistroConvertido)
+  private
+    FDataSet: TDataSet;
+    FQueryPesquisa: TSqlQuery;
+    FIdCliente: Integer;
+    FIdCidade: Integer;
+    FTipo: Integer;
+    FCelular: String;
+    FHomePage: String;
+    FEndereco: String;
+    FComplemento: String;
+    FNumero: String;
+    FEmail: String;
+    FObservacao: String;
+    FFone: String;
+    FCep: String;
+    FEstadoCivil: String;
+    FBairro: String;
+    function GetIdCidade: Integer;
+  public
+    procedure CarregaDoDataset(DataSet: TDataSet);
+    property QueryPesquisa: TSqlQuery read FQueryPesquisa write FQueryPesquisa;
+  public
+    property IdCliente: Integer read FIdCliente;
+    property Tipo: Integer read FTipo;
+    property Endereco: String read FEndereco;
+    property Numero: String read FNumero;
+    property Complemento: String read FComplemento;
+    property Bairro: String read FBairro;
+    property EstadoCivil: String read FEstadoCivil;
+    property IdCidade: Integer read FIdCidade;
+    property Cep: String read FCep;
+    property Fone: String read FFone;
+    property Celular: String read FCelular;
+    property Email: String read FEmail;
+    property HomePage: String read FHomePage;
+    property Observacao: String read FObservacao;
+  end;
+
 procedure LimpaClientes(query: TSQLQuery);
 
 implementation
@@ -144,8 +183,8 @@ begin
    FFone                  := ApenasDigitos(FDataSet.FieldByName('FONE').AsString);
    FCelular               := ApenasDigitos(FDataSet.FieldByName('CELULAR').AsString);
    FAtivo                 := 'S';
-   FEndereco              := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('ENDERECO').AsString)));
-   FBairro                := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('BAIRRO').AsString)));
+//   FEndereco              := ;
+//   FBairro                := ;
    FCep                   := ApenasDigitos(FDataSet.FieldByName('CEP').AsString);
    FComplemento           := '';
    FIdCidade              := GetIdCidade;
@@ -290,6 +329,40 @@ begin
    query.SQLConnection.ExecuteDirect('DELETE FROM TSolSolicitacao');
    query.SQLConnection.ExecuteDirect('DELETE FROM TRecCliente');
    query.SQLConnection.ExecuteDirect('ALTER TRIGGER TESTPRODUTOMOVIMENTO_ALL_AF ACTIVE');
+end;
+
+{ TEnderecoConvertido }
+
+procedure TEnderecoConvertido.CarregaDoDataset(DataSet: TDataSet);
+begin
+   FDataSet := DataSet;
+
+   FIdCliente   := FDataSet.FieldByName('CODIGO').AsInteger;
+   FTipo        := 1;
+   FEndereco    := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('ENDERECO').AsString)));
+   FNumero      := '';
+   FComplemento := '';
+   FBairro      := Trim(UpperCase(TiraAcentos(FDataSet.FieldByName('BAIRRO').AsString)));
+   FEstadoCivil := FDataSet.FieldByName('ESTADO CIVIL').Asstring;
+   FCep         := ApenasDigitos(FDataSet.FieldByName('CEP').AsString);
+   FIdCidade    := GetIdCidade;
+   FFone        := ApenasDigitos(FDataSet.FieldByName('FONE').AsString);
+   FCelular     := ApenasDigitos(FDataSet.FieldByName('CELULAR').AsString);
+   FEmail       := 'naoinformado@naoinformado.com.br';
+   FHomePage    := '';
+   FObservacao  := '';
+end;
+
+function TEnderecoConvertido.GetIdCidade: Integer;
+begin
+   Result := 3998;
+   with FQueryPesquisa do begin
+      Sql.Clear;
+      Sql.Add(Format('Select IdCidade From TGerCidade Where CEP = ''%s'' ', [FCep]));
+      Open;
+      if not FQueryPesquisa.IsEmpty then
+         Result := FieldbyName('IdCidade').AsInteger;
+   end;
 end;
 
 end.

@@ -16,7 +16,7 @@ type
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
     procedure GravaCliente(Cliente: TClienteConvertido);
-    procedure GravaEndereco(Cliente: TClienteConvertido);
+    procedure GravaEndereco(Endereco: TEnderecoConvertido);
   public
     procedure Open; override;
   end;
@@ -39,20 +39,27 @@ end;
 procedure TFCVD101AA.GravaRegistro;
 var
    ClienteConvertido: TClienteConvertido;
+   EnderecoConvertido: TEnderecoConvertido;
 begin
    inherited;
    ClienteConvertido := TClienteConvertido.Create;
    ClienteConvertido.QueryPesquisa := QueryPesquisa;
    ClienteConvertido.CarregaDoDataset(CDSDadosOrigem);
 
+   EnderecoConvertido := TEnderecoConvertido.Create;
+   EnderecoConvertido.QueryPesquisa := QueryPesquisa;
+   EnderecoConvertido.CarregaDoDataset(CDSDadosOrigem);
+
    try
       GravaCliente(ClienteConvertido);
+      GravaEndereco(EnderecoConvertido);
    except on e:Exception do begin
          GravaLog('Cliente: ' + IntToStr(ClienteConvertido.Idcliente) + ' Mensagem: '+E.Message);
       end;
    end;
 
    ClienteConvertido.Free;
+   EnderecoConvertido.Free;
 end;
 
 procedure TFCVD101AA.LimpaRegistros;
@@ -119,25 +126,26 @@ begin
    end;
 end;
 
-procedure TFCVD101AA.GravaEndereco(Cliente: TClienteConvertido);
+procedure TFCVD101AA.GravaEndereco(Endereco: TEnderecoConvertido);
 begin
-         { Endereco Comercial }
-//         Start(tcInsert, 'TRecClienteEndereco', QueryTrabalho  );
-//            AddValue('IdCliente',              IdCliente);
-//            AddValue('Tipo',                   1);
-//            AddValue('Endereco',               UpperCase(TiraAcentos(CDSDados.FieldByName('Endereco').AsString)) );
-//            AddValue('Numero',                 '');
-//            AddValue('Complemento',            '');
-//            AddValue('Bairro',                 UpperCase(TiraAcentos(CDSDados.FieldByName('Bairro').AsString)) );
-//            AddValue('EstadoCivil',            RetornaEstadoCivil);
-//            AddValue('IdCidade',               GetCidade);
-//            AddValue('Cep',                    ApenasDigitos(CDSDados.FieldByName('Cep').AsString) );
-//            AddValue('Fone',                   ApenasDigitos(CDSDados.FieldByName('telefone').AsString) );
-//            AddValue('Celular',                ApenasDigitos(CDSDados.FieldByName('Celular').AsString) );
-//            AddValue('Email',                  CDSDados.FieldByName('Email').AsString);
-//            AddValue('HomePage',               FieldByName('HomePage').AsString);
-//            AddValue('Observacao',             FieldByName('Obs').AsString);
-//         Executa;
+   with SqlDados do begin
+      Start(tcInsert, 'TRecClienteEndereco');
+         AddValue('IdCliente',              Endereco.IdCliente);
+         AddValue('Tipo',                   Endereco.Tipo);
+         AddValue('Endereco',               Endereco.Endereco);
+         AddValue('Numero',                 Endereco.Numero);
+         AddValue('Complemento',            Endereco.Complemento);
+         AddValue('Bairro',                 Endereco.Bairro);
+         AddValue('EstadoCivil',            Endereco.EstadoCivil);
+         AddValue('IdCidade',               Endereco.IdCidade);
+         AddValue('Cep',                    Endereco.Cep);
+         AddValue('Fone',                   Endereco.Fone);
+         AddValue('Celular',                Endereco.Celular);
+         AddValue('Email',                  Endereco.Email);
+         AddValue('HomePage',               Endereco.HomePage);
+         AddValue('Observacao',             Endereco.Observacao);
+      Executa;
+   end;
 end;
 
 procedure TFCVD101AA.Open;
