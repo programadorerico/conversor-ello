@@ -1,9 +1,9 @@
 inherited FCVD201AA: TFCVD201AA
-  Left = 374
-  Top = 125
+  Left = 312
+  Top = 153
   Width = 964
   Height = 494
-  Caption = 'Documentos a pagar'
+  Caption = 'Contas a pagar'
   PixelsPerInch = 96
   TextHeight = 13
   inherited EllBox1: TEllBox
@@ -28,22 +28,24 @@ inherited FCVD201AA: TFCVD201AA
       inherited EBProdutos: TEllBox
         Width = 680
         Height = 371
-        inherited DBDados: TExlDBGrid [0]
-          Top = 24
-          Width = 666
-          Height = 207
+        inherited PtlBox14: TPtlBox1
+          Width = 679
+          Color = clGray
+          LabelText = 'Documentos'
         end
         inherited MError: TcxMemo [1]
           Top = 261
           Width = 668
         end
-        inherited PtlBox14: TPtlBox1 [2]
-          Width = 679
-          LabelText = 'Documentos'
+        inherited DBDados: TExlDBGrid [2]
+          Top = 24
+          Width = 666
+          Height = 207
         end
         inherited PtlBox11: TPtlBox1
           Top = 241
           Width = 666
+          Color = clGray
         end
         inherited EBTampa: TEllBox
           Left = 646
@@ -74,13 +76,13 @@ inherited FCVD201AA: TFCVD201AA
     inherited EllBox5: TEllBox
       Top = 409
       Width = 940
-      inherited btConfirmar: TButton
+      inherited btCancelar: TButton
         Left = 839
       end
       inherited btSair: TButton
         Left = 839
       end
-      inherited btCancelar: TButton
+      inherited btConfirmar: TButton
         Left = 839
       end
       inherited ToolBar1: TToolBar
@@ -96,7 +98,14 @@ inherited FCVD201AA: TFCVD201AA
     end
   end
   inherited DataSource: TDataSource
-    Top = 316
+    DataSet = CDSDadosOrigem
+    Left = 595
+    Top = 76
+  end
+  inherited DataSetProvider2: TDataSetProvider
+    DataSet = ADOQueryOrigem
+    Left = 597
+    Top = 156
   end
   inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
@@ -136,7 +145,12 @@ inherited FCVD201AA: TFCVD201AA
       '    -- ?? a.J_UPA,'
       '    a.J_BAS'
       'FROM TITULO a')
-    Left = 357
-    Top = 312
+    Left = 597
+    Top = 208
+  end
+  inherited CDSDadosOrigem: TClientDataSet
+    ProviderName = 'DataSetProvider2'
+    Left = 595
+    Top = 115
   end
 end

@@ -911,16 +911,6 @@ object FPrincipal: TFPrincipal
     PopupMenuItems = [rpmiItems, rpmiMinimizeRibbon]
     QuickAccessToolbar.Toolbar = BarManagerBar1
     TabOrder = 3
-    object FRibbonTab3: TdxRibbonTab
-      Caption = 'Contas a Pagar'
-      Groups = <
-        item
-        end
-        item
-          ToolbarName = 'BarManagerBar4'
-        end>
-      Visible = False
-    end
     object FRibbonTab2: TdxRibbonTab
       Caption = 'Produtos'
       Groups = <
@@ -930,8 +920,17 @@ object FPrincipal: TFPrincipal
         item
         end>
     end
-    object FRibbonTab1: TdxRibbonTab
+    object FRibbonTab3: TdxRibbonTab
       Active = True
+      Caption = 'Contas a Pagar'
+      Groups = <
+        item
+        end
+        item
+          ToolbarName = 'BarManagerBar4'
+        end>
+    end
+    object FRibbonTab1: TdxRibbonTab
       Caption = 'Contas a receber'
       Groups = <
         item
@@ -2831,7 +2830,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar5: TdxBar
       Caption = 'Produtos'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 421
@@ -2856,7 +2854,6 @@ object FPrincipal: TFPrincipal
     object BarManagerBar4: TdxBar
       Caption = 'Fornecedor'
       CaptionButtons = <>
-      DockedDockingStyle = dsTop
       DockedLeft = 0
       DockedTop = 0
       FloatLeft = 267
@@ -2864,10 +2861,6 @@ object FPrincipal: TFPrincipal
       FloatClientWidth = 0
       FloatClientHeight = 0
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'dxBarLargeButton16'
-        end
         item
           Visible = True
           ItemName = 'dxBarLargeButton17'
@@ -3101,7 +3094,7 @@ object FPrincipal: TFPrincipal
       Category = 0
       Description = 'FCVD201AA'
       Hint = 'Contas a Pagar'
-      Visible = ivNever
+      Visible = ivAlways
       LargeImageIndex = 2
       OnClick = dxBarLargeButton4Click
       HotImageIndex = 2

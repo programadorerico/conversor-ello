@@ -3,23 +3,19 @@ unit CVD201AA;
 interface
 
 uses
-  SysUtils, Variants, Classes, Controls, Forms,
-  PaiConversor, ADODB, DB,
-  SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, StdCtrls,
-  cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids,
-  ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
+  SysUtils, Variants, Classes, Controls, Forms, PaiConversor, ADODB, DB, SqlExpr, FMTBcd, Provider,
+  ComCtrls, Buttons, ToolWin, StdCtrls, cxControls, cxContainer, cxEdit, cxTextEdit, cxMemo, Grids,
+  DBGrids, ExlDBGrid, PtlBox1, Graphics, ExtCtrls, EllBox, DBClient, UContasPagar;
 
 type
   TFCVD201AA = class(TFPaiConversor)
-    procedure BImportarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
     fIdDocumento: Integer;
     fIdParcela: Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
-  public
-    { Public declarations }
+    procedure GravaContaPagar(Conta: TContaConvertida);
   end;
 
 var
@@ -31,74 +27,67 @@ uses UDataModule, UnSql, Utils;
 
 {$R *.dfm}
 
-procedure TFCVD201AA.LimpaRegistros;
+procedure TFCVD201AA.FormCreate(Sender: TObject);
 begin
-   with QueryTrabalho do begin
-      Sql.Clear;
-      Sql.Add('Delete from TPagBaixaParcela');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete from TPagBaixa');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete from TPagParcela');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete from TPagDocumento');
-      ExecSql;
-   end;
    inherited;
+   ADOQueryOrigem.SQL.Text := UContasPagar.QUERY;
 end;
 
 procedure TFCVD201AA.GravaRegistro;
+var
+   Conta: TContaConvertida;
 begin
    inherited;
-   with SqlDados, CDSDadosOrigem do begin
-      try
-         Inc(fIdDocumento);
-         Start(tcInsert, 'TPagDocumento');
-            AddValue('Empresa',      1);
-            AddValue('IdDocumento',  fIdDocumento);
-            AddValue('IdFornecedor', CDSDadosOrigem.FieldByName('fornecedor_codigo').AsInteger);
-            AddValue('IdTipo',       1);
-            AddValue('Documento',    FieldByName('numero_documento').AsString);
-            AddValue('Complemento',  UpperCase(TiraAcentos(FieldByName('obs').AsString)));
-            AddValue('Emissao',      FieldByName('data_emissao').AsDateTime);
-            AddValue('Valor',        FieldByName('valor_parcela').AsFloat);
-            AddValue('Pago',         0);
-            AddValue('APagar',       FieldByName('valor_parcela').AsFloat);
-            AddValue('QtdeParcela',  1);
-            AddValue('Origem',       'IMP');
-            AddValue('Usuario',      'IMPLANTACAO');
-         Executa;
 
-         { Parcela }
-         Inc(fIdParcela);
-         Start(tcInsert, 'TPagParcela');
-            AddValue('Empresa',          1);
-            AddValue('IdParcela',        fIdParcela);
-            AddValue('IdDocumento',      fIdDocumento);
-            AddValue('Parcela',          1);
-            AddValue('Vencimento',       FieldByName('data_venda').AsDateTime);
-            AddValue('Valor',            FieldByName('valor_parcela').AsFloat);
-            AddValue('ValorPendente',    FieldByName('valor_parcela').AsFloat-FieldByName('valor_pago').AsFloat);
-            AddValue('ValorBaixado',     FieldByName('valor_pago').AsFloat);
-         Executa;
+   Conta := TContaConvertida.Create(QueryPesquisa);
+   Conta.CarregaDoDataset(CDSDadosOrigem);
 
-      except on e:Exception do GravaLog('Documento: ' + FieldByName('numero_documento').AsString + ' Mensagem: '+E.Message);
+   try
+      GravaContaPagar(Conta);
+   except
+      on e:Exception do
+         GravaLog('Documento: ' + IntToStr(Conta.IdDocumento) + ' Mensagem: ' + E.Message);
+   end;
 
-      end;
+   Conta.Free;
+end;
+
+procedure TFCVD201AA.GravaContaPagar(Conta: TContaConvertida);
+begin
+   with SqlDados do begin
+      Start(tcInsert, 'TPagDocumento');
+         AddValue('Empresa',      Conta.IdEmpresa);
+         AddValue('IdDocumento',  Conta.IdDocumento);
+         AddValue('IdFornecedor', Conta.IdFornecedor);
+         AddValue('IdTipo',       Conta.IdTipo);
+         AddValue('Documento',    Conta.Documento);
+         AddValue('Complemento',  Conta.Complemento);
+         AddValue('Emissao',      Conta.Emissao);
+         AddValue('Valor',        Conta.Valor);
+         AddValue('Pago',         Conta.Pago);
+         AddValue('APagar',       Conta.APagar);
+         AddValue('QtdeParcela',  Conta.QtdeParcela);
+         AddValue('Origem',       Conta.Origem);
+         AddValue('Usuario',      Conta.Usuario);
+      Executa;
+
+      Start(tcInsert, 'TPagParcela');
+         AddValue('Empresa',          Conta.IdEmpresa);
+         AddValue('IdParcela',        Conta.IdDocumento);
+         AddValue('IdDocumento',      Conta.IdDocumento);
+         AddValue('Parcela',          1);
+         AddValue('Vencimento',       Conta.Vencimento);
+         AddValue('Valor',            Conta.Valor);
+         AddValue('ValorPendente',    Conta.APagar);
+         AddValue('ValorBaixado',     Conta.Pago);
+      Executa;
    end;
 end;
 
-procedure TFCVD201AA.BImportarClick(Sender: TObject);
+procedure TFCVD201AA.LimpaRegistros;
 begin
-   fIdDocumento := 0;
-   fIdParcela   := 0;
    inherited;
+   UContasPagar.LimpaRegistros(QueryPesquisa);
 end;
 
 initialization RegisterClass(TFCVD201AA);

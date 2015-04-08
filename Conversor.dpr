@@ -22,7 +22,9 @@ uses
   UFornecedores in 'Comuns\UFornecedores.pas',
   UClientes in 'Comuns\UClientes.pas',
   UConfig in 'Comuns\UConfig.pas',
-  Interfaces in 'Comuns\Interfaces.pas';
+  Interfaces in 'Comuns\Interfaces.pas',
+  UContasPagar in 'Comuns\UContasPagar.pas',
+  UContasReceber in 'Comuns\UContasReceber.pas';
 
 {$R *.res}
 {$R winxp.res}
