@@ -3,23 +3,20 @@ unit CVD102AA;
 interface
 
 uses
-  SysUtils, Variants, Classes, Controls, Forms,
-  PaiConversor, StdCtrls, ADODB, DB,
-  SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, cxControls,
-  cxContainer, cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid,
-  PtlBox1, Graphics, ExtCtrls, EllBox, DBClient;
+  SysUtils, Variants, Classes, Controls, Forms, PaiConversor, StdCtrls, ADODB, DB,
+  SqlExpr, FMTBcd, Provider, ComCtrls, Buttons, ToolWin, cxControls, cxContainer,
+  cxEdit, cxTextEdit, cxMemo, Grids, DBGrids, ExlDBGrid, PtlBox1, Graphics,
+  ExtCtrls, EllBox, DBClient, UContasReceber;
 
 type
   TFCVD102AA = class(TFPaiConversor)
     Edit1: TEdit;
     Label2: TLabel;
-    procedure BImportarClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
-    { Private declarations }
-    fIdDocumento: Integer;
-    fIdParcela: Integer;
     procedure LimpaRegistros; override;
     procedure GravaRegistro; override;
+    procedure GravaContaReceber(Conta: TContaConvertida);
   end;
 
 var
@@ -31,79 +28,77 @@ uses UDataModule, UnSql, Utils;
 
 {$R *.dfm}
 
-procedure TFCVD102AA.LimpaRegistros;
+procedure TFCVD102AA.FormCreate(Sender: TObject);
 begin
-   with QueryTrabalho do begin
-      Sql.Clear;
-      Sql.Add('Delete from TRecBaixaParcela');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete from TRecBaixa');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete from TRecParcela');
-      ExecSql;
-
-      Sql.Clear;
-      Sql.Add('Delete from TRecDocumento');
-      ExecSql;
-   end;
    inherited;
+   ADOQueryOrigem.SQL.Text := UContasReceber.QUERY;
 end;
 
 procedure TFCVD102AA.GravaRegistro;
-var valor, valor_recebido: Currency;
+var
+   Conta: TContaConvertida;
 begin
    inherited;
-   FIdDocumento := CDSDadosOrigem.FieldByName('CodContaReceber').AsInteger;
-   valor := CDSDadosOrigem.FieldByName('valor').AsCurrency;
-   valor_recebido := CDSDadosOrigem.FieldByName('ValorRecebido').AsCurrency;
-   with SqlDados do begin
-      try
-         Start(tcInsert, 'TRecDocumento');
-            AddValue('Empresa',     1);
-            AddValue('IdDocumento', FIdDocumento);
-            AddValue('IdCliente',   CDSDadosOrigem.FieldByName('CodCliente').AsInteger);
-            AddValue('IdTipo',      1);
-            AddValue('Documento',   StrZero(CDSDadosOrigem.FieldByName('numeroTitulo').AsString, 7));
-//            AddValue('Complemento', FieldByName('Observacao').AsString + '  Fatura: ' + FieldByName('FaturaNumero').AsString);
-            AddValue('Emissao',     CDSDadosOrigem.FieldByName('DataEmissao').AsDateTime);
-            AddValue('Valor',       valor);
-            AddValue('QtdeParcela', 1);
-            AddValue('Origem',      'IMP');
-            AddValue('Valido',      'S');
-            AddValue('Usuario',     'IMPLANTACAO');
-         Executa;
+   Conta := TContaConvertida.Create(QueryPesquisa);
+   Conta.CarregaDoDataset(CDSDadosOrigem);
 
-         Inc(fIdParcela);
-         Start(tcInsert, 'TRecParcela');
-            AddValue('Empresa',            1);
-            AddValue('IdParcela',          fIdParcela);
-            AddValue('IdDocumento',        fIdDocumento);
-            AddValue('IdPortador',         1);
-            AddValue('IdTipoDocumento',    1);
-            AddValue('IdCliente',          CDSDadosOrigem.FieldByName('CodCliente').AsInteger);
-            AddValue('Parcela',            1);
-            AddValue('Vencimento',         CDSDadosOrigem.FieldByName('DataRecebimento').AsDateTime);
-            AddValue('Valor',              valor);
-            AddValue('DataBaixa',          CDSDadosOrigem.FieldByName('DataRecebimento').Asdatetime);
-            AddValue('ValorBaixado',       valor_recebido);
-         Executa;
-
-      except
-         on e:Exception do
-            GravaLog('Documento: ' + CDSDadosOrigem.FieldByName('NumeroTitulo').AsString + ' Mensagem: '+E.Message);
-      end;
+   try
+      GravaContaReceber(Conta);
+   except
+      on e:Exception do
+         GravaLog('Documento: ' + CDSDadosOrigem.FieldByName('NumeroTitulo').AsString + ' Mensagem: '+E.Message);
    end;
 end;
 
-procedure TFCVD102AA.BImportarClick(Sender: TObject);
+procedure TFCVD102AA.LimpaRegistros;
 begin
-   fIdDocumento := 0;
-   fIdParcela   := 0;
    inherited;
+   UContasReceber.LimpaRegistros(QueryPesquisa);
+end;
+
+procedure TFCVD102AA.GravaContaReceber(Conta: TContaConvertida);
+begin
+   with SqlDados do begin
+      if Conta.NumeroParcela=1 then begin
+         Start(tcInsert, 'TRecDocumento');
+            AddValue('Empresa',     Conta.IdEmpresa);
+            AddValue('IdDocumento', Conta.IdDocumento);
+            AddValue('IdCliente',   Conta.IdCliente);
+            AddValue('IdTipo',      Conta.IdTipo);
+            AddValue('Documento',   Conta.Documento);
+            AddValue('Complemento', Conta.Complemento);
+            AddValue('Emissao',     Conta.Emissao);
+            AddValue('Valor',       Conta.Valor);
+            AddValue('QtdeParcela', Conta.QtdeParcela);
+            AddValue('Origem',      Conta.Origem);
+            AddValue('Valido',      Conta.Valido);
+            AddValue('Usuario',     Conta.Usuario);
+         Executa;
+      end;
+
+      Start(tcInsert, 'TRecParcela');
+         AddValue('Empresa',            Conta.IdEmpresa);
+         AddValue('IdParcela',          Conta.IdDocumento);
+         AddValue('IdDocumento',        Conta.IdPrimeiraParcela);
+         AddValue('IdPortador',         Conta.IdPortador);
+         AddValue('IdTipoDocumento',    Conta.IdTipoDocumento);
+         AddValue('IdCliente',          Conta.IdCliente);
+         AddValue('Parcela',            Conta.NumeroParcela);
+         AddValue('Vencimento',         Conta.Vencimento);
+         AddValue('Valor',              Conta.Valor);
+
+         if Conta.Recebida then begin
+            AddValue('DataBaixa',       Conta.DataBaixa);
+            AddValue('ValorBaixado',    Conta.Valor);
+         end;
+      Executa;
+
+      Start(tcUpdate, 'TRecDocumento');
+         AddWhere('Empresa',     Conta.IdEmpresa);
+         AddWhere('Documento',   Conta.Documento);
+         AddValue('QtdeParcela', Conta.NumeroParcela);
+      Executa;
+   end;
 end;
 
 initialization RegisterClass(TFCVD102AA);

@@ -921,7 +921,6 @@ object FPrincipal: TFPrincipal
         end>
     end
     object FRibbonTab3: TdxRibbonTab
-      Active = True
       Caption = 'Contas a Pagar'
       Groups = <
         item
@@ -931,6 +930,7 @@ object FPrincipal: TFPrincipal
         end>
     end
     object FRibbonTab1: TdxRibbonTab
+      Active = True
       Caption = 'Contas a receber'
       Groups = <
         item
@@ -2820,6 +2820,10 @@ object FPrincipal: TFPrincipal
         item
           Visible = True
           ItemName = 'dxBarLargeButton2'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarLargeButton30'
         end>
       OneOnRow = True
       Row = 0
@@ -3314,6 +3318,15 @@ object FPrincipal: TFPrincipal
       OnClick = dxBarLargeButton4Click
       SyncImageIndex = False
       ImageIndex = 54
+    end
+    object dxBarLargeButton30: TdxBarLargeButton
+      Caption = '2-Contas a Receber'
+      Category = 0
+      Description = 'FCVD102AA'
+      Hint = '2-Contas a Receber'
+      Visible = ivAlways
+      LargeImageIndex = 2
+      OnClick = dxBarLargeButton4Click
     end
     object CustomdxBarCombo1: TCustomdxBarCombo
       Caption = 'New Item'

@@ -115,13 +115,24 @@ inherited FCVD102AA: TFCVD102AA
     end
   end
   inherited DataSource: TDataSource
-    Left = 433
-    Top = 312
+    DataSet = CDSDadosOrigem
+    Left = 617
+    Top = 80
+  end
+  inherited DataSetProvider2: TDataSetProvider
+    DataSet = ADOQueryOrigem
+    Left = 605
+    Top = 172
   end
   inherited ADOQueryOrigem: TADOQuery
     SQL.Strings = (
       'select * from contareceber')
-    Left = 357
-    Top = 312
+    Left = 453
+    Top = 216
+  end
+  inherited CDSDadosOrigem: TClientDataSet
+    ProviderName = 'DataSetProvider2'
+    Left = 611
+    Top = 123
   end
 end
